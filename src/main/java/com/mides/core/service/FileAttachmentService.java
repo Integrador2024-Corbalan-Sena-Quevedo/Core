@@ -2,21 +2,28 @@ package com.mides.core.service;
 
 
 import com.mides.core.model.Candidato;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class FileAttachmentService implements IFileAttachmentService{
+    @Autowired
+    ICandidatoSevice candidatoSevice;
 
     @Override
-    public void processCSVData(Map<String, String> csvData) {
-        Candidato candidato = new Candidato();
-        candidato.setCI(csvData.get("CI"));
-        candidato.setNombre(csvData.get("nombre"));
-        candidato.setApellido(csvData.get("apellido"));
-        candidato.setEdad(Integer.parseInt(csvData.get("edad")));
-        candidato.setDepartamento(csvData.get("departamento"));
+    public void processCSVData(List<Map<String, String>> csvData) {
+        for (Map<String, String> row : csvData) {
+            Candidato candidato = new Candidato();
+            candidato.setCI(row.get("CI"));
+            candidato.setNombre(row.get("nombre"));
+            candidato.setApellido(row.get("apellido"));
+            candidato.setEdad(Integer.parseInt(row.get("edad")));
+            candidato.setDepartamento(row.get("departamento"));
 
-        System.out.println(candidato.toString());
+            candidatoSevice.saveCandidato(candidato);
+        }
     }
 }

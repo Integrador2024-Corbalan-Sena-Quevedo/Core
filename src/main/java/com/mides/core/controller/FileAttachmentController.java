@@ -7,54 +7,56 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.POST)
 public class FileAttachmentController {
 
     @Autowired
     IFileAttachmentService fileAttachmentService;
 
     @PostMapping("/upload-csv")
-    public ResponseEntity<String> uploadCSVFile(@RequestParam("file") MultipartFile file) {
+    @ResponseBody
+    public ResponseEntity<?> uploadCSVFile(@RequestParam("file") MultipartFile file) {
 
-        Map<String,String> csvData = new HashMap<>();
+        List<Map<String,String>> csvData = new ArrayList<>();
+
+
 
         if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Por favor, sube un archivo CSV.");
+            return new ResponseEntity<>("Seleccione un archivo por favor",HttpStatus.BAD_REQUEST);
         }
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-            for (CSVRecord csvRecord : csvParser) {
+            for (CSVRecord csvRecord : csvParser) { // csveRecord son los values del archivo
+                Map<String,String> csvRow = new HashMap<>();
                 for (String header : csvParser.getHeaderNames()){
-                    csvData.put(header, csvRecord.get(header));
+                    csvRow.put(header, csvRecord.get(header));
                 }
+                csvData.add(csvRow);
             }
 
             fileAttachmentService.processCSVData(csvData);
-//            System.out.println("Datos del CSV");
-//            csvData.forEach((header, value) -> System.out.println(header + "\n" + value));
 
-
-
-            return ResponseEntity.ok("Archivo CSV procesado con éxito.");
+            return new ResponseEntity<>("Archivo subido con éxito!",HttpStatus.OK);
 
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo CSV.");
+            return new ResponseEntity<>("Error en la carga de archivo",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

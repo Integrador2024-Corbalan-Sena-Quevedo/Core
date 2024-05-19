@@ -2,6 +2,10 @@ package com.mides.core.model;
 
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +17,11 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
 public class Candidato {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private String CI;
     private String nombre;
     private String apellido;
