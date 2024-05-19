@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +41,7 @@ public class FileAttachmentController {
             BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-            for (CSVRecord csvRecord : csvParser) { // csveRecord son los values del archivo
+            for (CSVRecord csvRecord : csvParser) { // csvRecord son los values del archivo
                 Map<String,String> csvRow = new HashMap<>();
                 for (String header : csvParser.getHeaderNames()){
                     csvRow.put(header, csvRecord.get(header));

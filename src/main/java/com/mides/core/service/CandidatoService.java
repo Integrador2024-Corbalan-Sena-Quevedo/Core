@@ -17,17 +17,18 @@ public class CandidatoService implements ICandidatoSevice{
 
     @Override
     public void saveCandidato(Candidato candidato) {
-        candidatoRepositoy.save(candidato);
+        if(candidatoRepositoy.getCandidatoPorCI(candidato.getCI()) == null){
+            candidatoRepositoy.save(candidato);
+        }
     }
 
     @Override
     public void deleteCandidato(Long id) {
-
     }
 
     @Override
     public Candidato findCandidato(Long id) {
-        return null;
+      return  candidatoRepositoy.findById(id).orElse(null);
     }
 
     @Override
