@@ -29,27 +29,17 @@ public class FileAttachmentController {
     @ResponseBody
     public ResponseEntity<?> uploadCSVFile(@RequestParam("file") MultipartFile file) {
 
-        List<Map<String,String>> csvData = new ArrayList<>();
-
-
 
         if (file.isEmpty()) {
             return new ResponseEntity<>("Seleccione un archivo por favor",HttpStatus.BAD_REQUEST);
         }
 
         try {
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-            for (CSVRecord csvRecord : csvParser) { // csvRecord son los values del archivo
-                Map<String,String> csvRow = new HashMap<>();
-                for (String header : csvParser.getHeaderNames()){
-                    csvRow.put(header, csvRecord.get(header));
-                }
-                csvData.add(csvRow);
-            }
-
-            fileAttachmentService.processCSVData(csvData);
+            fileAttachmentService.forCSVData(reader, csvParser);
 
             return new ResponseEntity<>("Archivo subido con éxito!",HttpStatus.OK);
 
