@@ -3,6 +3,7 @@ package com.mides.core.service;
 import com.mides.core.model.Candidato;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ICandidatoSevice {
 
@@ -11,4 +12,5 @@ public interface ICandidatoSevice {
     void deleteCandidato(Long id);
     Candidato findCandidato(Long id);
     void editCandidato(Candidato candidato);
+    Candidato processCandidato(List<Map<String, String>>  csvData);
 }
