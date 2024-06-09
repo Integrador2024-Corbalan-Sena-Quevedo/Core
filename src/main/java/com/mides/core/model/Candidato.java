@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,26 +20,20 @@ public class Candidato {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private String CI;
+    private String documento;
+    private String tipoDocumento;
     private String nombre;
     private String apellido;
     private String sexo;
     private Date fechaDeNacimiento;
     private int edad;
-    private String departamento;
-
-
-    @Override
-    public String toString() {
-        return "Candidato{" +
-                "CI='" + CI + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", sexo='" + sexo + '\'' +
-                ", fechaDeNacimiento=" + fechaDeNacimiento +
-                ", edad=" + edad +
-                ", departamento='" + departamento + '\'' +
-                '}';
-    }
+    private String estadoCivil;
+    private String email;
+    @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    private Dirreccion dirreccion;
+    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
+    private List<Telefono> telefonos;
+    @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    private Educacion educacion;
 
 }

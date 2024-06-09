@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class CandidatoService implements ICandidatoSevice{
     @Autowired
@@ -17,7 +19,7 @@ public class CandidatoService implements ICandidatoSevice{
 
     @Override
     public void saveCandidato(Candidato candidato) {
-        if(candidatoRepositoy.getCandidatoPorCI(candidato.getCI()) == null){
+        if(candidatoRepositoy.getCandidatoPorCI(candidato.getDocumento()) == null){
             candidatoRepositoy.save(candidato);
         }
     }
@@ -35,4 +37,20 @@ public class CandidatoService implements ICandidatoSevice{
     public void editCandidato(Candidato candidato) {
 
     }
+
+    @Override
+    public Candidato processCandidato(List<Map<String, String>> csvData) {
+        Candidato candidato = new Candidato();
+        for (Map<String, String> row : csvData) {
+            candidato.setDocumento(row.get("CI"));
+            candidato.setNombre(row.get("Nombre"));
+            candidato.setApellido(row.get("apellidos"));
+            //candidato.setEdad(Integer.parseInt(row.get("edad")));
+
+        }
+        this.saveCandidato(candidato);
+        return candidato;
+    }
+
+
 }

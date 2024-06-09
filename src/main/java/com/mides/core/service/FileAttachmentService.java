@@ -18,7 +18,17 @@ public class FileAttachmentService implements IFileAttachmentService{
 
     @Autowired
     ICandidatoSevice candidatoSevice;
+    @Autowired
+    IDirreccionService dirreccionService;
 
+    @Autowired
+    ITelefonoService  telefonoService;
+
+    @Autowired
+    IEducacionService educacionService;
+
+    @Autowired
+    IInstitucionService institucionService;
     List<Map<String,String>> csvData = new ArrayList<>();
 
     @Override
@@ -37,15 +47,13 @@ public class FileAttachmentService implements IFileAttachmentService{
 
     @Override
     public void processCSVData(List<Map<String, String>> csvData) {
-        for (Map<String, String> row : csvData) {
-            Candidato candidato = new Candidato();
-            candidato.setCI(row.get("CI"));
-            candidato.setNombre(row.get("nombre"));
-            candidato.setApellido(row.get("apellido"));
-            candidato.setEdad(Integer.parseInt(row.get("edad")));
-            candidato.setDepartamento(row.get("departamento"));
+           Candidato candidato = candidatoSevice.processCandidato(csvData);
+            dirreccionService.processDirreccion(csvData,candidato);
+            telefonoService.processTelefono(csvData,candidato);
+            institucionService.precargarInsituciones();
+            educacionService.processEducacion(csvData, candidato, institucionService.getInstituciones());
 
-            candidatoSevice.saveCandidato(candidato);
-        }
+
     }
+
 }

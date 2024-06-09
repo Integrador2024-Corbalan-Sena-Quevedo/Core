@@ -37,7 +37,7 @@ public class FileAttachmentController {
         try {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
+            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withQuote('"').withIgnoreSurroundingSpaces(true));
 
             fileAttachmentService.forCSVData(reader, csvParser);
 

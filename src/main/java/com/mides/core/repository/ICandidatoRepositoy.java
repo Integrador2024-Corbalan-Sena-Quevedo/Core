@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface ICandidatoRepositoy  extends JpaRepository<Candidato, Long> {
 
-    @Query(value = "SELECT * FROM Candidato WHERE CI = ?", nativeQuery = true)
-    public Candidato getCandidatoPorCI(@Param("CI") String CI);
+    @Query(value = "SELECT * FROM Candidato WHERE documento = ?", nativeQuery = true)
+    public Candidato getCandidatoPorCI(@Param("documento") String CI);
 }
