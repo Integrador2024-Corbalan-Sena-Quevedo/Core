@@ -12,15 +12,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class TipoDiscapacidad {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nombre;
-    @ManyToMany(mappedBy = "areas")
-    private List<Candidato> candidatos;
+    private String descripcion;
 
-    public Area(String nombre) {
+    @ManyToMany(mappedBy = "tipoDiscapacidades")
+    private List<Discapacidad> discapacidades;
+
+    public TipoDiscapacidad(String nombre, String descripcion) {
         this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 }

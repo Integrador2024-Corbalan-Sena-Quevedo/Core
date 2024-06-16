@@ -68,7 +68,7 @@ public class EducacionService implements IEducacionService{
             if(deseaInstitucion){
                 institucionesDeseo.add(institucions.get(1));
             }
-            deseaInstitucion = row.get("Tipo_inst_deseo - RehabilitaciÃ³n").equals("1");
+            deseaInstitucion = row.get("Tipo_inst_deseo - Rehabilitación").equals("1");
             if(deseaInstitucion){
                 institucionesDeseo.add(institucions.get(2));
             }
