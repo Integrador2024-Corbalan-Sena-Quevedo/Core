@@ -6,21 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class Salud {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private String nombre;
-    @ManyToMany(mappedBy = "areas")
-    private List<Candidato> candidatos;
-
-    public Area(String nombre) {
-        this.nombre = nombre;
-    }
+    private String atencionMedica;
+    private String carnetSalud;
+    private String medicamento;
+    private String saludMental;
+    private String cualesMedicamentos;
+    @OneToOne
+    @JoinColumn(name = "candidato_id", referencedColumnName = "id")
+    private Candidato candidato;
 }

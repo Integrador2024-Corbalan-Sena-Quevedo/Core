@@ -28,7 +28,52 @@ public class FileAttachmentService implements IFileAttachmentService{
     IEducacionService educacionService;
 
     @Autowired
+    IHabilidadService habilidadService;
+
+    @Autowired
     IInstitucionService institucionService;
+    @Autowired
+    ISaludService saludService;
+    @Autowired
+    IIdiomaService idiomaService;
+
+    @Autowired
+     ICandidatoIdiomaService candidatoIdiomaService;
+    @Autowired
+    IDatosAdicionalesCandidatoService datosAdicionalesCandidatoService;
+    @Autowired
+    IAyudaTecnicaService ayudaTecnicaService;
+
+    @Autowired
+    IPrestacionService prestacionService;
+
+    @Autowired
+    IAreaService areaService;
+
+    @Autowired
+     ITipoDiscapacidadService tipoDiscapacidadService;
+
+    @Autowired
+    IDiscapacidadService discapacidadService;
+
+    @Autowired
+    ITurnoService turnoService;
+    @Autowired
+    IDisponibilidadHorariaService disponibilidadHorariaService;
+    @Autowired
+    IMotivoDesempleoService motivoDesempleoService;
+    @Autowired
+    IGustoLaboralService gustoLaboralService;
+
+    @Autowired
+    IActitudService actitudService;
+
+    @Autowired
+    IExperienciaLaboralService experienciaLaboralService;
+
+    @Autowired
+    IApoyoService apoyoService;
+
     List<Map<String,String>> csvData = new ArrayList<>();
 
     @Override
@@ -47,12 +92,29 @@ public class FileAttachmentService implements IFileAttachmentService{
 
     @Override
     public void processCSVData(List<Map<String, String>> csvData) {
-           Candidato candidato = candidatoSevice.processCandidato(csvData);
-            dirreccionService.processDirreccion(csvData,candidato);
-            telefonoService.processTelefono(csvData,candidato);
+            apoyoService.processApoyoCarga(csvData);
+            actitudService.processActitudCarga(csvData);
+            gustoLaboralService.processGustoLaboralCarga(csvData);
+            motivoDesempleoService.processMotivoDesempleoCarga(csvData);
+            turnoService.processTurnoPrecarga(csvData);
+            tipoDiscapacidadService.processTipoDiscapacidadCarga(csvData);
+            areaService.processAreaCarga(csvData);
+            prestacionService.processPrestacionCarga(csvData);
+            ayudaTecnicaService.processAyudaTecnicaCarga(csvData);
+            Candidato candidato = candidatoSevice.processCandidato(csvData, ayudaTecnicaService.getAyudaTecnicas(), prestacionService.getPrestaciones(), areaService.getAreas(), apoyoService.getApoyos());
+            dirreccionService.processDirreccion(csvData, candidato);
+            telefonoService.processTelefono(csvData, candidato);
             institucionService.precargarInsituciones();
             educacionService.processEducacion(csvData, candidato, institucionService.getInstituciones());
-
+            habilidadService.processHabilidad(csvData, candidato);
+            saludService.processSalud(csvData, candidato);
+            idiomaService.precargaIdiomas();
+            idiomaService.processIdioma(csvData);
+            candidatoIdiomaService.processCandidatoIdioma(csvData,candidato,idiomaService.getIdiomas());
+            datosAdicionalesCandidatoService.processDatosAdicionalesCandidato(csvData, candidato);
+            discapacidadService.processDiscapacidad(csvData,tipoDiscapacidadService.getTipoDiscapacidades(),candidato);
+            disponibilidadHorariaService.processDisponibilidadHoraria(csvData,turnoService.getTurnos(),candidato);
+            experienciaLaboralService.processExperienciaLaboral(csvData,gustoLaboralService.getGustos(),motivoDesempleoService.getMotivos(),actitudService.getActitudes(), candidato);
 
     }
 

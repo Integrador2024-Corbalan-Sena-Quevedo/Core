@@ -1,26 +1,29 @@
 package com.mides.core.model;
 
+import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class Actitud {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nombre;
-    @ManyToMany(mappedBy = "areas")
-    private List<Candidato> candidatos;
+    private String observacionDeActiud;
+    @ManyToOne
+    @JoinColumn(name = "experienciaLaboral_id", referencedColumnName = "id")
+    private ExperienciaLaboral experienciaLaboral;
 
-    public Area(String nombre) {
+
+    public Actitud(String nombre) {
         this.nombre = nombre;
     }
 }

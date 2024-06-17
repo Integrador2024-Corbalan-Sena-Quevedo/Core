@@ -5,22 +5,25 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
+
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+@Getter
+@Setter
+public class Idioma {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nombre;
-    @ManyToMany(mappedBy = "areas")
-    private List<Candidato> candidatos;
 
-    public Area(String nombre) {
+    @OneToMany(mappedBy = "idioma", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CandidatoIdioma> candidatoIdiomas;
+
+
+    public Idioma(String nombre) {
         this.nombre = nombre;
     }
 }

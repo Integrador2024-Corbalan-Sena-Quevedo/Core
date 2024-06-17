@@ -7,20 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class Prestacion {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Column(unique = true)
     private String nombre;
-    @ManyToMany(mappedBy = "areas")
+    @ManyToMany(mappedBy = "prestaciones")
     private List<Candidato> candidatos;
 
-    public Area(String nombre) {
+    public Prestacion(String nombre) {
         this.nombre = nombre;
     }
+
+
 }

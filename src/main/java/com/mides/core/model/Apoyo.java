@@ -1,26 +1,27 @@
 package com.mides.core.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
 @Entity
-@Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Area {
+@Getter
+@Inheritance(strategy = InheritanceType.JOINED)
+// @DiscriminatorColumn(name = "tipo_apoyo")
+public abstract class Apoyo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nombre;
-    @ManyToMany(mappedBy = "areas")
+
+    @ManyToMany(mappedBy = "apoyos")
     private List<Candidato> candidatos;
 
-    public Area(String nombre) {
+    public Apoyo(String nombre) {
         this.nombre = nombre;
     }
 }
