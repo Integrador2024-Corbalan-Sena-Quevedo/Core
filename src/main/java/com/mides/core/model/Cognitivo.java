@@ -17,4 +17,8 @@ public class Cognitivo extends Apoyo{
     public Cognitivo(String nombre) {
         super(nombre);
     }
+
+    public Cognitivo() {
+        super();
+    }
 }

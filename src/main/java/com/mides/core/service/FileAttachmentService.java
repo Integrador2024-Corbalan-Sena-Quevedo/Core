@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,10 +75,13 @@ public class FileAttachmentService implements IFileAttachmentService{
     @Autowired
     IApoyoService apoyoService;
 
+    @Autowired
+    IEncuestaService encuestaService;
+
     List<Map<String,String>> csvData = new ArrayList<>();
 
     @Override
-    public void forCSVData(BufferedReader bufferedReader, CSVParser csvParser) {
+    public void forCSVData(BufferedReader bufferedReader, CSVParser csvParser) throws ParseException {
 
         for (CSVRecord csvRecord : csvParser) { // csvRecord son los values del archivo
             Map<String,String> csvRow = new HashMap<>();
@@ -91,7 +95,7 @@ public class FileAttachmentService implements IFileAttachmentService{
     }
 
     @Override
-    public void processCSVData(List<Map<String, String>> csvData) {
+    public void processCSVData(List<Map<String, String>> csvData) throws ParseException {
             apoyoService.processApoyoCarga(csvData);
             actitudService.processActitudCarga(csvData);
             gustoLaboralService.processGustoLaboralCarga(csvData);
@@ -115,7 +119,7 @@ public class FileAttachmentService implements IFileAttachmentService{
             discapacidadService.processDiscapacidad(csvData,tipoDiscapacidadService.getTipoDiscapacidades(),candidato);
             disponibilidadHorariaService.processDisponibilidadHoraria(csvData,turnoService.getTurnos(),candidato);
             experienciaLaboralService.processExperienciaLaboral(csvData,gustoLaboralService.getGustos(),motivoDesempleoService.getMotivos(),actitudService.getActitudes(), candidato);
-
+            encuestaService.processEncuesta(csvData,candidato);
     }
 
 }

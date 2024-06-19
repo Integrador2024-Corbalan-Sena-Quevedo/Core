@@ -17,14 +17,21 @@ public class AyudaTecnicaService implements IAyudaTecnicaService {
     @Override
     public void saveAyudaTecnica(AyudaTecnica ayudaTecnica) {
         List<AyudaTecnica> ayudaTecnicas = ayudaTecnicaRepository.findAll();
-        for (AyudaTecnica ayudaTec : ayudaTecnicas){
-            if (!ayudaTec.getNombre().equals(ayudaTecnica.getNombre())){
-                ayudaTecnicaRepository.save(ayudaTecnica);
-            }
+        if (!existNombreAyuda(ayudaTecnica,ayudaTecnicas)){
+            ayudaTecnicaRepository.save(ayudaTecnica);
         }
         if(ayudaTecnicas.isEmpty()){
             ayudaTecnicaRepository.save(ayudaTecnica);
         }
+    }
+
+    private boolean existNombreAyuda(AyudaTecnica ayudaTecnica, List<AyudaTecnica> ayudaTecnicas) {
+        for (AyudaTecnica ayudaTec : ayudaTecnicas){
+            if (ayudaTec.getNombre().equals(ayudaTecnica.getNombre())){
+               return true;
+            }
+        }
+        return false;
     }
 
     @Override

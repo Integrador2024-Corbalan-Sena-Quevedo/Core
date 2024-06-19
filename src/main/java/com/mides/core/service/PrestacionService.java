@@ -16,12 +16,11 @@ public class PrestacionService implements IPrestacionService{
     @Override
     public void savePrestacion(Prestacion prestacion) {
         List<Prestacion> prestaciones = prestacionRepository.findAll();
-        for (Prestacion prestacionAux : prestaciones){
-            if(!prestacionAux.getNombre().equals(prestacion.getNombre())){
-                prestacionRepository.save(prestacion);
-            }
 
+        if(!existNombrePrestacion(prestacion, prestaciones)){
+            prestacionRepository.save(prestacion);
         }
+
         if (prestaciones.isEmpty()){
             prestacionRepository.save(prestacion);
         }
@@ -56,6 +55,15 @@ public class PrestacionService implements IPrestacionService{
         this.savePrestaciones(prestaciones);
     }
 
+
+    private  boolean existNombrePrestacion(Prestacion prestacion, List<Prestacion> prestacions){
+        for (Prestacion prestacionAux : prestacions){
+            if (prestacionAux.getNombre().equals(prestacion.getNombre())){
+                return true;
+            }
+        }
+        return  false;
+    }
     @Override
     public List<Prestacion> getPrestaciones() {
         return prestacionRepository.findAll();

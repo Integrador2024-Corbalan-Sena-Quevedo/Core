@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FileAttachmentController {
 
             return new ResponseEntity<>("Archivo subido con éxito!",HttpStatus.OK);
 
-        } catch (IOException e) {
+        } catch (IOException  | ParseException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error en la carga de archivo",HttpStatus.INTERNAL_SERVER_ERROR);
         }

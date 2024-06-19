@@ -5,6 +5,10 @@ import com.mides.core.repository.ICandidatoRepositoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +44,31 @@ public class CandidatoService implements ICandidatoSevice{
     }
 
     @Override
-    public Candidato processCandidato(List<Map<String, String>> csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones,List<Area> areas, List<Apoyo> apoyos) {
+    public Candidato processCandidato(List<Map<String, String>> csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones,List<Area> areas, List<Apoyo> apoyos) throws ParseException {
         Candidato candidato = new Candidato();
+        SimpleDateFormat fechaNacimientoFormato = new SimpleDateFormat("yyyy-MM-dd");
         for (Map<String, String> row : csvData) {
-            candidato.setDocumento(row.get("CI"));
-            candidato.setNombre(row.get("Nombre"));
-            candidato.setApellido(row.get("apellidos"));
-            candidato.setAyudaTecnicas(getAyudaTecnicas(csvData, ayudaTecnicas));
-            candidato.setPrestaciones(getPrestaciones(csvData,prestaciones));
-            candidato.setApoyos(getApoyos(csvData, apoyos));
-            candidato.setAreas(getAreas(csvData, areas));
-            //candidato.setEdad(Integer.parseInt(row.get("edad")));
+            try {
+                if(!row.get("NroCI").isEmpty()){
+                    candidato.setDocumento(row.get("NroCI"));
+                    candidato.setTipoDocumento("Nacional");
+                }else{
+                    candidato.setDocumento(row.get("Nro_doc_ext"));
+                    candidato.setTipoDocumento("Extranjero");
+                }
+                candidato.setNombre(row.get("Nombre"));
+                candidato.setApellido(row.get("Apellidos"));
+                candidato.setSexo(row.get("Sexo"));
+                candidato.setIdentidadGenero(row.get("Id_genero"));
+                candidato.setEstadoCivil(row.get("Est_civil"));
+                candidato.setFechaDeNacimiento(fechaNacimientoFormato.parse(row.get("Fecha_de_nacimiento")));
+                candidato.setAyudaTecnicas(getAyudaTecnicas(csvData, ayudaTecnicas));
+                candidato.setPrestaciones(getPrestaciones(csvData,prestaciones));
+                candidato.setApoyos(getApoyos(csvData, apoyos));
+                candidato.setAreas(getAreas(csvData, areas));
+            }catch (ParseException e){
+                throw new ParseException(e.getMessage(),0);
+            }
 
         }
         this.saveCandidato(candidato);

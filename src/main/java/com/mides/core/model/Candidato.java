@@ -26,8 +26,8 @@ public class Candidato {
     private String nombre;
     private String apellido;
     private String sexo;
+    private String identidadGenero;
     private Date fechaDeNacimiento;
-    private int edad;
     private String estadoCivil;
     private String email;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
@@ -78,6 +78,8 @@ public class Candidato {
             inverseJoinColumns = @JoinColumn(name = "apoyo_id")
     )
     private List<Apoyo> apoyos;
+    @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    private Encuesta encuesta;
 
 
 }
