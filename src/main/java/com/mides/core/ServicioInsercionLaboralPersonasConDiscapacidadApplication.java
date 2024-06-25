@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan
+
 public class ServicioInsercionLaboralPersonasConDiscapacidadApplication {
 
 	public static void main(String[] args) throws IOException {
