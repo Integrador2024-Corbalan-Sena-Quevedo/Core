@@ -5,6 +5,7 @@ import com.mides.core.model.Institucion;
 import com.mides.core.repository.IInsititucionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class InstitucionService implements IInstitucionService{
     }
 
     @Override
+    @Transactional
     public void precargarInsituciones() {
         Institucion institucionEducativa = new Institucion(Institucion.Instituciondeseo.EDUCATIVA);
         Institucion institucionRecreativa = new Institucion(Institucion.Instituciondeseo.RECREATIVA);

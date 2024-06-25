@@ -5,6 +5,8 @@ import com.mides.core.model.Salud;
 import com.mides.core.repository.ISaludRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,7 @@ public class SaludService implements ISaludService{
     }
 
     @Override
+//    @Transactional
     public void processSalud(List<Map<String, String>> csvData, Candidato candidato) {
         Salud salud = new Salud();
 

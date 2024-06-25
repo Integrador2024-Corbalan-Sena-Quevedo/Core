@@ -7,6 +7,8 @@ import com.mides.core.repository.ICandidatoIdiomaRepository;
 import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ public class CandidatoIdiomaService implements ICandidatoIdiomaService{
     }
 
     @Override
+//    @Transactional
     public void processCandidatoIdioma(List<Map<String, String>> csvData, Candidato candidato, List<Idioma> idiomas) {
 
         for (Map<String, String> row : csvData) {

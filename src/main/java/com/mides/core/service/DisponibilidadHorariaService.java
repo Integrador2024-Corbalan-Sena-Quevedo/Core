@@ -6,6 +6,8 @@ import com.mides.core.model.Turno;
 import com.mides.core.repository.IDisponibilidadHorariaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class DisponibilidadHorariaService implements  IDisponibilidadHorariaServ
     }
 
     @Override
+//    @Transactional
     public void processDisponibilidadHoraria(List<Map<String, String>> csvData, List<Turno> turnos, Candidato candidato) {
         DisponibilidadHoraria disponibilidadHoraria = new DisponibilidadHoraria();
 
