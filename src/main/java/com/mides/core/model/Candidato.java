@@ -8,8 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -27,9 +29,11 @@ public class Candidato {
     private String apellido;
     private String sexo;
     private String identidadGenero;
-    private Date fechaDeNacimiento;
+    @Temporal(TemporalType.DATE) // Especifica que la columna es de tipo DATE
+    private LocalDate fechaDeNacimiento;
     private String estadoCivil;
-    private String email;
+    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
+    private  List<Email> emails;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     private Dirreccion dirreccion;
     @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)

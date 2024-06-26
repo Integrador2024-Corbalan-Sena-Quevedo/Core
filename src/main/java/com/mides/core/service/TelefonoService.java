@@ -5,6 +5,8 @@ import com.mides.core.model.Telefono;
 import com.mides.core.repository.ITelefonoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class TelefonoService implements ITelefonoService {
     }
 
     @Override
+//    @Transactional
     public void processTelefono(List<Map<String, String>> csvData, Candidato candidato) {
         Telefono telefono = new Telefono();
         for (Map<String, String> row : csvData) {
@@ -44,6 +47,6 @@ public class TelefonoService implements ITelefonoService {
             telefono.setDuenioDos(row.get("Duenio_tel2"));
             telefono.setCandidato(candidato);
         }
-        this.telefonoRepository.save(telefono);
+        this.saveTelefono(telefono);
     }
 }

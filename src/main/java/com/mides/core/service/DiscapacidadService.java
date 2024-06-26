@@ -7,6 +7,8 @@ import com.mides.core.model.TipoDiscapacidad;
 import com.mides.core.repository.IDiscapacidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class DiscapacidadService implements  IDiscapacidadService{
     }
 
     @Override
+//    @Transactional
     public void processDiscapacidad(List<Map<String, String>> csvData, List<TipoDiscapacidad> tipoDiscapacidades, Candidato candidato) {
         Discapacidad discapacidad = new Discapacidad();
         for (Map<String, String> row : csvData){

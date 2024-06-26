@@ -6,25 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Encuesta {
+public class Email {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private String estado;
-    private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaFinalizacion;
-    private String creadaPor;
-    private String idFlow;
-    private String idFlowAFAM;
-    @OneToOne
+    private String email;
+    @ManyToOne
     @JoinColumn(name = "candidato_id", referencedColumnName = "id")
     private Candidato candidato;
+
 }

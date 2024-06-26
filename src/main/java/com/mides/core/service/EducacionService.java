@@ -7,6 +7,8 @@ import com.mides.core.repository.IEducacionRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ public class EducacionService implements IEducacionService{
     }
 
     @Override
+//    @Transactional
     public void processEducacion(List<Map<String, String>> csvData, Candidato candidato, List<Institucion> institucions) {
 
         Educacion educacion = new Educacion();

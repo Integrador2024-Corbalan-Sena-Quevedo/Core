@@ -5,6 +5,8 @@ import com.mides.core.model.Dirreccion;
 import com.mides.core.repository.IDirreccionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,7 @@ public class DirreccionService implements IDirreccionService{
     }
 
     @Override
+//    @Transactional
     public void processDirreccion(List<Map<String, String>> csvData, Candidato candidato) {
         Dirreccion dirreccion = new Dirreccion();
         for (Map<String, String> row : csvData) {
