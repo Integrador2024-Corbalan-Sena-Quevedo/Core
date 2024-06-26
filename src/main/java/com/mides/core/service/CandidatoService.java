@@ -4,7 +4,15 @@ import com.mides.core.model.*;
 import com.mides.core.repository.ICandidatoRepositoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +48,29 @@ public class CandidatoService implements ICandidatoSevice{
     }
 
     @Override
-    public Candidato processCandidato(List<Map<String, String>> csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones,List<Area> areas, List<Apoyo> apoyos) {
+//    @Transactional
+    public Candidato processCandidato(List<Map<String, String>> csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones,List<Area> areas, List<Apoyo> apoyos) throws ParseException {
         Candidato candidato = new Candidato();
+        DateTimeFormatter fechaNacimientoFormato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (Map<String, String> row : csvData) {
-            candidato.setDocumento(row.get("CI"));
+            if(!row.get("NroCI").isEmpty()){
+                candidato.setDocumento(row.get("NroCI"));
+                candidato.setTipoDocumento("Nacional");
+            }else{
+                candidato.setDocumento(row.get("Nro_doc_ext"));
+                candidato.setTipoDocumento("Extranjero");
+            }
             candidato.setNombre(row.get("Nombre"));
-            candidato.setApellido(row.get("apellidos"));
+            candidato.setApellido(row.get("Apellidos"));
+            candidato.setSexo(row.get("Sexo"));
+            candidato.setIdentidadGenero(row.get("Id_genero"));
+            candidato.setEstadoCivil(row.get("Est_civil"));
+            LocalDate fechaNacimiento = LocalDate.parse(row.get("Fecha_de_nacimiento"), fechaNacimientoFormato);
+            candidato.setFechaDeNacimiento(fechaNacimiento);
             candidato.setAyudaTecnicas(getAyudaTecnicas(csvData, ayudaTecnicas));
             candidato.setPrestaciones(getPrestaciones(csvData,prestaciones));
             candidato.setApoyos(getApoyos(csvData, apoyos));
             candidato.setAreas(getAreas(csvData, areas));
-            //candidato.setEdad(Integer.parseInt(row.get("edad")));
 
         }
         this.saveCandidato(candidato);

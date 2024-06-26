@@ -2,6 +2,7 @@ package com.mides.core.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,8 +11,9 @@ import java.util.List;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
 // @DiscriminatorColumn(name = "tipo_apoyo")
-public abstract class Apoyo {
+public  class Apoyo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

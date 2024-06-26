@@ -5,6 +5,8 @@ import com.mides.core.model.DatosAdicionalesCandidato;
 import com.mides.core.repository.IDatosAdicionalesCandidatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class DatosAdicionalesCandidatoService implements IDatosAdicionalesCandid
     }
 
     @Override
+//    @Transactional
     public void processDatosAdicionalesCandidato(List<Map<String, String>> csvData, Candidato candidato) {
 
         DatosAdicionalesCandidato datosAdicionalesCandidato = new DatosAdicionalesCandidato();

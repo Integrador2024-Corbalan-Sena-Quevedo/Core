@@ -5,6 +5,8 @@ import com.mides.core.model.Habilidad;
 import com.mides.core.repository.IHabilidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class HabilidadService implements IHabilidadService {
     }
 
     @Override
+//    @Transactional
     public void processHabilidad(List<Map<String, String>> csvData, Candidato candidato) {
         Habilidad habilidad = new Habilidad();
         for (Map<String, String> row : csvData) {

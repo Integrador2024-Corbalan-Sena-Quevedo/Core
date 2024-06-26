@@ -4,6 +4,8 @@ import com.mides.core.model.*;
 import com.mides.core.repository.IExperienciaLaboralRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class ExperienciaLaboralService implements  IExperienciaLaboralService{
     }
 
     @Override
+//    @Transactional
     public void processExperienciaLaboral(List<Map<String, String>> csvData, List<GustoLaboral> gustoLaborales, List<MotivoDesempleo> motivoDesempleos, List<Actitud> actitudes, Candidato candidato) {
         ExperienciaLaboral experienciaLaboral = new ExperienciaLaboral();
         for (Map<String, String> row : csvData){

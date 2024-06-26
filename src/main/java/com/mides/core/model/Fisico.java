@@ -16,4 +16,8 @@ public class Fisico extends Apoyo{
     public Fisico(String nombre) {
         super(nombre);
     }
+
+    public Fisico() {
+        super();
+    }
 }

@@ -16,7 +16,24 @@ public class ApoyoService implements IApoyoService{
     IApoyoRepository apoyoRepository;
     @Override
     public void saveApoyo(Apoyo apoyo) {
-        apoyoRepository.save(apoyo);
+        List<Apoyo> apoyos = apoyoRepository.findAll();
+        if (!existNombreApoyo(apoyo, apoyos)){
+            apoyoRepository.save(apoyo);
+        }
+        if (apoyos.isEmpty()){
+            apoyoRepository.save(apoyo);
+        }
+    }
+
+    private boolean existNombreApoyo(Apoyo apoyo, List<Apoyo> apoyos) {
+
+        for (Apoyo apoyoAux : apoyos){
+            if (apoyoAux.getNombre().equals(apoyo.getNombre())){
+                return true;
+            }
+        }
+        return false;
+//        return apoyos.stream().anyMatch(apoyoAux -> apoyoAux.getNombre().equals(apoyo.getNombre()));
     }
 
     @Override
