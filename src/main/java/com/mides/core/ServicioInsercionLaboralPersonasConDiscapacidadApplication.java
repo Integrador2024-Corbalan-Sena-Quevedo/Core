@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.io.IOException;
 
 @SpringBootApplication
-@ComponentScan
+
 @EnableTransactionManagement
 public class ServicioInsercionLaboralPersonasConDiscapacidadApplication {
 
