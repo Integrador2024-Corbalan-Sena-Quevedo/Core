@@ -1,6 +1,7 @@
 package com.mides.core.service;
 
 import com.mides.core.model.Candidato;
+import com.mides.core.model.Cliente;
 import com.mides.core.model.Email;
 import com.mides.core.repository.IEmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class EmailService implements IEmailService {
     }
 
     @Override
-    public void processEmail(List<Map<String, String>> csvData, Candidato candidato) throws Exception {
+    public void processEmail(List<Map<String, String>> csvData, Cliente cliente) throws Exception {
         Email email = new Email();
             for (Map<String, String> row : csvData){
                 email.setEmail(row.get("email"));
-                email.setCandidato(candidato);
+                email.setCliente(cliente);
             }
 
         this.saveEmail(email);

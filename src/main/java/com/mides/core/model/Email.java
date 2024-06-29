@@ -18,7 +18,7 @@ public class Email {
     private Long id;
     private String email;
     @ManyToOne
-    @JoinColumn(name = "candidato_id", referencedColumnName = "id")
-    private Candidato candidato;
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
 }

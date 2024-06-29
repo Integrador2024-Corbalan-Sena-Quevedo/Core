@@ -23,7 +23,9 @@ public class Dirreccion {
     private String apartamento;
     private String esquinaUno;
     private String esquinaDos;
+    private String kilometro;
+    private String observacionesDireccion;
     @OneToOne
-    @JoinColumn(name = "candidato_id", referencedColumnName = "id")
-    private Candidato candidato;
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    private Cliente cliente;
 }

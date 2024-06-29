@@ -2,6 +2,7 @@ package com.mides.core.service;
 
 import com.mides.core.model.Candidato;
 import com.mides.core.model.Dirreccion;
+import com.mides.core.model.Empresa;
 import com.mides.core.repository.IDirreccionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,6 @@ public class DirreccionService implements IDirreccionService{
     }
 
     @Override
-//    @Transactional
     public void processDirreccion(List<Map<String, String>> csvData, Candidato candidato) {
         Dirreccion dirreccion = new Dirreccion();
         for (Map<String, String> row : csvData) {
@@ -54,7 +54,25 @@ public class DirreccionService implements IDirreccionService{
             dirreccion.setApartamento(row.get("Apto"));
             dirreccion.setEsquinaUno(row.get("Esq_1"));
             dirreccion.setEsquinaDos(row.get("Esq_2"));
-            dirreccion.setCandidato(candidato);
+            dirreccion.setCliente(candidato);
+        }
+        dirreccionRepository.save(dirreccion);
+    }
+
+    @Override
+    public void processDirreccion(List<Map<String, String>> csvData, Empresa empresa) {
+        Dirreccion dirreccion = new Dirreccion();
+        for (Map<String, String> row : csvData) {
+            dirreccion.setApartamento(row.get("Departamento"));
+            dirreccion.setLocalidad(row.get("Localidad"));
+            dirreccion.setCalle(row.get("Calleruta:"));
+            dirreccion.setNumeroPuerta(Integer.parseInt(row.get("Número:")));
+            dirreccion.setApartamento(row.get("Apartamento:"));
+            dirreccion.setKilometro(row.get("Kilómetro:"));
+            dirreccion.setEsquinaUno(row.get("Esquina 1:"));
+            dirreccion.setEsquinaDos(row.get("Esquina 2:"));
+            dirreccion.setObservacionesDireccion(row.get("Observaciones Dirección:"));
+            dirreccion.setCliente(empresa);
         }
         dirreccionRepository.save(dirreccion);
     }

@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Candidato {
+public class Candidato extends Cliente{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -32,12 +32,6 @@ public class Candidato {
     @Temporal(TemporalType.DATE) // Especifica que la columna es de tipo DATE
     private LocalDate fechaDeNacimiento;
     private String estadoCivil;
-    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private  List<Email> emails;
-    @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private Dirreccion dirreccion;
-    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private List<Telefono> telefonos;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     private Educacion educacion;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
