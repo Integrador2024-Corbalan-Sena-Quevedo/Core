@@ -20,6 +20,6 @@ public class Telefono {
     private String numeroDos;
     private String duenioDos;
     @ManyToOne
-    @JoinColumn(name = "candidato_id", referencedColumnName = "id")
-    private Candidato candidato;
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    private Cliente cliente;
 }

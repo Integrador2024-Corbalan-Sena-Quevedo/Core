@@ -22,7 +22,7 @@ public class FileAttachmentController {
 
     @PostMapping("/upload-csv")
     @ResponseBody
-    public ResponseEntity<?> uploadCSVFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadCSVFile(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
 
 
         if (file.isEmpty()) {
@@ -33,7 +33,7 @@ public class FileAttachmentController {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withQuote('"').withIgnoreSurroundingSpaces(true));
-            fileAttachmentService.forCSVData(reader, csvParser);
+            fileAttachmentService.forCSVData(reader, csvParser, type);
 
             return new ResponseEntity<>("Archivo subido con éxito!",HttpStatus.OK);
 

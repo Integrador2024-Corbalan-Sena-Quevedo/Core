@@ -8,10 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -19,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Candidato {
+@DiscriminatorValue("Candidato")
+public class Candidato extends Cliente{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -32,12 +31,6 @@ public class Candidato {
     @Temporal(TemporalType.DATE) // Especifica que la columna es de tipo DATE
     private LocalDate fechaDeNacimiento;
     private String estadoCivil;
-    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private  List<Email> emails;
-    @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private Dirreccion dirreccion;
-    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private List<Telefono> telefonos;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     private Educacion educacion;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
@@ -83,7 +76,7 @@ public class Candidato {
     )
     private List<Apoyo> apoyos;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private Encuesta encuesta;
+    private EncuestaCandidato encuestaCandidato;
 
 
 }

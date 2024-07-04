@@ -1,6 +1,8 @@
 package com.mides.core.service;
 
 import com.mides.core.model.Candidato;
+import com.mides.core.model.Cliente;
+import com.mides.core.model.Empresa;
 import com.mides.core.model.Telefono;
 import com.mides.core.repository.ITelefonoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +39,20 @@ public class TelefonoService implements ITelefonoService {
     }
 
     @Override
-//    @Transactional
-    public void processTelefono(List<Map<String, String>> csvData, Candidato candidato) {
+    public void processTelefono(List<Map<String, String>> csvData, Cliente cliente) {
         Telefono telefono = new Telefono();
         for (Map<String, String> row : csvData) {
-            telefono.setNumeroUno(row.get("Tel_1"));
-            telefono.setDuenioUno(row.get("Duenio_tel1"));
-            telefono.setNumeroDos(row.get("Tel_2"));
-            telefono.setDuenioDos(row.get("Duenio_tel2"));
-            telefono.setCandidato(candidato);
+            if(cliente instanceof Candidato){
+                telefono.setNumeroUno(row.get("Tel_1"));
+                telefono.setDuenioUno(row.get("Duenio_tel1"));
+                telefono.setNumeroDos(row.get("Tel_2"));
+                telefono.setDuenioDos(row.get("Duenio_tel2"));
+
+            } else if (cliente instanceof Empresa) {
+                telefono.setNumeroUno(row.get("Teléfono:"));
+                telefono.setNumeroDos(row.get("Otro teléfono:"));
+            }
+            telefono.setCliente(cliente);
         }
         this.saveTelefono(telefono);
     }
