@@ -18,9 +18,9 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.POST)
 public class UsuarioController {
     @Autowired
@@ -28,6 +28,7 @@ public class UsuarioController {
 
 
     @PostMapping("/login-usuario")
+
     public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> loginData) {
         String nombreUsuario = loginData.get("usuario");
         String password = loginData.get("password");
@@ -42,23 +43,20 @@ public class UsuarioController {
             boolean existe = login(nombreUsuario, password);
 
             if (existe) {
+                UUID uuid = UUID.randomUUID();
                 response.put("mensaje", "Login exitoso");
                 response.put("codigo", 200);
+                response.put("apiKey", uuid.toString());
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.put("mensaje", "Usuario y/o contraseña incorrectos");
-                response.put("codigo", 400);
+                response.put("codigo", 404);
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             return new ResponseEntity<>("Ocurrió un error durante el login", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-
-
-
     }
     public boolean login(String nombre, String password){
 
@@ -75,6 +73,7 @@ public class UsuarioController {
         return false;
 
     }
+
 
 
 }
