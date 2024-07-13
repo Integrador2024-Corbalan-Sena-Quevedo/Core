@@ -56,7 +56,7 @@ public class DirreccionService implements IDirreccionService{
             dirreccion.setEsquinaDos(row.get("Esq_2"));
             dirreccion.setCliente(candidato);
         }
-        dirreccionRepository.save(dirreccion);
+        this.saveDirreccion(dirreccion);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DirreccionService implements IDirreccionService{
             dirreccion.setObservacionesDireccion(row.get("Observaciones Dirección:"));
             dirreccion.setCliente(empresa);
         }
-        dirreccionRepository.save(dirreccion);
+        this.saveDirreccion(dirreccion);
     }
 
 }

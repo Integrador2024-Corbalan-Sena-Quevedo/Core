@@ -42,6 +42,7 @@ public class Empleo {
     private String remuneracionOfrecida;
     private String tipoRemuneracion;
     private String tipoRemuneracionOtro;
+    private String categoria;
     @OneToOne(mappedBy = "empleo", cascade = CascadeType.ALL)
     private ConocimientosEspecificosEmpleo ConocimientosEspecificosEmpleo;
     @ManyToOne

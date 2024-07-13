@@ -1,6 +1,7 @@
 package com.mides.core.service;
 
-import com.mides.core.service.*;
+//import com.mides.core.repository.IParametersRepository;
+import com.mides.core.repository.IParametersRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+import static com.mides.core.model.Constant.CANDIDATO_PRECARGA;
+
 @Service
 @Component
 @NoArgsConstructor
@@ -21,8 +24,10 @@ import java.util.Map;
 public class CargaInicialService implements ICargaInicialService{
 
 
-
     private boolean cargaProcesada;
+
+    @Autowired
+    private IParametersRepository parametersRepository;
 
     @Autowired
     private IApoyoService apoyoService;
@@ -57,11 +62,17 @@ public class CargaInicialService implements ICargaInicialService{
     IInstitucionService institucionService;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    public void procesarCargaSiEsNecesario(List<Map<String, String>> csvData) {
-        if (!cargaProcesada) {
-            processCarga(csvData);
-            cargaProcesada = true;
+    public void procesarCargaSiEsNecesario(List<Map<String, String>> csvData) throws Exception {
+        try {
+            String valueParam = parametersRepository.getParameterById(CANDIDATO_PRECARGA);
+            if(Integer.parseInt(valueParam) == 0) {
+                processCarga(csvData);
+                parametersRepository.updateParameterById(CANDIDATO_PRECARGA,"1");
+            }
+        }catch (Exception e){
+            throw new Exception(e);
         }
+
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void processCarga(List<Map<String, String>> csvData) {
