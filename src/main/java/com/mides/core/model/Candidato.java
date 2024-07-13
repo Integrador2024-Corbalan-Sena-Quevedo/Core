@@ -85,5 +85,34 @@ public class Candidato {
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     private Encuesta encuesta;
 
-
+    @Override
+    public String toString() {
+        return "Candidato{" +
+                "id=" + id +
+                ", documento='" + documento + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", sexo='" + sexo + '\'' +
+                ", identidadGenero='" + identidadGenero + '\'' +
+                ", fechaDeNacimiento=" + fechaDeNacimiento +
+                ", estadoCivil='" + estadoCivil + '\'' +
+                ", emails=" + emails +
+                ", dirreccion=" + dirreccion +
+                ", telefonos=" + telefonos +
+                ", educacion=" + educacion +
+                ", habilidad=" + habilidad +
+                ", salud=" + salud +
+                ", candidatoIdiomas=" + candidatoIdiomas +
+                ", datosAdicionalesCandidato=" + datosAdicionalesCandidato +
+                ", ayudaTecnicas=" + ayudaTecnicas +
+                ", prestaciones=" + prestaciones +
+                ", areas=" + areas +
+                ", discapacidad=" + discapacidad +
+                ", disponibilidadHoraria=" + disponibilidadHoraria +
+                ", experienciaLaboral=" + experienciaLaboral +
+                ", apoyos=" + apoyos +
+                ", encuesta=" + encuesta +
+                '}';
+    }
 }

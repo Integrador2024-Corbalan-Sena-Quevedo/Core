@@ -13,7 +13,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 // @DiscriminatorColumn(name = "tipo_apoyo")
-public  class Apoyo {
+public class Apoyo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -26,4 +26,6 @@ public  class Apoyo {
     public Apoyo(String nombre) {
         this.nombre = nombre;
     }
+
+
 }
