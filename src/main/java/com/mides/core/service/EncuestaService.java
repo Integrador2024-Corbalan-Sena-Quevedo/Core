@@ -1,15 +1,16 @@
 package com.mides.core.service;
 
 import com.mides.core.model.Candidato;
-import com.mides.core.model.Encuesta;
+import com.mides.core.model.Empresa;
+import com.mides.core.model.EncuestaCandidato;
+import com.mides.core.model.EncuestaEmpresa;
+import com.mides.core.repository.IEncuestaEmpresaRepository;
 import com.mides.core.repository.IEncuestaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -20,15 +21,22 @@ public class EncuestaService implements  IEncuestaService{
 
     @Autowired
     IEncuestaRepository encuestaRepository;
+
+    @Autowired
+    IEncuestaEmpresaRepository encuestaEmpresaRepository;
     @Override
-    public void saveEncuesta(Encuesta encuesta) {
-        encuestaRepository.save(encuesta);
+    public void saveEncuesta(EncuestaCandidato encuestaCandidato) {
+        encuestaRepository.save(encuestaCandidato);
     }
 
     @Override
-//    @Transactional
-    public void processEncuesta(List<Map<String, String>> csvData, Candidato candidato) throws ParseException {
-        Encuesta encuesta = new Encuesta();
+    public void saveEncuestaEmpresa(EncuestaEmpresa encuestaEmpresa) {
+        encuestaEmpresaRepository.save(encuestaEmpresa);
+    }
+
+    @Override
+    public void processEncuestaCandidato(List<Map<String, String>> csvData, Candidato candidato) {
+        EncuestaCandidato encuestaCandidato = new EncuestaCandidato();
         DateTimeFormatter fechaCreacionFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
         for (Map<String, String> row : csvData){
@@ -36,20 +44,41 @@ public class EncuestaService implements  IEncuestaService{
             String fechaFinalizacionString = row.get("FechaFinalizacion");
             String fechaCreacionSinAMPM = fechaCreacionString.replaceAll("\\s+[AP]M$", "");
             String fechaFinalizacionSinAMPM = fechaFinalizacionString.replaceAll("\\s+[AP]M$", "");
-            encuesta.setEstado(row.get("Estado"));
-            encuesta.setIdFlow(row.get("IdFlow"));
-            encuesta.setIdFlowAFAM(row.get("IdFlowAFAM"));
-            encuesta.setCreadaPor(row.get("CreadaPor"));
-            encuesta.setCandidato(candidato);
+            encuestaCandidato.setEstado(row.get("Estado"));
+            encuestaCandidato.setIdFlow(row.get("IdFlow"));
+            encuestaCandidato.setIdFlowAFAM(row.get("IdFlowAFAM"));
+            encuestaCandidato.setCreadaPor(row.get("CreadaPor"));
+            encuestaCandidato.setCandidato(candidato);
             try {
                 LocalDateTime fechaCreacion = LocalDateTime.parse(fechaCreacionSinAMPM, fechaCreacionFormatter);
                 LocalDateTime fechaFinalizacion = LocalDateTime.parse(fechaFinalizacionSinAMPM, fechaCreacionFormatter);
-                encuesta.setFechaCreacion(fechaCreacion);
-                encuesta.setFechaFinalizacion(fechaFinalizacion);
+                encuestaCandidato.setFechaCreacion(fechaCreacion);
+                encuestaCandidato.setFechaFinalizacion(fechaFinalizacion);
             } catch (Exception e) {
                 System.err.println("Error al parsear la fecha: " + e.getMessage());
             }
         }
-        this.saveEncuesta(encuesta);
+        this.saveEncuesta(encuestaCandidato);
+    }
+
+    @Override
+    public void processEncuestaEmpresa(List<Map<String, String>> csvData, Empresa empresa) {
+        EncuestaEmpresa encuestaEmpresa = new EncuestaEmpresa();
+        DateTimeFormatter fechaCreacionFormato = DateTimeFormatter.ofPattern("dd/MM/yy");
+
+        for (Map<String, String> row : csvData){
+            encuestaEmpresa.setIdEncuesta(Long.parseLong(row.get("Id Encuesta")));
+            encuestaEmpresa.setObservaciones(row.get("Obs"));
+            encuestaEmpresa.setComentarios(row.get("Comentarios:"));
+            encuestaEmpresa.setCalificacionEncuesta(row.get("¿Cómo calificarías esta gestión?:"));
+            try {
+                LocalDate fechaCreacion = LocalDate.parse(row.get("Fecha de Creación"), fechaCreacionFormato);
+                encuestaEmpresa.setFechaDeCreacion(fechaCreacion);
+            }catch (Exception e){
+                System.err.println("Error al parsear la fecha: " + e.getMessage());
+            }
+        }
+        encuestaEmpresa.setEmpresa(empresa);
+        this.saveEncuestaEmpresa(encuestaEmpresa);
     }
 }

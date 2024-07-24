@@ -42,18 +42,20 @@ public class TareaService implements  ITareaService{
         TareaNoEsencial tareaNoEsencial = new TareaNoEsencial();
 
         for (Map<String, String> row : csvData){
-            List<DetalleTarea> detalleTareasEsenciales = processTareaDetalle(row.get("Detalle de las tareas esenciales:"), tareaEsencial, null);
-            tareaEsencial.setDetalleTarea(detalleTareasEsenciales);
-            tareaEsencial.setNombre(row.get("Tareas esenciales:"));
-
-            List<DetalleTarea> detalleTareasNoEsenciales = processTareaDetalle(row.get("Detalle de las tareas no esenciales:"), null, tareaNoEsencial);
-            tareaNoEsencial.setDetalleTarea(detalleTareasNoEsenciales);
-            tareaNoEsencial.setNombre(row.get("Tareas no esenciales:"));
+            processSingleTarea(row, tareaEsencial, "Tareas esenciales:", "Detalle de las tareas esenciales:", "Tareas esenciales: - Otros");
+            processSingleTarea(row, tareaNoEsencial, "Tareas no esenciales:", "Detalle de las tareas no esenciales:", "Tareas no esenciales: - Otros");
         }
         tareaEsencial.setEmpleo(empleo);
         tareaNoEsencial.setEmpleo(empleo);
         this.saveTarea(tareaEsencial);
         this.saveTarea(tareaNoEsencial);
+    }
+
+    private void processSingleTarea(Map<String, String> row, Tarea tarea, String nombreKey, String detalleKey, String otrasKey) {
+        List<DetalleTarea> detalleTareas = processTareaDetalle(row.get(detalleKey), tarea instanceof TareaEsencial ? (TareaEsencial) tarea : null, tarea instanceof TareaNoEsencial ? (TareaNoEsencial) tarea : null);
+        tarea.setDetalleTarea(detalleTareas);
+        tarea.setNombre(row.get(nombreKey));
+        tarea.setOtras(row.get(otrasKey));
     }
 
     public List<DetalleTarea> processTareaDetalle(String detalleTareaString, TareaEsencial tareaEsencial, TareaNoEsencial tareaNoEsencial) {

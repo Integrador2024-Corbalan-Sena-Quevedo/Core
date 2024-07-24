@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Encuesta {
+public class EncuestaCandidato {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;

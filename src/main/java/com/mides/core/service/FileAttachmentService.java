@@ -95,6 +95,8 @@ public class FileAttachmentService implements IFileAttachmentService{
     ITareaService tareaService;
     @Autowired
     IEmpleoService empleoService;
+    @Autowired
+    IDatosAdicionalesEmpresaService datosAdicionalesEmpresaService;
 
     List<Map<String,String>> csvData = new ArrayList<>();
 
@@ -134,19 +136,22 @@ public class FileAttachmentService implements IFileAttachmentService{
             discapacidadService.processDiscapacidad(csvData, tipoDiscapacidadService.getTipoDiscapacidades(), candidato);
             disponibilidadHorariaService.processDisponibilidadHoraria(csvData, turnoService.getTurnos(), candidato);
             experienciaLaboralService.processExperienciaLaboral(csvData, gustoLaboralService.getGustos(), motivoDesempleoService.getMotivos(), actitudService.getActitudes(), candidato);
-            encuestaService.processEncuesta(csvData, candidato);
+            encuestaService.processEncuestaCandidato(csvData, candidato);
             emailService.processEmail(csvData, candidato);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void processCSVDataCompany(List<Map<String, String>> csvData) throws Exception {
         Empresa empresa =  empresaSevice.processEmpresa(csvData);
+        datosAdicionalesEmpresaService.proessDatosAdicionalesEmpresa(csvData, empresa);
         dirreccionService.processDirreccion(csvData, empresa);
         emailService.processEmail(csvData, empresa);
         telefonoService.processTelefono(csvData, empresa);
         Empleo empleo = empleoService.processEmpleo(csvData, empresa);
         tareaService.processTarea(csvData, empleo);
-
+        empleoService.processConocimientoEspecificosEmpleo(csvData,empleo);
+        encuestaService.processEncuestaEmpresa(csvData, empresa);
     }
 
 

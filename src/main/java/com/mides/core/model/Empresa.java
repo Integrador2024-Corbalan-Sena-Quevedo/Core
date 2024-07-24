@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
+@DiscriminatorValue("Empresa")
 public class Empresa extends Cliente{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -17,10 +18,11 @@ public class Empresa extends Cliente{
     private String actividadEconomica;
     private String ramaEconomica;
     private String personaReferencia;
-//    private ContactoEmpresa contactoEmpresa;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Empleo> empleo;
     private String cvsEnviados;
     @OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL)
     private DatosAdicionalesEmpresa datosAdicionalesEmpresa;
+    @OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL)
+    private EncuestaEmpresa encuestaEmpresa;
 }

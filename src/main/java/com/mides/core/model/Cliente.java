@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "tipo")
 @Entity
 @Getter
 @Setter
