@@ -2,5 +2,8 @@ package com.mides.core.model;
 
 public enum Rol {
     ADMIN,
-    USER
+    OPERADOR_LABORAL_SUPERIOR,
+
+    OPERADOR_LABORAL_NOVATO
+
 }
