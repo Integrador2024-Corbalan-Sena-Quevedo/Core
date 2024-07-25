@@ -1,6 +1,7 @@
 package com.mides.core.controller;
 
 import com.mides.core.model.Candidato;
+import com.mides.core.model.Cliente;
 import com.mides.core.service.IFiltroCandidatosService;
 import com.mides.core.specification.FiltroCandidato;
 import com.mides.core.specification.SearchCandidatoSpecification;
@@ -20,7 +21,14 @@ public class FiltroCandidatosController {
     @Autowired
     IFiltroCandidatosService filtroCandidatosService;
 
-        @PostMapping("/candidatos")
+    private final ObjectMapper objectMapper;
+
+    public FiltroCandidatosController(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+
+    @PostMapping("/candidatos")
         public ResponseEntity<?> filtrado(@RequestBody  Map<String, List<FiltroCandidato>> filtrosMap) {
             List<FiltroCandidato> filtros = filtrosMap.get("filtros");
 
@@ -29,12 +37,23 @@ public class FiltroCandidatosController {
                     System.out.println("  - " + filtro.toString());
                 }
             try {
-                SearchCandidatoSpecification criteria = new SearchCandidatoSpecification(filtros);
-                Map<Long, Candidato> candidatos = filtroCandidatosService.filtrarCandidatos(criteria);
+                Map<Long, Cliente> candidatos;
+                if(filtros.isEmpty()){
+                    candidatos = filtroCandidatosService.todosCandidatos();
+                }else{
+                    SearchCandidatoSpecification criteria = new SearchCandidatoSpecification(filtros);
+                    candidatos = filtroCandidatosService.filtrarCandidatos(criteria);
+                }
+
                 System.out.println("Lista de filtros:");
 
-                candidatos.forEach((id, candidato) ->
-                        System.out.println("  - " + id.toString() + " - " + candidato.toString()));
+
+                String json = objectMapper.writeValueAsString(candidatos);
+                System.out.println(json);
+
+                candidatos.forEach((id, candidado) ->
+
+                        System.out.println("  - " + id.toString() + " - " + candidado.toString()));
 
 
 

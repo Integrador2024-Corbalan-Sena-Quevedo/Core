@@ -2,6 +2,8 @@ package com.mides.core.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,18 +30,24 @@ public class Candidato extends Cliente{
     private String apellido;
     private String sexo;
     private String identidadGenero;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE) // Especifica que la columna es de tipo DATE
-    private LocalDate fechaDeNacimiento;
+    private LocalDate fecha_de_nacimiento;
     private String estadoCivil;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Educacion educacion;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Habilidad habilidad;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Salud salud;
     @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CandidatoIdioma> candidatoIdiomas ;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private DatosAdicionalesCandidato datosAdicionalesCandidato;
     @ManyToMany
     @JoinTable(
@@ -47,6 +55,7 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "ayuda_id")
     )
+    @JsonManagedReference
     private List<AyudaTecnica> ayudaTecnicas;
     @ManyToMany
     @JoinTable(
@@ -54,6 +63,7 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "prestacion_id")
     )
+    @JsonManagedReference
     private List<Prestacion> prestaciones;
     @ManyToMany
     @JoinTable(
@@ -61,12 +71,16 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "area_id")
     )
+    @JsonManagedReference
     private List<Area> areas;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Discapacidad discapacidad;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private DisponibilidadHoraria disponibilidadHoraria;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private ExperienciaLaboral experienciaLaboral;
     @ManyToMany
     @JoinTable(
@@ -74,8 +88,10 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "apoyo_id")
     )
+    @JsonManagedReference
     private List<Apoyo> apoyos;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private EncuestaCandidato encuestaCandidato;
 
     @Override
@@ -88,11 +104,11 @@ public class Candidato extends Cliente{
                 ", apellido='" + apellido + '\'' +
                 ", sexo='" + sexo + '\'' +
                 ", identidadGenero='" + identidadGenero + '\'' +
-                ", fechaDeNacimiento=" + fechaDeNacimiento +
+                ", fechaDeNacimiento=" + fecha_de_nacimiento +
                 ", estadoCivil='" + estadoCivil + '\'' +
-                ", emails=" + emails +
-                ", dirreccion=" + dirreccion +
-                ", telefonos=" + telefonos +
+                ", emails=" + this.getEmails() +
+                ", dirreccion=" + this.getDirreccion() +
+                ", telefonos=" + this.getTelefonos() +
                 ", educacion=" + educacion +
                 ", habilidad=" + habilidad +
                 ", salud=" + salud +
@@ -105,7 +121,7 @@ public class Candidato extends Cliente{
                 ", disponibilidadHoraria=" + disponibilidadHoraria +
                 ", experienciaLaboral=" + experienciaLaboral +
                 ", apoyos=" + apoyos +
-                ", encuesta=" + encuesta +
+                ", encuesta=" + this.getEncuestaCandidato() +
                 '}';
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 
 import javax.script.ScriptEngine;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,94 +30,111 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
 
         List<Predicate> predicate = new ArrayList<>();
 
-        if (!filtros.isEmpty()){
+        if (filtros != null && !filtros.isEmpty()){
+
             for (FiltroCandidato filtro : filtros) {
-                System.out.println("Filtro Actual : ++"+filtro.getName());
-               if(Objects.equals(filtro.getName(), "Apoyo")){
-                   System.out.println("Entro En Apoyo");
-                   Join<Candidato, Apoyo> apoyo = root.join("apoyos", JoinType.INNER );
-                   System.out.println("Hizo el join");
-                    for (String unApoyo : filtro.getSubFiltros()){
-                        System.out.println("Nombre de la columna: "+unApoyo);
-                        System.out.println("Nombre de la columna: "+apoyo.get("nombre"));
-                        Predicate apoyoCandidato = criteriaBuilder.equal(apoyo.get("nombre"), unApoyo);
-                        predicate.add(apoyoCandidato);
-                    }
-               }
-                if(Objects.equals(filtro.getName(), "Area")){
-                    System.out.println("Entro En Area");
 
-                    Join<Candidato, Area> area = root.join("areas", JoinType.INNER );
-                    System.out.println("Hizo el join");
-                    for (String unArea : filtro.getSubFiltros()){
-                        System.out.println("Nombre de la columna: "+unArea);
-                        System.out.println("Nombre de la columna: "+area.get("nombre"));
-                        Path<String> areaNombrePath = area.get("nombre");
-                        Predicate areaCandidato = criteriaBuilder.equal(areaNombrePath, unArea);
-                        predicate.add(areaCandidato);
-                    }
-                }
-                if(Objects.equals(filtro.getName(), "Turno")){
-                    Join<Candidato, DisponibilidadHoraria> disponibilidadHorariaJoin = root.join("disponibilidadHoraria", JoinType.INNER );
-                    Join<DisponibilidadHoraria, Turno> disponibilidadHorariaTurnoJoin = disponibilidadHorariaJoin.join("turnos", JoinType.INNER );
-
-                    System.out.println("Hizo el join");
-                    for (String unTurno : filtro.getSubFiltros()){
-                        System.out.println("Nombre de la columna: "+unTurno);
-                        System.out.println("Nombre de la columna: "+disponibilidadHorariaTurnoJoin.get("turno"));
-                        Path<String> turnoNombrePath = disponibilidadHorariaTurnoJoin.get("turno");
-                        Predicate apoyoTurno = criteriaBuilder.equal(turnoNombrePath, unTurno);
-                        predicate.add(apoyoTurno);
-                    }
-                }
-                if(Objects.equals(filtro.getName(), "tipo_discapicidad")){
-                    Join<Candidato, Discapacidad> candidatoDiscapacidadJoin = root.join("discapacidad", JoinType.INNER );
-                    Join<Discapacidad, TipoDiscapacidad> tipoDiscapacidadJoin = candidatoDiscapacidadJoin.join("tipoDiscapacidades", JoinType.INNER );
-
-                    for (String untipoDiscapacidad : filtro.getSubFiltros()){
-                        Path<String> discapacidadNombrePath = tipoDiscapacidadJoin.get("nombre");
-                        Predicate tipoDiscapacidadCandidato = criteriaBuilder.equal(discapacidadNombrePath, untipoDiscapacidad);
-                        predicate.add(tipoDiscapacidadCandidato);
-                    }
-                }
-
-                if(Objects.equals(filtro.getName(), "motivo_desempleo")){
-                    Join<Candidato, ExperienciaLaboral> experienciaLaboralJoin = root.join("experienciaLaboral", JoinType.INNER );
-                    Join<ExperienciaLaboral, MotivoDesempleo> motivoDesempleoJoin = experienciaLaboralJoin.join("motivosDesempleo", JoinType.INNER );
-                    for (String unMotivoDesempleo: filtro.getSubFiltros()){
-                        Predicate motivoDesempleoCandidato = criteriaBuilder.equal(motivoDesempleoJoin.get("motivo"), unMotivoDesempleo);
-                        predicate.add(motivoDesempleoCandidato);
-                    }
-                }
-                if(Objects.equals(filtro.getName(), "ayuda_tecnica")){
-                    Join<Candidato, AyudaTecnica> ayudaTecnicaJoin = root.join("ayudaTecnicas", JoinType.INNER );
-                    for (String unAyudaTecnica: filtro.getSubFiltros()){
-                        Predicate ayudaTecnicaCandidato = criteriaBuilder.equal(ayudaTecnicaJoin.get("nombre"), unAyudaTecnica);
-                        predicate.add(ayudaTecnicaCandidato);
-                    }
-                }
-
-                if(Objects.equals(filtro.getName(), "Habilidad")){
-                    Join<Candidato, Habilidad> habilidadJoin = root.join("habilidad", JoinType.INNER );
-                    for (String unaHabilidad: filtro.getSubFiltros()){
-                        Predicate habilidadCandidato = criteriaBuilder.equal(habilidadJoin.get(unaHabilidad), 1);
-                        predicate.add(habilidadCandidato);
-                    }
-                }
-
-                if(Objects.equals(filtro.getName(), "documento"))
-                    for (String unDocumento: filtro.getSubFiltros()){
-                        Predicate documentoCandidato = criteriaBuilder.equal(root.get("documento"), unDocumento);
-                        predicate.add(documentoCandidato);
-                    }
+                switch (filtro.getName()){
+                    case "Apoyo" :
+                        Join<Candidato, Apoyo> apoyo = root.join("apoyos", JoinType.INNER );
+                        addSubFilters(apoyo, "nombre", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "Area" :
+                        Join<Candidato, Area> area = root.join("areas", JoinType.INNER );
+                        addSubFilters(area, "nombre", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "Turno" :
+                        Join<Candidato, DisponibilidadHoraria> disponibilidadHorariaJoin = root.join("disponibilidadHoraria", JoinType.INNER );
+                        Join<DisponibilidadHoraria, Turno> disponibilidadHorariaTurnoJoin = disponibilidadHorariaJoin.join("turnos", JoinType.INNER );
+                        addSubFilters(disponibilidadHorariaTurnoJoin, "turno", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "tipo_discapicidad" :
+                        Join<Candidato, Discapacidad> candidatoDiscapacidadJoin = root.join("discapacidad", JoinType.INNER );
+                        Join<Discapacidad, TipoDiscapacidad> tipoDiscapacidadJoin = candidatoDiscapacidadJoin.join("tipoDiscapacidades", JoinType.INNER );
+                        addSubFilters(tipoDiscapacidadJoin, "nombre", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "motivo_desempleo" :
+                        Join<Candidato, ExperienciaLaboral> experienciaLaboralJoin = root.join("experienciaLaboral", JoinType.INNER );
+                        Join<ExperienciaLaboral, MotivoDesempleo> motivoDesempleoJoin = experienciaLaboralJoin.join("motivosDesempleo", JoinType.INNER );
+                        addSubFilters(motivoDesempleoJoin, "motivo", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "ayuda_tecnica" :
+                        Join<Candidato, AyudaTecnica> ayudaTecnicaJoin = root.join("ayudaTecnicas", JoinType.INNER );
+                        addSubFilters(ayudaTecnicaJoin, "nombre", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "Habilidad":
+                        Join<Candidato, Habilidad> habilidadJoin = root.join("habilidad", JoinType.INNER );
+                        addSubFiltersHabilidad(habilidadJoin, filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "documento" :
+                        addSubFilters(root, "documento", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "mayores a":
+                        addFiltersMayores(root, "fecha_de_nacimiento", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "menores a":
+                        addFiltersMenores(root, "fecha_de_nacimiento", filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
                 }
             }
+        }
 
         System.out.println("CAntidad de Predicados +++++++++++"+predicate.size());
         query.orderBy(criteriaBuilder.asc(root.get("apellido")));
-        return criteriaBuilder.or(predicate.toArray(new Predicate[predicate.size()]));
+        return criteriaBuilder.and(predicate.toArray(new Predicate[predicate.size()]));
+    }
+
+    private void addFiltersMayores(Path<?> path, String attributeName, List<String> subFilters, CriteriaBuilder criteriaBuilder, List<Predicate> predicates){
+        if (subFilters != null && !subFilters.isEmpty()){
+
+            for (String subFilter : subFilters){
+                LocalDate anioNacimiento = calcularAnioNacimiento(Integer.parseInt(subFilter));
+                Predicate predicate = criteriaBuilder.lessThan(path.get(attributeName), anioNacimiento);
+                predicates.add(predicate);
+                System.out.println(path.get(attributeName) + " " + anioNacimiento);
+            }
+        }
+    }
+
+    private void addFiltersMenores(Path<?> path, String attributeName, List<String> subFilters, CriteriaBuilder criteriaBuilder, List<Predicate> predicates){
+        if (subFilters != null && !subFilters.isEmpty()){
+
+            for (String subFilter : subFilters){
+                LocalDate anioNacimiento = calcularAnioNacimiento(Integer.parseInt(subFilter));
+                Predicate predicate = criteriaBuilder.greaterThan(path.get(attributeName), anioNacimiento);
+                predicates.add(predicate);
+                System.out.println(path.get(attributeName) + " " + anioNacimiento);
+            }
+        }
+    }
+
+    private static LocalDate calcularAnioNacimiento(int edad) {
+        int anioActual = LocalDate.now().getYear();
+        int anioNacimiento = anioActual - edad;
+        // Asumimos que nacieron el 1 de enero de ese año para simplificar
+        return LocalDate.of(anioNacimiento, 1, 1);
+    }
+
+
+
+    private void addSubFilters(Path<?> path, String attributeName, List<String> subFilters, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        if (subFilters != null && !subFilters.isEmpty()) {
+            List<Predicate> filterPredicates = new ArrayList<>();
+            for (String subFilter : subFilters) {
+                Predicate predicate = criteriaBuilder.equal(path.get(attributeName), subFilter);
+                filterPredicates.add(predicate);
+            }
+            if (!filterPredicates.isEmpty()) {
+                predicates.add(criteriaBuilder.or(filterPredicates.toArray(new Predicate[0])));
+            }
+        }
+    }
+
+    private void addSubFiltersHabilidad(Path<?> path, List<String> subFilters, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        for (String subFilter : subFilters) {
+            Predicate predicate = criteriaBuilder.equal(path.get(subFilter), 1);
+            predicates.add(predicate);
+        }
     }
 
 }
-
-

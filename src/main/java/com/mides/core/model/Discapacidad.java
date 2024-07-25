@@ -1,5 +1,7 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +23,7 @@ public class Discapacidad {
     private String diagnostico;
     @OneToOne
     @JoinColumn(name = "candidato_id", referencedColumnName = "id")
+    @JsonBackReference
     private Candidato candidato;
     @ManyToMany
     @JoinTable(
@@ -28,6 +31,7 @@ public class Discapacidad {
             joinColumns = @JoinColumn(name = "discapacidad_id"),
             inverseJoinColumns = @JoinColumn(name = "tipoDiscapacidad_id")
     )
+    @JsonManagedReference
     private List<TipoDiscapacidad> tipoDiscapacidades;
 
 

@@ -1,5 +1,7 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class Prestacion {
     @Column(unique = true)
     private String nombre;
     @ManyToMany(mappedBy = "prestaciones")
+    @JsonBackReference
     private List<Candidato> candidatos;
 
     public Prestacion(String nombre) {
