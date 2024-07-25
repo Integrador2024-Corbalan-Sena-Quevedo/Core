@@ -26,7 +26,7 @@ public class UsuarioService implements IUsuarioService{
     public boolean existeUsuario(Usuario usuario, List<Usuario> usuariosLista){
 
         for(Usuario usuarioAux : usuariosLista){
-            if(usuarioAux.getNombreUsuario().equals(usuario.getNombreUsuario())){
+            if(usuarioAux.getUsername().equals(usuario.getUsername())){
                 return true;
             }
         }
@@ -42,7 +42,7 @@ public class UsuarioService implements IUsuarioService{
     public Usuario getUsuario(String nombre) {
         List<Usuario> lista = usuarioRepository.findAll();
         for(Usuario usuarioAux : lista){
-            if(usuarioAux.getNombreUsuario().equals(nombre)){
+            if(usuarioAux.getUsername().equals(nombre)){
                 return usuarioAux;
             }
         }

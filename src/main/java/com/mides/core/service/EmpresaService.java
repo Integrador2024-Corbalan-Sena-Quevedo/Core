@@ -17,7 +17,9 @@ public class EmpresaService implements  IEmpresaSevice{
     IEmpresaRepository empresaRepository;
     @Override
     public void saveEmpresa(Empresa empresa) {
-        empresaRepository.save(empresa);
+        if(empresaRepository.getEmpresaByRut(empresa.getRut()).isEmpty()){
+            empresaRepository.save(empresa);
+        }
     }
 
     @Override
