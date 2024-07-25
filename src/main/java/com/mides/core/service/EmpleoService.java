@@ -64,9 +64,8 @@ public class EmpleoService implements IEmpleoService{
             empleo.setRemuneracionOfrecida(row.get("Detalle salarial:"));
             empleo.setTipoRemuneracion(row.get("La remuneración ofrecida es:"));
             empleo.setTipoRemuneracionOtro(row.get("La remuneración ofrecida es: - Otros"));
-
-
         }
+        empleo.setCategoria("Sin definir");
         empleo.setEmpresa(empresa);
         this.saveEmpleo(empleo);
         return empleo;
