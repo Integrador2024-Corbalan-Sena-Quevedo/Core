@@ -8,10 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.sql.Date;
 import java.util.List;
 
 @Getter
@@ -19,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@DiscriminatorValue("Candidato")
 public class Candidato extends Cliente{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -77,7 +76,7 @@ public class Candidato extends Cliente{
     )
     private List<Apoyo> apoyos;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
-    private Encuesta encuesta;
+    private EncuestaCandidato encuestaCandidato;
 
 
 }

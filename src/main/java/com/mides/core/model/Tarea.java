@@ -14,6 +14,7 @@ public abstract class Tarea {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nombre;
+    private String otras;
 
     @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL)
     private List<DetalleTarea> detalleTarea;

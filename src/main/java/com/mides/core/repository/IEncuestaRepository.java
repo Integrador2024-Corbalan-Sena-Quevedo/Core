@@ -1,7 +1,7 @@
 package com.mides.core.repository;
 
-import com.mides.core.model.Encuesta;
+import com.mides.core.model.EncuestaCandidato;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IEncuestaRepository extends JpaRepository<Encuesta, Long> {
+public interface IEncuestaRepository extends JpaRepository<EncuestaCandidato, Long> {
 }
