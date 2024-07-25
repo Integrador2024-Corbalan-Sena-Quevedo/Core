@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Empleo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -18,6 +20,7 @@ public class Empleo {
     private String departamento;
     private String localidades;
     @OneToMany(mappedBy = "empleo", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Tarea> tareas;
     private String trabajoAlExterior;
     private String implicaDesplazamientos;
@@ -44,10 +47,9 @@ public class Empleo {
     private String tipoRemuneracionOtro;
     private String categoria;
     @OneToOne(mappedBy = "empleo", cascade = CascadeType.ALL)
-    private ConocimientosEspecificosEmpleo ConocimientosEspecificosEmpleo;
+    @JsonManagedReference
+    private ConocimientosEspecificosEmpleo conocimientosEspecificosEmpleo;
     @ManyToOne
     @JoinColumn(name = "empresaId", referencedColumnName = "id")
     private Empresa empresa;
-
-
 }

@@ -9,4 +9,7 @@ import java.util.Map;
 public interface IEmpresaSevice {
     void saveEmpresa(Empresa empresa);
     Empresa processEmpresa(List<Map<String, String>> csvData);
+
+    Empresa findEmpresaByRut(String rut);
+    Empresa findEmpresaById(Long id);
 }

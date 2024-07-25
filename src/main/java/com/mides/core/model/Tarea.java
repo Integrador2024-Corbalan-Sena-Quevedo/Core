@@ -1,5 +1,7 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.DetalleTarea;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,9 +19,11 @@ public abstract class Tarea {
     private String otras;
 
     @OneToMany(mappedBy = "tarea", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<DetalleTarea> detalleTarea;
     @ManyToOne
     @JoinColumn(name = "empleo_id")
+    @JsonBackReference
     private Empleo empleo;
 
     public Tarea(String nombre, List<DetalleTarea> detalles) {

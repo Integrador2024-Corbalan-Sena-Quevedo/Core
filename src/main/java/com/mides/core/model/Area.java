@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class Area {
     private Long id;
     private String nombre;
     @ManyToMany(mappedBy = "areas")
+    @JsonBackReference
     private List<Candidato> candidatos;
 
     public Area(String nombre) {

@@ -1,6 +1,7 @@
 package com.mides.core.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,5 +29,6 @@ public class Habilidad {
     private int otrasHabilidades;
     @OneToOne
     @JoinColumn(name = "candidato_id", referencedColumnName = "id")
+    @JsonBackReference
     private Candidato candidato;
 }

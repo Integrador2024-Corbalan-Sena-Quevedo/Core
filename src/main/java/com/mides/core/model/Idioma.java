@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class Idioma {
     private String nombre;
 
     @OneToMany(mappedBy = "idioma", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<CandidatoIdioma> candidatoIdiomas;
 
 

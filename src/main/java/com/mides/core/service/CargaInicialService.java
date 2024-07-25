@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
-import static com.mides.core.model.Constant.CANDIDATO_PRECARGA;
+import static com.mides.core.constant.Constant.CANDIDATO_PRECARGA;
 
 @Service
 @Component
