@@ -2,10 +2,14 @@ package com.mides.core.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,8 +30,9 @@ public class Candidato extends Cliente{
     private String apellido;
     private String sexo;
     private String identidadGenero;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE) // Especifica que la columna es de tipo DATE
-    private LocalDate fechaDeNacimiento;
+    private LocalDate fecha_de_nacimiento;
     private String estadoCivil;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -74,8 +79,8 @@ public class Candidato extends Cliente{
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     @JsonManagedReference
     private DisponibilidadHoraria disponibilidadHoraria;
-    @JsonManagedReference
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private ExperienciaLaboral experienciaLaboral;
     @ManyToMany
     @JoinTable(
@@ -89,14 +94,34 @@ public class Candidato extends Cliente{
     @JsonManagedReference
     private EncuestaCandidato encuestaCandidato;
 
-
     @Override
     public String toString() {
         return "Candidato{" +
                 "id=" + id +
                 ", documento='" + documento + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
+                ", sexo='" + sexo + '\'' +
+                ", identidadGenero='" + identidadGenero + '\'' +
+                ", fechaDeNacimiento=" + fecha_de_nacimiento +
+                ", estadoCivil='" + estadoCivil + '\'' +
+                ", emails=" + this.getEmails() +
+                ", dirreccion=" + this.getDirreccion() +
+                ", telefonos=" + this.getTelefonos() +
+                ", educacion=" + educacion +
+                ", habilidad=" + habilidad +
+                ", salud=" + salud +
+                ", candidatoIdiomas=" + candidatoIdiomas +
+                ", datosAdicionalesCandidato=" + datosAdicionalesCandidato +
+                ", ayudaTecnicas=" + ayudaTecnicas +
+                ", prestaciones=" + prestaciones +
+                ", areas=" + areas +
+                ", discapacidad=" + discapacidad +
+                ", disponibilidadHoraria=" + disponibilidadHoraria +
+                ", experienciaLaboral=" + experienciaLaboral +
+                ", apoyos=" + apoyos +
+                ", encuesta=" + this.getEncuestaCandidato() +
                 '}';
     }
 }

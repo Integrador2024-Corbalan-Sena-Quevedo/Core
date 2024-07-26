@@ -24,7 +24,19 @@ public abstract class Cliente {
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Dirreccion dirreccion;
+    @JsonManagedReference
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Telefono> telefonos;
+
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", emails=" + emails +
+                ", dirreccion=" + dirreccion +
+                ", telefonos=" + telefonos +
+                '}';
+    }
 }

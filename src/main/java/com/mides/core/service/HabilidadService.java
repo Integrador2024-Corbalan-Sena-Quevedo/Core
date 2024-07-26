@@ -41,14 +41,14 @@ public class HabilidadService implements IHabilidadService {
     public void processHabilidad(List<Map<String, String>> csvData, Candidato candidato) {
         Habilidad habilidad = new Habilidad();
         for (Map<String, String> row : csvData) {
-            habilidad.setPowerPoint(Integer.parseInt(row.get("PowerPoint")));
+            habilidad.setPower_point(Integer.parseInt(row.get("PowerPoint")));
             habilidad.setWord(Integer.parseInt(row.get("Word")));
             habilidad.setExcel(Integer.parseInt(row.get("Excel")));
             habilidad.setInternet(Integer.parseInt(row.get("Internet")));
             habilidad.setLSU(Integer.parseInt(row.get("LSU")));
-            habilidad.setManejoDeDinero(Integer.parseInt(row.get("Otras_habilidades - Maneja el dinero")));
-            habilidad.setAutonomiaEnTransportePublico(Integer.parseInt(row.get("Otras_habilidades - Autonomía en el transporte público")));
-            habilidad.setImagenPersonal(Integer.parseInt(row.get("Otras_habilidades - Imagen personal")));
+            habilidad.setManejo_de_dinero(Integer.parseInt(row.get("Otras_habilidades - Maneja el dinero")));
+            habilidad.setAutonomia_en_transporte_publico(Integer.parseInt(row.get("Otras_habilidades - Autonomía en el transporte público")));
+            habilidad.setImagen_personal(Integer.parseInt(row.get("Otras_habilidades - Imagen personal")));
             habilidad.setOtrasHabilidades(Integer.parseInt(row.get("Otras_habilidades - Ninguna de las anteriores")));
             habilidad.setDescripcion(row.get("Desc_otras_hab"));
             habilidad.setCandidato(candidato);

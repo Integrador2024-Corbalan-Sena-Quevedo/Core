@@ -71,7 +71,7 @@ public class CandidatoService implements ICandidatoSevice{
             candidato.setIdentidadGenero(row.get("Id_genero"));
             candidato.setEstadoCivil(row.get("Est_civil"));
             LocalDate fechaNacimiento = LocalDate.parse(row.get("Fecha_de_nacimiento"), fechaNacimientoFormato);
-            candidato.setFechaDeNacimiento(fechaNacimiento);
+            candidato.setFecha_de_nacimiento(fechaNacimiento);
             candidato.setAyudaTecnicas(getAyudaTecnicas(csvData, ayudaTecnicas));
             candidato.setPrestaciones(getPrestaciones(csvData,prestaciones));
             candidato.setApoyos(getApoyos(csvData, apoyos));
