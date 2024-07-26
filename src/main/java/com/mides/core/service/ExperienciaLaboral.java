@@ -1,5 +1,7 @@
 package com.mides.core.service;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.model.Actitud;
 import com.mides.core.model.Candidato;
 import com.mides.core.model.GustoLaboral;
@@ -33,6 +35,7 @@ public class ExperienciaLaboral {
     private String tipoDeTrabajoOtros;
     @OneToOne
     @JoinColumn(name = "candidato_id", referencedColumnName = "id")
+    @JsonBackReference
     private Candidato candidato;
     @ManyToMany
     @JoinTable(
@@ -40,6 +43,7 @@ public class ExperienciaLaboral {
             joinColumns = @JoinColumn(name = "experienciaLaboral_id"),
             inverseJoinColumns = @JoinColumn(name = "motivoDesempleo_id")
     )
+    @JsonManagedReference
     private List<MotivoDesempleo> motivosDesempleo;
 
     @ManyToMany
@@ -48,8 +52,10 @@ public class ExperienciaLaboral {
             joinColumns = @JoinColumn(name = "experienciaLaboral_id"),
             inverseJoinColumns = @JoinColumn(name = "gustoLaboral_id")
     )
+    @JsonManagedReference
     private List<GustoLaboral> gustosLaborales;
     @OneToMany(mappedBy = "experienciaLaboral", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private  List<Actitud> actitudes;
 
 }

@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class TipoDiscapacidad {
     private String descripcion;
 
     @ManyToMany(mappedBy = "tipoDiscapacidades")
+    @JsonBackReference
     private List<Discapacidad> discapacidades;
 
     public TipoDiscapacidad(String nombre, String descripcion) {

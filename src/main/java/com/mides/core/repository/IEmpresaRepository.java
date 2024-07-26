@@ -10,4 +10,6 @@ public interface IEmpresaRepository extends JpaRepository<Empresa, Long> {
 
     @Query(value = "SELECT * FROM empresa WHERE rut = ?", nativeQuery = true)
     List<Empresa> getEmpresaByRut(String rut);
+
+
 }

@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class Actitud {
     private String observacionDeActiud;
     @ManyToOne
     @JoinColumn(name = "experienciaLaboral_id", referencedColumnName = "id")
+    @JsonBackReference
     private ExperienciaLaboral experienciaLaboral;
 
 

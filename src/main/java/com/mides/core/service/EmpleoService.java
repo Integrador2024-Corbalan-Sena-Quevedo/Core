@@ -1,22 +1,42 @@
 package com.mides.core.service;
 
-import com.mides.core.model.ConocimientosEspecificosEmpleo;
-import com.mides.core.model.Empleo;
-import com.mides.core.model.Empresa;
-import com.mides.core.model.Tarea;
+import com.mides.core.dto.EmpleoDTO;
+import com.mides.core.dto.EmpresaDTO;
+import com.mides.core.model.*;
+import com.mides.core.repository.ICandidatoRepositoy;
 import com.mides.core.repository.IConocimientosEspecificosEmpleoRepository;
 import com.mides.core.repository.IEmpleoRepository;
+import com.mides.core.request.EmpleoRequest;
+import lombok.NoArgsConstructor;
+import org.apache.el.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
+@NoArgsConstructor
 public class EmpleoService implements IEmpleoService{
 
     @Autowired
     IEmpleoRepository empleoRepository;
+    @Autowired
+    ICandidatoRepositoy candidatoRepositoy;
+    @Autowired
+    IChatGPTService chatGPTService;
+
+    @Autowired
+    IPdfService pdfService;
 
     @Autowired
     IConocimientosEspecificosEmpleoRepository conocimientosEspecificosEmpleoRepository;
@@ -94,6 +114,143 @@ public class EmpleoService implements IEmpleoService{
         conocimientosEspecificosEmpleo.setEmpleo(empleo);
         this.saveConocimientoEspecificosEmplep(conocimientosEspecificosEmpleo);
 
+    }
+
+    @Override
+    public List<Candidato> getCandidatosParaEmpleo(Empleo empleo, List<Candidato> candidatos) {
+        QueryFilterEmpleo queryFilterEmpleo = new QueryFilterEmpleo();
+        queryFilterEmpleo.setRemuneracionOfrecida(empleo.getRemuneracionOfrecida());
+        if (empleo.getRemuneracionOfrecida() != null) {
+            queryFilterEmpleo.setRemuneracionOfrecida(empleo.getRemuneracionOfrecida());
+        }
+
+        if (empleo.getConocimientosEspecificosEmpleo() != null) {
+            String ingles = empleo.getConocimientosEspecificosEmpleo().getIngles();
+            queryFilterEmpleo.setIngles("SI".equalsIgnoreCase(ingles) ? ingles : "");
+
+            String portugues = empleo.getConocimientosEspecificosEmpleo().getPortgues();
+            queryFilterEmpleo.setPortugues("SI".equalsIgnoreCase(portugues) ? portugues : "");
+
+            String computacion = empleo.getConocimientosEspecificosEmpleo().getComputacion();
+            queryFilterEmpleo.setComputacion(computacion != null ? computacion : "");
+        }
+
+        if (empleo.getCargaHorariaSemanal() != null) {
+            String cargaHoraria = empleo.getCargaHorariaSemanal().replaceAll("[^\\d]", "");
+            queryFilterEmpleo.setCargaHorariaSemanal(cargaHoraria);
+        }
+        queryFilterEmpleo.setDepartamento(empleo.getDepartamento() != null ? empleo.getDepartamento() : "");
+        queryFilterEmpleo.setExperienciaMinima(empleo.getExperienciaPrevia() != null ? empleo.getExperienciaPrevia() : "");
+        queryFilterEmpleo.setLocalidades(empleo.getLocalidades() != null ? empleo.getLocalidades() : "");
+        queryFilterEmpleo.setLibretaConducir(empleo.getLibretaConducir() != null ? empleo.getLibretaConducir() : "");
+        queryFilterEmpleo.setImplicaDesplazamientos(empleo.getImplicaDesplazamientos() != null ? empleo.getImplicaDesplazamientos() : "");
+        queryFilterEmpleo.setFormacionAcademica(empleo.getFormacionAcademica() != null ? empleo.getFormacionAcademica() : "");
+        if (empleo.getRangoDeEdad() != null && !empleo.getRangoDeEdad().equals("")) {
+            int[] ageRange = extractAgeRange(empleo.getRangoDeEdad());
+            queryFilterEmpleo.setEdadMinima(ageRange[0]);
+            queryFilterEmpleo.setEdadMaxima(ageRange[1]);
+        }
+        else {
+            queryFilterEmpleo.setEdadMinima(14);
+            queryFilterEmpleo.setEdadMaxima(99);
+        }
+      return candidatoRepositoy.findCandidatosByFilter(queryFilterEmpleo);
+
+    }
+
+    public int[] extractAgeRange(String rangoDeEdad) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(rangoDeEdad);
+        List<Integer> numbers = new ArrayList<>();
+        while (matcher.find()) {
+            numbers.add(Integer.parseInt(matcher.group()));
+        }
+        if (numbers.size() == 2) {
+            return new int[]{numbers.get(0), numbers.get(1)};
+        } else {
+           return new int[]{14, 99};
+        }
+    }
+
+    @Override
+    public Empleo findById(Long id) {
+      return  empleoRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Empleo> getEmpleos() {
+        return empleoRepository.findAll();
+    }
+
+    @Override
+    public List<EmpleoDTO> getEmpleosDTO() {
+        List<EmpleoDTO> empleos = this.getEmpleos().stream().map(empleo -> {
+            EmpleoDTO empleoDTO = new EmpleoDTO();
+            empleoDTO.setId(empleo.getId());
+            empleoDTO.setNombrePuesto(empleo.getNombrePuesto());
+            empleoDTO.setTareas(empleo.getTareas());
+            empleoDTO.setEmpresaId(empleo.getEmpresa().getId());
+            empleoDTO.setEmpresaNombre(empleo.getEmpresa().getNombre());
+            empleoDTO.setCorreoEmpresa(empleo.getEmpresa().getEmails().get(0).getEmail());
+            return empleoDTO;
+        }).toList();
+
+        return empleos;
+    }
+
+    @Override
+    public ResponseEntity<?> candidatosSegueridosParaEmpleo(EmpleoRequest empleoRequest) throws IOException {
+        try {
+            List<Candidato> candidatos = candidatoRepositoy.findAllById(empleoRequest.getCandidatosId());
+
+            if (candidatos.isEmpty()){
+                return new ResponseEntity<>("No hay candidatos para sugerir", HttpStatus.OK);
+            }
+
+            List<File> pdfFiles = new ArrayList<>();
+            StringBuilder pdfContentText = new StringBuilder();
+
+            EmpleoDTO empleoDTO = obetenerEmpleoDto(empleoRequest);
+            EmpleoDTO empleoDetalleDto = crearEmpleoDTO(empleoDTO.getId());
+
+            String detalleTareaEmpelo = empleoDetalleDto.getDetalleTarea();
+
+
+            for (Candidato candidato : candidatos){
+                Resource resource = pdfService.getPdfResource(candidato.getDocumento());
+                if(resource != null){
+                    pdfFiles.add(resource.getFile());
+                }
+            }
+
+            for (File file : pdfFiles){
+                pdfContentText.append(pdfService.readPdfContent(file));
+            }
+
+            return chatGPTService.callToOpenAiApi(detalleTareaEmpelo, pdfContentText);
+
+        }catch (Exception e){
+            return new ResponseEntity<>("Ha ocurrido un error inesperado", HttpStatus.INTERNAL_SERVER_ERROR) ;
+        }
+
+    }
+
+    private EmpleoDTO crearEmpleoDTO(Long empleoId) {
+        Empleo empleo = this.findById(empleoId);
+        EmpleoDTO empleoDTO = new EmpleoDTO();
+        String detallesTarea = empleo.getTareas().stream().filter(tarea -> tarea instanceof TareaEsencial)
+                                .flatMap(tarea -> tarea.getDetalleTarea().stream())
+                                .map(detalleTarea -> detalleTarea.getDetalle())
+                                .collect(Collectors.joining(" | "));
+        empleoDTO.setDetalleTarea(detallesTarea);
+        return empleoDTO;
+    }
+
+    private EmpleoDTO obetenerEmpleoDto(EmpleoRequest empleoRequest) {
+        EmpleoDTO empleoDTO = new EmpleoDTO();
+        empleoDTO.setId(empleoRequest.getEmpleoId());
+        empleoDTO.setCandidatosId(empleoRequest.getCandidatosId());
+        return empleoDTO;
     }
 
 
