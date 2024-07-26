@@ -2,6 +2,7 @@ package com.mides.core.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
