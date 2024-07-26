@@ -26,7 +26,6 @@ public abstract class Cliente {
     private Dirreccion dirreccion;
     @JsonManagedReference
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Telefono> telefonos;
 
 
