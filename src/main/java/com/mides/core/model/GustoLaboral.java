@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class GustoLaboral {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @ManyToMany(mappedBy = "gustosLaborales")
+    @JsonBackReference
     private List<ExperienciaLaboral> experienciaLaborales;
     private String gusto;
 

@@ -2,12 +2,10 @@ package com.mides.core.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,14 +30,19 @@ public class Candidato extends Cliente{
     private LocalDate fechaDeNacimiento;
     private String estadoCivil;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Educacion educacion;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Habilidad habilidad;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Salud salud;
     @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CandidatoIdioma> candidatoIdiomas ;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private DatosAdicionalesCandidato datosAdicionalesCandidato;
     @ManyToMany
     @JoinTable(
@@ -47,6 +50,7 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "ayuda_id")
     )
+    @JsonManagedReference
     private List<AyudaTecnica> ayudaTecnicas;
     @ManyToMany
     @JoinTable(
@@ -54,6 +58,7 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "prestacion_id")
     )
+    @JsonManagedReference
     private List<Prestacion> prestaciones;
     @ManyToMany
     @JoinTable(
@@ -61,11 +66,15 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "area_id")
     )
+    @JsonManagedReference
     private List<Area> areas;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Discapacidad discapacidad;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private DisponibilidadHoraria disponibilidadHoraria;
+    @JsonManagedReference
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     private ExperienciaLaboral experienciaLaboral;
     @ManyToMany
@@ -74,9 +83,20 @@ public class Candidato extends Cliente{
             joinColumns = @JoinColumn(name = "candidato_id"),
             inverseJoinColumns = @JoinColumn(name = "apoyo_id")
     )
+    @JsonManagedReference
     private List<Apoyo> apoyos;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private EncuestaCandidato encuestaCandidato;
 
 
+    @Override
+    public String toString() {
+        return "Candidato{" +
+                "id=" + id +
+                ", documento='" + documento + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                '}';
+    }
 }

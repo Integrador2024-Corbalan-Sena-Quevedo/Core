@@ -1,7 +1,11 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -24,7 +28,6 @@ public class ConocimientosEspecificosEmpleo {
     private String lee;
     @OneToOne
     @JoinColumn(name = "empleo_id", referencedColumnName = "id")
+    @JsonBackReference
     private Empleo empleo;
-
-
 }

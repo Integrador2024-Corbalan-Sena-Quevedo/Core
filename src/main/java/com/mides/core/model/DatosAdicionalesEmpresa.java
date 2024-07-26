@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,5 +19,6 @@ public class DatosAdicionalesEmpresa {
     private LocalDate fechaRespuesta;
     @OneToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    @JsonBackReference
     private Empresa empresa;
 }
