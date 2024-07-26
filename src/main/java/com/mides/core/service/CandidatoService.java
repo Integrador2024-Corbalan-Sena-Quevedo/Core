@@ -23,7 +23,7 @@ public class CandidatoService implements ICandidatoSevice{
     ICandidatoRepositoy candidatoRepositoy;
     @Override
     public List<Candidato> getCandidatos() {
-        return null;
+        return candidatoRepositoy.findAll();
     }
 
     @Override
@@ -38,8 +38,13 @@ public class CandidatoService implements ICandidatoSevice{
     }
 
     @Override
-    public Candidato findCandidato(Long id) {
-      return  candidatoRepositoy.findById(id).orElse(null);
+    public Candidato findCandidato(String documento) {
+      return  candidatoRepositoy.getCandidatoPorCI(documento);
+    }
+
+    @Override
+    public Candidato findCandidatoById(Long id) {
+        return  candidatoRepositoy.findById(id).orElse(null);
     }
 
     @Override

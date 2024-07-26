@@ -1,7 +1,5 @@
 package com.mides.core.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

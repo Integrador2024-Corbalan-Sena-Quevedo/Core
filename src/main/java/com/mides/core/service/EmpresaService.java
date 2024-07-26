@@ -6,6 +6,7 @@ import com.mides.core.repository.IEmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.InsetsUIResource;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -37,4 +38,16 @@ public class EmpresaService implements  IEmpresaSevice{
         this.saveEmpresa(empresa);
         return  empresa;
     }
+
+    @Override
+    public Empresa findEmpresaByRut(String rut) {
+        return empresaRepository.getEmpresaByRut(rut).get(0);
+    }
+
+    @Override
+    public Empresa findEmpresaById(Long id) {
+        return  empresaRepository.findById(id).orElse(null);
+    }
+
+
 }

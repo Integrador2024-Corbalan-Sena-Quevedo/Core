@@ -1,5 +1,6 @@
 package com.mides.core.service;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mides.core.model.Tarea;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,6 +14,7 @@ public class DetalleTarea {
      private String detalle;
      @ManyToOne
      @JoinColumn(name = "tarea_id", referencedColumnName = "id")
+     @JsonBackReference
      private Tarea tarea;
 
 }

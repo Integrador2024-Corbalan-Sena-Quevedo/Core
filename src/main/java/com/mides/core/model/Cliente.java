@@ -2,10 +2,7 @@ package com.mides.core.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public abstract class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -28,6 +26,7 @@ public abstract class Cliente {
     private Dirreccion dirreccion;
     @JsonManagedReference
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Telefono> telefonos;
 
 
