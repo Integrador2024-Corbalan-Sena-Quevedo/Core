@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 
 @Service
 public class Pdfservice  implements IPdfService {
@@ -38,4 +40,22 @@ public class Pdfservice  implements IPdfService {
             }
             return null;
     }
+    @Override
+    public Resource base64AsPdf(String nombre, String cvBase64){
+        try {
+            byte[] pdfData = Base64.getDecoder().decode(cvBase64);
+            String filename = nombre + "Cv.pdf";
+            return new NamedByteArrayResource(pdfData, filename);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir la cadena Base64 a PDF", e);
+        }
+    }
+
+    @Override
+    public byte[] pdfAsBase64(MultipartFile file) throws IOException {
+
+        byte[] pdfData = Base64.getEncoder().encode(file.getBytes());
+        return pdfData;
+    }
+
 }

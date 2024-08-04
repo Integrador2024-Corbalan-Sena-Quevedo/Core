@@ -1,7 +1,5 @@
 package com.mides.core.request;
 
-import com.mides.core.dto.CandidatoDTO;
-import com.mides.core.dto.EmpresaDTO;
 import lombok.Data;
 
 import java.util.List;

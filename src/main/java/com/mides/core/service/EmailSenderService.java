@@ -1,14 +1,13 @@
 package com.mides.core.service;
 
-import com.mides.core.dto.CandidatoDTO;
 import com.mides.core.dto.EmailDTO;
-import com.mides.core.dto.EmpresaDTO;
 import com.mides.core.model.Candidato;
 import com.mides.core.constant.Constant;
 import com.mides.core.model.Empresa;
 import com.mides.core.repository.IParametersRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -52,7 +51,7 @@ public class EmailSenderService {
         try {
             for (Candidato candidato : candidatos) {
                 Candidato candidatoBase = candidatoSevice.findCandidato(candidato.getDocumento());
-                Resource resource = pdfService.getPdfResource(candidatoBase.getDocumento());
+                Resource resource = pdfService.base64AsPdf(candidatoBase.getNombre(),candidatoBase.getCsvBase64());
                 if (resource != null) {
                     resources.add(resource);
                 }
@@ -74,12 +73,12 @@ public class EmailSenderService {
             helper.setTo(emailDTO.getToEmail());
             helper.setSubject(emailDTO.getSubject());
             helper.setText(emailDTO.getBody());
-            for (Resource resource : resources){
-                helper.addAttachment(Objects.requireNonNull(resource.getFilename()), resource.getFile());
+            for (Resource resource : resources) {
+                ByteArrayDataSource dataSource = new ByteArrayDataSource(resource.getInputStream(), "application/pdf");
+                helper.addAttachment(resource.getFilename(), dataSource);
             }
             mailSender.send(message);
         }
-
     }
 
 

@@ -28,9 +28,7 @@ public class CandidatoService implements ICandidatoSevice{
 
     @Override
     public void saveCandidato(Candidato candidato) {
-        if(candidatoRepositoy.getCandidatoPorCI(candidato.getDocumento()) == null){
             candidatoRepositoy.save(candidato);
-        }
     }
 
     @Override
@@ -51,6 +49,12 @@ public class CandidatoService implements ICandidatoSevice{
     public void editCandidato(Candidato candidato) {
 
     }
+    @Transactional
+    @Override
+    public void deleteCv(Long id) {
+        candidatoRepositoy.deleteCv(id);
+    }
+
 
     @Override
 //    @Transactional
