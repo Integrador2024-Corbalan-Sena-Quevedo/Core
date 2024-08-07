@@ -96,6 +96,8 @@ public class Candidato extends Cliente{
     private EncuestaCandidato encuestaCandidato;
     @Column(columnDefinition = "TEXT")
     private String csvBase64;
+    @OneToMany
+    private List<Seguimiento> seguimientos;
 
     @Override
     public String toString() {
