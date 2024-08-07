@@ -192,6 +192,9 @@ public class EmpleoService implements IEmpleoService{
             empleoDTO.setEmpresaId(empleo.getEmpresa().getId());
             empleoDTO.setEmpresaNombre(empleo.getEmpresa().getNombre());
             empleoDTO.setCorreoEmpresa(empleo.getEmpresa().getEmails().get(0).getEmail());
+            empleoDTO.setLocalidad(empleo.getLocalidades());
+            empleoDTO.setIdEncuesta(empleo.getEmpresa().getEncuestaEmpresa().getIdEncuesta());
+            empleoDTO.setActivo(empleo.getActivo());
             return empleoDTO;
         }).toList();
 
@@ -233,6 +236,11 @@ public class EmpleoService implements IEmpleoService{
             return new ResponseEntity<>("Ha ocurrido un error inesperado", HttpStatus.INTERNAL_SERVER_ERROR) ;
         }
 
+    }
+
+    @Override
+    public void updateActive(int i, Long id) {
+        empleoRepository.updateActive(i, id);
     }
 
     private EmpleoDTO crearEmpleoDTO(Long empleoId) {
