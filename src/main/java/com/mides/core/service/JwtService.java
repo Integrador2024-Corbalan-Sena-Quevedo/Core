@@ -25,7 +25,7 @@ public class JwtService {
     private String getToken(Map<String, Object> extaClaims, UserDetails usuario) {
         return Jwts.builder().setClaims(extaClaims).setSubject(usuario.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*800))
                 .signWith(getKey(), SignatureAlgorithm.HS256).compact();
     }
 

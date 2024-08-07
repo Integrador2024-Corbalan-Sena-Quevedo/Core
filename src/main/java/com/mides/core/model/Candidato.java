@@ -93,6 +93,8 @@ public class Candidato extends Cliente{
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     @JsonManagedReference
     private EncuestaCandidato encuestaCandidato;
+    @OneToMany
+    private List<Seguimiento> seguimientos;
 
     @Override
     public String toString() {
