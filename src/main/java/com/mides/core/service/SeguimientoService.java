@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +51,12 @@ public class SeguimientoService implements ISeguimientoService {
     @Override
     @Transactional
     public void processSeguimiento(SeguimientoDTO seguimientoDTO) {
-        Seguimiento seguimiento = new Seguimiento();
+        Seguimiento seguimiento  = seguimientoRepository.findByEmpleoIdAndCandidatoId(seguimientoDTO.getEmpleoId(), seguimientoDTO.getDocumentoEmpleado());
+
+        if (seguimiento == null) {
+            seguimiento = new Seguimiento();
+        }
+
         if (seguimientoDTO.getSeguimientoId() != null){
             seguimiento.setId(seguimientoDTO.getSeguimientoId());
         }
@@ -68,6 +74,7 @@ public class SeguimientoService implements ISeguimientoService {
             seguimiento.setTelefonoEmpleado(cel);
             seguimiento.setNombreEmpleado(candidato.getNombre() + " " + candidato.getApellido());
             seguimiento.setDocumentoEmpleado(candidato.getDocumento());
+            seguimiento.setFechaIngresoEmpleado(seguimientoDTO.getFechaIngresoEmpleado());
         }
 
         Empresa empresa = empresaSevice.findEmpresaById(seguimientoDTO.getEmpresaId());
@@ -101,7 +108,6 @@ public class SeguimientoService implements ISeguimientoService {
 
     @Override
     public List<SeguimientoDTO> getSeguimientosDTO() {
-
         List<SeguimientoDTO> seguimientos = seguimientoRepository.findAll().stream().map(seguimiento -> {
             List<String> detalleSeguimiento = seguimiento.getDetalleSeguimientos().stream()
                     .map(DetalleSeguimiento::getDetalle)
