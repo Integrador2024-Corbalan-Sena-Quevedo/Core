@@ -24,4 +24,6 @@ public interface IEmpleoService {
     List<EmpleoDTO> getEmpleosDTO();
 
     ResponseEntity<?> candidatosSegueridosParaEmpleo(EmpleoRequest empleoRequest) throws IOException;
+
+    void updateActive(int i, Long id);
 }

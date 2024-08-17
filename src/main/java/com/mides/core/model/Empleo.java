@@ -52,4 +52,7 @@ public class Empleo {
     @ManyToOne
     @JoinColumn(name = "empresaId", referencedColumnName = "id")
     private Empresa empresa;
+    private int activo;
+    @OneToMany
+    private List<Seguimiento> seguimientos;
 }

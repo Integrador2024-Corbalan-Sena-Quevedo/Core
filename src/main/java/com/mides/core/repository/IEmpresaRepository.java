@@ -12,4 +12,6 @@ public interface IEmpresaRepository extends JpaRepository<Empresa, Long> {
     List<Empresa> getEmpresaByRut(String rut);
 
 
+    @Query(value = "UPDATE empresa SET cvs_enviados = ? WHERE id = ?", nativeQuery = true)
+    void updateCvEnviados(int size, Long empresaId);
 }

@@ -14,5 +14,6 @@ public interface ICandidatoSevice {
     Candidato findCandidato(String documento);
     Candidato findCandidatoById(Long id);
     void editCandidato(Candidato candidato);
+    void deleteCv(Long id);
     Candidato processCandidato(List<Map<String, String>>  csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones, List<Area> areas, List<Apoyo> apoyos) throws ParseException;
 }
