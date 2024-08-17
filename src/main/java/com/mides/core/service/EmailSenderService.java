@@ -58,6 +58,7 @@ public class EmailSenderService {
             }
             if(!resources.isEmpty()){
                 sendEmailWithCv(emailDTO, resources);
+                empresaSevice.updateCvEnviados(resources.size(),empresaId);
             }
         }catch(MessagingException | IOException e){
             e.printStackTrace();

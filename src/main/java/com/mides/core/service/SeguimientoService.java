@@ -1,5 +1,8 @@
 package com.mides.core.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mides.core.dto.DetalleSeguimientoDTO;
 import com.mides.core.dto.SeguimientoDTO;
 import com.mides.core.model.*;
 import com.mides.core.repository.IDetalleSeguimientoRepository;
@@ -60,9 +63,19 @@ public class SeguimientoService implements ISeguimientoService {
         if (seguimientoDTO.getSeguimientoId() != null){
             seguimiento.setId(seguimientoDTO.getSeguimientoId());
         }
-        List<DetalleSeguimiento> detallesSeguimiento = processDetalleSeguimiento(seguimientoDTO);
+        List<DetalleSeguimiento> detallesSeguimiento = processDetalleSeguimiento(seguimientoDTO, seguimiento.getDetalleSeguimientos());
 
-        seguimiento.setDetalleSeguimientos(detallesSeguimiento);
+        if (seguimiento.getDetalleSeguimientos() == null) {
+            seguimiento.setDetalleSeguimientos(new ArrayList<>());
+        } else {
+            seguimiento.getDetalleSeguimientos().clear();
+        }
+
+        seguimiento.getDetalleSeguimientos().addAll(detallesSeguimiento);
+
+        for (DetalleSeguimiento detalleSeguimiento : detallesSeguimiento) {
+            detalleSeguimiento.setSeguimiento(seguimiento);
+        }
 
         Candidato candidato = candidatoSevice.findCandidato(seguimientoDTO.getDocumentoEmpleado());
         if (candidato != null) {
@@ -90,9 +103,7 @@ public class SeguimientoService implements ISeguimientoService {
         seguimiento.setEmailEncargado(seguimientoDTO.getEmailEncargado());
 
 
-        for (DetalleSeguimiento detalleSeguimiento : detallesSeguimiento) {
-            detalleSeguimiento.setSeguimiento(seguimiento);
-        }
+
 
         Empleo empleo = empleoService.findById(seguimientoDTO.getEmpleoId());
         if (empleo != null){
@@ -109,9 +120,16 @@ public class SeguimientoService implements ISeguimientoService {
     @Override
     public List<SeguimientoDTO> getSeguimientosDTO() {
         List<SeguimientoDTO> seguimientos = seguimientoRepository.findAll().stream().map(seguimiento -> {
-            List<String> detalleSeguimiento = seguimiento.getDetalleSeguimientos().stream()
-                    .map(DetalleSeguimiento::getDetalle)
+            List<DetalleSeguimientoDTO> detalleSeguimientosDTO = seguimiento.getDetalleSeguimientos().stream()
+                    .map(detalleSeguimiento -> {
+                        DetalleSeguimientoDTO detalleDTO = new DetalleSeguimientoDTO();
+                        detalleDTO.setDetalle(detalleSeguimiento.getDetalle());
+                        detalleDTO.setOperadorLaboral(detalleSeguimiento.getUsuario());
+                        detalleDTO.setFechaDetalle(detalleSeguimiento.getFecha());
+                        return detalleDTO;
+                    })
                     .collect(Collectors.toList());
+
             SeguimientoDTO seguimientoDTO = new SeguimientoDTO();
             seguimientoDTO.setSeguimientoId(seguimiento.getId());
             seguimientoDTO.setDocumentoEmpleado(seguimiento.getDocumentoEmpleado());
@@ -128,19 +146,31 @@ public class SeguimientoService implements ISeguimientoService {
             seguimientoDTO.setEmpleoId(seguimiento.getEmpleo().getId());
             seguimientoDTO.setDiscapacidades(seguimiento.getDiscapacidades());
             seguimientoDTO.setOperadorLaboral(seguimiento.getOperadorLaboral());
-            seguimientoDTO.setDetalles(detalleSeguimiento);
+            seguimientoDTO.setDetalles(detalleSeguimientosDTO);
             return seguimientoDTO;
         }).collect(Collectors.toList());
 
         return seguimientos;
     }
 
+    @Override
+    public void processUpdateSeguimiento(DetalleSeguimientoDTO detalleSeguimiento) {
+        Seguimiento seguimiento = seguimientoRepository.findById(detalleSeguimiento.getSeguimientoId()).orElse(null);
+        if(seguimiento != null){
+            DetalleSeguimiento detalleSeguimientoNuevo = new DetalleSeguimiento(detalleSeguimiento.getDetalle(),detalleSeguimiento.getFechaDetalle(), detalleSeguimiento.getOperadorLaboral(),seguimiento);
+            seguimiento.getDetalleSeguimientos().add(detalleSeguimientoNuevo);
+            seguimientoRepository.save(seguimiento);
+        }
+
+    }
+
 
     @Transactional
-    private List<DetalleSeguimiento> processDetalleSeguimiento(SeguimientoDTO seguimientoDTO) {
+    private List<DetalleSeguimiento> processDetalleSeguimiento(SeguimientoDTO seguimientoDTO, List<DetalleSeguimiento> detalleSeguimientosAux) {
         List<DetalleSeguimiento> detalleSeguimientos = new ArrayList<>();
-        for (String detalle : seguimientoDTO.getDetalles()) {
-            DetalleSeguimiento detalleSeguimiento = new DetalleSeguimiento(detalle, LocalDate.now());
+
+        for (DetalleSeguimientoDTO detalle : seguimientoDTO.getDetalles()) {
+            DetalleSeguimiento detalleSeguimiento = new DetalleSeguimiento(detalle.getDetalle(), LocalDate.now());
             detalleSeguimientos.add(detalleSeguimiento);
         }
         return detalleSeguimientos;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -47,6 +48,19 @@ public class Pdfservice  implements IPdfService {
             String filename = nombre + "Cv.pdf";
             return new NamedByteArrayResource(pdfData, filename);
         } catch (Exception e) {
+            throw new RuntimeException("Error al convertir la cadena Base64 a PDF", e);
+        }
+    }
+
+    public File base64AsPdfFile(String nombre, String cvBase64) {
+        try {
+            byte[] pdfData = Base64.getDecoder().decode(cvBase64);
+            File tempFile = File.createTempFile(nombre + "Cv", ".pdf");
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(pdfData);
+            }
+            return tempFile;
+        } catch (IOException e) {
             throw new RuntimeException("Error al convertir la cadena Base64 a PDF", e);
         }
     }

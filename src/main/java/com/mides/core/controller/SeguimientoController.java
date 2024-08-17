@@ -1,5 +1,6 @@
 package com.mides.core.controller;
 
+import com.mides.core.dto.DetalleSeguimientoDTO;
 import com.mides.core.dto.SeguimientoDTO;
 import com.mides.core.model.Seguimiento;
 import com.mides.core.service.ISeguimientoService;
@@ -24,8 +25,8 @@ public class SeguimientoController {
     }
 
     @PatchMapping("/updateSeguimiento")
-    public ResponseEntity<?> updateSeguimiento(@RequestBody SeguimientoDTO seguimientoDTO){
-        seguimientoService.processSeguimiento(seguimientoDTO);
+    public ResponseEntity<?> updateSeguimiento(@RequestBody DetalleSeguimientoDTO detalleSeguimientoDTO){
+        seguimientoService.processUpdateSeguimiento(detalleSeguimientoDTO);
         return new  ResponseEntity<>("Seguimiento actualizado", HttpStatus.OK);
     }
 

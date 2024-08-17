@@ -18,6 +18,8 @@ public class SeguimientoDTO {
     private String nombreEmpresa;
     private String nombreEmpleo;
     private String operadorLaboral;
+    private String operadorLaboralDetalle;
+    private LocalDate fechaDetalle;
     private Long tramite;
     private String documentoEmpleado;
     private String nombreEmpleado;
@@ -26,6 +28,6 @@ public class SeguimientoDTO {
     private LocalDate fechaIngresoEmpleado;
     private String nombreEncargado;
     private String localidad;
-    private List<String> detalles;
+    private List<DetalleSeguimientoDTO> detalles;
     private String telefonoEmpleado;
 }

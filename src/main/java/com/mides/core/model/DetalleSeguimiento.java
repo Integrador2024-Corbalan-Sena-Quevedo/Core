@@ -18,6 +18,7 @@ public class DetalleSeguimiento {
     private Long id;
     private String detalle;
     private LocalDate fecha;
+    private String usuario;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seguimiento_id")
     private Seguimiento seguimiento;
@@ -25,5 +26,12 @@ public class DetalleSeguimiento {
     public DetalleSeguimiento(String detalle, LocalDate fecha) {
         this.detalle = detalle;
         this.fecha = fecha;
+    }
+
+    public DetalleSeguimiento(String detalle, LocalDate fecha, String usuario, Seguimiento seguimiento) {
+        this.detalle = detalle;
+        this.fecha = fecha;
+        this.usuario = usuario;
+        this.seguimiento = seguimiento;
     }
 }

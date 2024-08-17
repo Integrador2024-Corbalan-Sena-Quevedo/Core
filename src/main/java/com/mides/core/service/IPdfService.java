@@ -12,5 +12,6 @@ public interface IPdfService {
      String readPdfContent(File pdfFile);
      Resource getPdfResource(String documento);
       Resource base64AsPdf(String nombre, String cvBase64);
+      File base64AsPdfFile(String nombre, String cvBase64);
       byte[] pdfAsBase64(MultipartFile file) throws IOException;
 }

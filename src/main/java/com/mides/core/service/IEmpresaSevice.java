@@ -1,6 +1,5 @@
 package com.mides.core.service;
 
-import com.mides.core.model.DatosAdicionalesEmpresa;
 import com.mides.core.model.Empresa;
 
 import java.util.List;
@@ -12,4 +11,6 @@ public interface IEmpresaSevice {
 
     Empresa findEmpresaByRut(String rut);
     Empresa findEmpresaById(Long id);
+
+    void updateCvEnviados(int size, Long empresaId);
 }

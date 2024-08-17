@@ -1,5 +1,6 @@
 package com.mides.core.service;
 
+import com.mides.core.dto.DetalleSeguimientoDTO;
 import com.mides.core.dto.SeguimientoDTO;
 import com.mides.core.model.Seguimiento;
 
@@ -11,4 +12,6 @@ public interface ISeguimientoService {
 
     void processSeguimiento(SeguimientoDTO seguimientoDTO);
     List<SeguimientoDTO> getSeguimientosDTO();
+
+    void processUpdateSeguimiento(DetalleSeguimientoDTO detalleSeguimiento);
 }

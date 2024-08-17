@@ -13,6 +13,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.SignStyle;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +63,9 @@ public class CandidatoService implements ICandidatoSevice{
 //    @Transactional
     public Candidato processCandidato(List<Map<String, String>> csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones,List<Area> areas, List<Apoyo> apoyos) throws ParseException {
         Candidato candidato = new Candidato();
-        DateTimeFormatter fechaNacimientoFormato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        DateTimeFormatter fechaNacimientoFormato = DateTimeFormatter.ofPattern("[d/M/yyyy][dd/MM/yyyy]");
+
         for (Map<String, String> row : csvData) {
             if(!row.get("NroCI").isEmpty()){
                 candidato.setDocumento(row.get("NroCI"));

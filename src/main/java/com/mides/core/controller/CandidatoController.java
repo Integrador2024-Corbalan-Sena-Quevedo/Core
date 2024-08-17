@@ -52,9 +52,9 @@ public class CandidatoController {
     }
 
     @PatchMapping("/deleteCv")
-    public ResponseEntity<?> deleteCv(@RequestBody Long id) throws Exception {
+    public ResponseEntity<?> deleteCv(@RequestBody Long candidatoId) throws Exception {
         try {
-            candidatoSevice.deleteCv(id);
+            candidatoSevice.deleteCv(candidatoId);
             return ResponseEntity.ok("Cv eliminado con exito");
         }catch (Exception e){
             throw new Exception(e);

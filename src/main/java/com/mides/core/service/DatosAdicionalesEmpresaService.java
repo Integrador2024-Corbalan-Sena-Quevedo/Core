@@ -25,15 +25,20 @@ public class DatosAdicionalesEmpresaService implements  IDatosAdicionalesEmpresa
     @Override
     public void proessDatosAdicionalesEmpresa(List<Map<String, String>> csvData, Empresa empresa) {
         DatosAdicionalesEmpresa datosAdicionalesEmpresa = new DatosAdicionalesEmpresa();
-        DateTimeFormatter fechaRespuestaEmpresa = DateTimeFormatter.ofPattern("dd/MM/yy");
+        DateTimeFormatter fechaRespuestaEmpresa = DateTimeFormatter.ofPattern("[d/M/yyyy][dd/MM/yyyy]");
 
         for (Map<String, String> row : csvData){
             datosAdicionalesEmpresa.setEmpresaDesierta(Integer.parseInt(row.get("Empresa Desierta")));
             datosAdicionalesEmpresa.setEmpresaSinRespuesta(Integer.parseInt(row.get("Empresas sin repsuesta")));
             datosAdicionalesEmpresa.setEmpleadosContratadosConDiscapacidad(row.get("¿La empresa tiene contratado actualmente personas con discapacidad?:"));
             datosAdicionalesEmpresa.setTuvoEmpleadosConDiscapacidad(row.get("¿Alguna vez tuvo contratadas personas con discapacidad?:"));
-            LocalDate fechaRespuesta = LocalDate.parse(row.get("Fecha de respuesta"), fechaRespuestaEmpresa);
-            datosAdicionalesEmpresa.setFechaRespuesta(fechaRespuesta);
+            if(!row.get("Fecha de respuesta").isEmpty()){
+                LocalDate fechaRespuesta = LocalDate.parse(row.get("Fecha de respuesta"), fechaRespuestaEmpresa);
+                datosAdicionalesEmpresa.setFechaRespuesta(fechaRespuesta);
+            }else {
+                datosAdicionalesEmpresa.setFechaRespuesta(null);
+            }
+
         }
         datosAdicionalesEmpresa.setEmpresa(empresa);
         this.saveDatosAdicionalesEmpresaSerive(datosAdicionalesEmpresa);

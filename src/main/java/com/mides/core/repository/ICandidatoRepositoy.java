@@ -24,13 +24,15 @@ public interface ICandidatoRepositoy  extends JpaRepository<Candidato, Long> {
             "LEFT JOIN candidato_idioma ci ON ci.candidato_id = c.id " +
             "LEFT JOIN idioma i ON ci.idioma_id = i.id " +
             "INNER JOIN disponibilidad_horaria dh ON dh.candidato_id = c.id " +
-            "WHERE (:#{#filter.departamento} = '' OR d.departamento LIKE %:#{#filter.departamento}%) " +
-            "AND (:#{#filter.formacionAcademica} = '' OR e.nivel_educativo LIKE %:#{#filter.formacionAcademica}%) " +
-            "AND (:#{#filter.ingles} = '' OR i.nombre IS NOT NULL ) " +
-            "AND (:#{#filter.portugues} = '' OR i.nombre IS NOT NULL ) " +
-            "AND (:#{#filter.edadMinima} IS NULL OR DATE_PART('year', AGE(c.fecha_de_nacimiento )) >= :#{#filter.edadMinima}) " +
-            "AND (:#{#filter.edadMaxima} IS NULL OR DATE_PART('year', AGE(c.fecha_de_nacimiento )) <= :#{#filter.edadMaxima}) " +
-            "AND (:#{#filter.cargaHorariaSemanal} IS NULL OR :#{#filter.cargaHorariaSemanal} = '' OR ABS(CAST(SPLIT_PART(dh.horas_semanales, ' ', 1) AS INTEGER) - CAST(:#{#filter.cargaHorariaSemanal} AS INTEGER)) <= 7)" , nativeQuery = true)
+            "WHERE (d.departamento LIKE CONCAT('%', :#{#filter.departamento}, '%') OR :#{#filter.departamento} = '') " +
+            "AND (e.nivel_educativo LIKE CONCAT('%', :#{#filter.formacionAcademica}, '%') OR :#{#filter.formacionAcademica} = '') " +
+            "AND (:#{#filter.ingles} = '' OR i.nombre LIKE 'Ingl%') " +
+            "AND (:#{#filter.portugues} = '' OR i.nombre LIKE 'Portu%' ) " +
+            "AND (DATE_PART('year', AGE(c.fecha_de_nacimiento )) >= :#{#filter.edadMinima}) " +
+            "AND (DATE_PART('year', AGE(c.fecha_de_nacimiento )) <= :#{#filter.edadMaxima}) " +
+            "AND (:#{#filter.cargaHorariaSemanal} IS NULL OR :#{#filter.cargaHorariaSemanal} = '' " +
+            "OR ABS(CAST(TRIM(SPLIT_PART(dh.horas_semanales, ' ', 1)) AS INTEGER) - CAST(:#{#filter.cargaHorariaSemanal} AS INTEGER)) <= 7 " +
+            "OR CAST(TRIM(SPLIT_PART(dh.horas_semanales, ' ', 1)) AS INTEGER) > CAST(:#{#filter.cargaHorariaSemanal} AS INTEGER))", nativeQuery = true)
     List<Candidato> findCandidatosByFilter(@Param("filter") QueryFilterEmpleo filter);
 
     @Modifying

@@ -46,7 +46,7 @@ public class DirreccionService implements IDirreccionService{
     public void processDirreccion(List<Map<String, String>> csvData, Candidato candidato) {
         Dirreccion dirreccion = new Dirreccion();
         for (Map<String, String> row : csvData) {
-            dirreccion.setApartamento(row.get("Departamento"));
+            dirreccion.setDepartamento(row.get("Departamento"));
             dirreccion.setLocalidad(row.get("Localidad"));
             dirreccion.setCalle(row.get("Calle"));
             dirreccion.setCalleIncluida(Integer.parseInt(row.get("Calle_incluida")));

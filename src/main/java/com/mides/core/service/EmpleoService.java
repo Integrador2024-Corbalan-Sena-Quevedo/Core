@@ -119,7 +119,7 @@ public class EmpleoService implements IEmpleoService{
     @Override
     public List<Candidato> getCandidatosParaEmpleo(Empleo empleo, List<Candidato> candidatos) {
         QueryFilterEmpleo queryFilterEmpleo = new QueryFilterEmpleo();
-        queryFilterEmpleo.setRemuneracionOfrecida(empleo.getRemuneracionOfrecida());
+
         if (empleo.getRemuneracionOfrecida() != null) {
             queryFilterEmpleo.setRemuneracionOfrecida(empleo.getRemuneracionOfrecida());
         }
@@ -220,9 +220,9 @@ public class EmpleoService implements IEmpleoService{
 
 
             for (Candidato candidato : candidatos){
-                Resource resource = pdfService.getPdfResource(candidato.getDocumento());
-                if(resource != null){
-                    pdfFiles.add(resource.getFile());
+                File file = pdfService.base64AsPdfFile(candidato.getNombre(), candidato.getCsvBase64());
+                if(file != null){
+                    pdfFiles.add(file);
                 }
             }
 
