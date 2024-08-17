@@ -47,6 +47,9 @@ public class Candidato extends Cliente{
     @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<CandidatoIdioma> candidatoIdiomas ;
+    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AuditoriaCandidato> auditoriaCandidatos; ;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     @JsonManagedReference
     private DatosAdicionalesCandidato datosAdicionalesCandidato;
@@ -129,4 +132,6 @@ public class Candidato extends Cliente{
                 ", encuesta=" + this.getEncuestaCandidato() +
                 '}';
     }
+
+
 }

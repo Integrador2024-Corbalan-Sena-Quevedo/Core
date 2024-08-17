@@ -23,7 +23,7 @@ public class Empresa extends Cliente{
     private String ramaEconomica;
     private String personaReferencia;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<Empleo> empleo;
     private String cvsEnviados;
     @OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL)

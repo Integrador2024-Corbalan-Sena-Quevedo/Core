@@ -51,6 +51,7 @@ public class Empleo {
     private ConocimientosEspecificosEmpleo conocimientosEspecificosEmpleo;
     @ManyToOne
     @JoinColumn(name = "empresaId", referencedColumnName = "id")
+    @JsonBackReference
     private Empresa empresa;
     private int activo;
     @OneToMany

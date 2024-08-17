@@ -13,4 +13,6 @@ public interface IFiltroCandidatosService {
     Map<Long, Cliente> filtrarCandidatos(Specification<Candidato> searchCandidato);
 
     Map<Long, Cliente> todosCandidatos();
+
+    Candidato obtenerElCandidato(long l);
 }

@@ -27,7 +27,6 @@ public class Institucion {
         RECREATIVA,
         REHABILITACION,
         OTRA;
-
     }
 
     public Institucion(Instituciondeseo tipo) {

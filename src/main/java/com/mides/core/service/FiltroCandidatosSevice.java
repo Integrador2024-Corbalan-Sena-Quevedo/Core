@@ -1,9 +1,13 @@
 package com.mides.core.service;
 
+import com.mides.core.model.Apoyo;
 import com.mides.core.model.Candidato;
 import com.mides.core.model.Cliente;
+import com.mides.core.model.Empresa;
 import com.mides.core.repository.IFiltroCandidatosRepository;
 import com.mides.core.specification.FiltroCandidato;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -40,4 +44,11 @@ public class FiltroCandidatosSevice implements IFiltroCandidatosService{
         }
         return ret;
     }
+
+    @Override
+    public Candidato obtenerElCandidato(long l) {
+        Candidato ret = filtroCandidatosRepository.findById(l).orElse(null);
+        return ret;
+    }
+
 }
