@@ -64,7 +64,7 @@ public class EncuestaService implements  IEncuestaService{
     @Override
     public void processEncuestaEmpresa(List<Map<String, String>> csvData, Empresa empresa) {
         EncuestaEmpresa encuestaEmpresa = new EncuestaEmpresa();
-        DateTimeFormatter fechaCreacionFormato = DateTimeFormatter.ofPattern("dd/MM/yy");
+        DateTimeFormatter fechaCreacionFormato = DateTimeFormatter.ofPattern("[d/M/yyyy][dd/MM/yyyy]");
 
         for (Map<String, String> row : csvData){
             encuestaEmpresa.setIdEncuesta(Long.parseLong(row.get("Id Encuesta")));
