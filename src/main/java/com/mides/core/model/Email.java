@@ -23,4 +23,16 @@ public class Email {
     @JsonBackReference
     private Cliente cliente;
 
+    public Email(String email, Cliente cliente) {
+        this.email = email;
+        this.cliente = cliente;
+    }
+
+    @Override
+    public String toString() {
+        return "Email{" +
+                "id=" + id +
+                ", email='" + email +
+                '}';
+    }
 }
