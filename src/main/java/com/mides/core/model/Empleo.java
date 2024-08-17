@@ -53,4 +53,7 @@ public class Empleo {
     @JoinColumn(name = "empresaId", referencedColumnName = "id")
     @JsonBackReference
     private Empresa empresa;
+    private int activo;
+    @OneToMany
+    private List<Seguimiento> seguimientos;
 }

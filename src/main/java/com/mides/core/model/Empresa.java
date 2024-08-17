@@ -32,4 +32,6 @@ public class Empresa extends Cliente{
     @OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL)
     @JsonManagedReference
     private EncuestaEmpresa encuestaEmpresa;
+    @OneToMany
+    private List<Seguimiento> seguimientos;
 }

@@ -11,4 +11,3 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 
     }
 
-

@@ -23,4 +23,7 @@ public class EmpleoDTO {
     private String detalleTarea;
     private List<Long> candidatosId;
     private String correoEmpresa;
+    private Long idEncuesta;
+    private String localidad;
+    private int activo;
 }

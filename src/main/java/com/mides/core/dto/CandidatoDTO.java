@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CandidatoDTO {
 
+    private Long candidatoId;
     private String nombre;
     private String apellido;
     private String documento;

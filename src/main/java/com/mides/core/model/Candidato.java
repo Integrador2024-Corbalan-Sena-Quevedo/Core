@@ -3,6 +3,7 @@ package com.mides.core.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
@@ -96,6 +97,10 @@ public class Candidato extends Cliente{
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     @JsonManagedReference
     private EncuestaCandidato encuestaCandidato;
+    @Column(columnDefinition = "TEXT")
+    private String csvBase64;
+    @OneToMany
+    private List<Seguimiento> seguimientos;
 
     @Override
     public String toString() {

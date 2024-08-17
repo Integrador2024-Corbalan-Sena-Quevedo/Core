@@ -35,13 +35,13 @@ public class FiltroCandidatosController {
         public ResponseEntity<?> filtrado(@RequestBody  Map<String, List<FiltroCandidato>> filtrosMap) {
             List<FiltroCandidato> filtros = filtrosMap.get("filtros");
 
-            System.out.println("Lista de filtros:");
-            for (FiltroCandidato filtro : filtros) {
-                    System.out.println("  - " + filtro.toString());
-                }
+//            System.out.println("Lista de filtros:");
+//            for (FiltroCandidato filtro : filtros) {
+//                    System.out.println("  - " + filtro.toString());
+//                }
             try {
                 Map<Long, Cliente> candidatos;
-                if(filtros.isEmpty()){
+                if( filtros == null || filtros.isEmpty() ){
                     candidatos = filtroCandidatosService.todosCandidatos();
                 }else{
                     SearchCandidatoSpecification criteria = new SearchCandidatoSpecification(filtros);

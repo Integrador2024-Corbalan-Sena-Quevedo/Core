@@ -119,7 +119,7 @@ public class EmpleoService implements IEmpleoService{
     @Override
     public List<Candidato> getCandidatosParaEmpleo(Empleo empleo, List<Candidato> candidatos) {
         QueryFilterEmpleo queryFilterEmpleo = new QueryFilterEmpleo();
-        queryFilterEmpleo.setRemuneracionOfrecida(empleo.getRemuneracionOfrecida());
+
         if (empleo.getRemuneracionOfrecida() != null) {
             queryFilterEmpleo.setRemuneracionOfrecida(empleo.getRemuneracionOfrecida());
         }
@@ -192,6 +192,9 @@ public class EmpleoService implements IEmpleoService{
             empleoDTO.setEmpresaId(empleo.getEmpresa().getId());
             empleoDTO.setEmpresaNombre(empleo.getEmpresa().getNombre());
             empleoDTO.setCorreoEmpresa(empleo.getEmpresa().getEmails().get(0).getEmail());
+            empleoDTO.setLocalidad(empleo.getLocalidades());
+            empleoDTO.setIdEncuesta(empleo.getEmpresa().getEncuestaEmpresa().getIdEncuesta());
+            empleoDTO.setActivo(empleo.getActivo());
             return empleoDTO;
         }).toList();
 
@@ -217,9 +220,9 @@ public class EmpleoService implements IEmpleoService{
 
 
             for (Candidato candidato : candidatos){
-                Resource resource = pdfService.getPdfResource(candidato.getDocumento());
-                if(resource != null){
-                    pdfFiles.add(resource.getFile());
+                File file = pdfService.base64AsPdfFile(candidato.getNombre(), candidato.getCsvBase64());
+                if(file != null){
+                    pdfFiles.add(file);
                 }
             }
 
@@ -233,6 +236,11 @@ public class EmpleoService implements IEmpleoService{
             return new ResponseEntity<>("Ha ocurrido un error inesperado", HttpStatus.INTERNAL_SERVER_ERROR) ;
         }
 
+    }
+
+    @Override
+    public void updateActive(int i, Long id) {
+        empleoRepository.updateActive(i, id);
     }
 
     private EmpleoDTO crearEmpleoDTO(Long empleoId) {
