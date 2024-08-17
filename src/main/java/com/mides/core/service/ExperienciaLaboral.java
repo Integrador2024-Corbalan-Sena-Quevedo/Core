@@ -54,6 +54,7 @@ public class ExperienciaLaboral {
     )
     @JsonManagedReference
     private List<GustoLaboral> gustosLaborales;
+
     @OneToMany(mappedBy = "experienciaLaboral", cascade = CascadeType.ALL)
     @JsonManagedReference
     private  List<Actitud> actitudes;
