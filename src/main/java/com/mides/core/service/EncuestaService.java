@@ -37,7 +37,7 @@ public class EncuestaService implements  IEncuestaService{
     @Override
     public void processEncuestaCandidato(List<Map<String, String>> csvData, Candidato candidato) {
         EncuestaCandidato encuestaCandidato = new EncuestaCandidato();
-        DateTimeFormatter fechaCreacionFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter fechaCreacionFormatter = DateTimeFormatter.ofPattern("d/M/yyyy H:mm:ss");
 
         for (Map<String, String> row : csvData){
             String fechaCreacionString = row.get("FechaCreacion");
