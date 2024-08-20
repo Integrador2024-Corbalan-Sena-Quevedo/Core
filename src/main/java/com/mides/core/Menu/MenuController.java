@@ -71,6 +71,39 @@ public class MenuController {
         return ResponseEntity.ok(empleosCargaHoraria);
     }
 
+    @GetMapping("estadisticas/entrevistasPorAnio")
+    public ResponseEntity<Map<String, Long>> getEntrevistasPorAnio() {
+        Map<String, Long> entrevistasPorAnio = menuService.getEntrevistasPorAnio();
+        return ResponseEntity.ok(entrevistasPorAnio);
+    }
 
+    @GetMapping("estadisticas/entrevistasPorGenero")
+    public ResponseEntity<Map<String, Long>> getEntrevistasPorGenero() {
+        Map<String, Long> entrevistasPorGenero = menuService.getEntrevistasPorGenero();
+        return ResponseEntity.ok(entrevistasPorGenero);
+    }
+
+    @GetMapping("estadisticas/candidatosPorEdad")
+    public ResponseEntity<Map<String, Long>> getCandidatosPorEdad() {
+        Map<String, Long> candidatosPorEdad = menuService.getCandidatosPorEdad();
+        return ResponseEntity.ok(candidatosPorEdad);
+    }
+
+    @GetMapping("estadisticas/candidatosPorDiscapacidad")
+    public ResponseEntity<Map<String, Long>> getCandidatosPorDiscapacidad() {
+        Map<String, Long> candidatosPorDiscapacidad = menuService.getCandidatosPorDiscapacidad();
+        return ResponseEntity.ok(candidatosPorDiscapacidad);
+    }
+    @GetMapping("estadisticas/candidatosNivelFormacion")
+    public ResponseEntity<Map<String, Long>> getCandidatosPorFormacionNecesaria() {
+        Map<String, Long> candidatosFormacionNecesaria = menuService.getCandidatosPorFormacionAcademica();
+        return ResponseEntity.ok(candidatosFormacionNecesaria);
+    }
+
+    @GetMapping("estadisticas/candidatosCargaHoraria")
+    public ResponseEntity<Map<String, Long>> getCandidatosPorCargaHoraria() {
+        Map<String, Long> candidatosCargaHoraria= menuService.getCandidatosPorCargaHoraria();
+        return ResponseEntity.ok(candidatosCargaHoraria);
+    }
 
 }
