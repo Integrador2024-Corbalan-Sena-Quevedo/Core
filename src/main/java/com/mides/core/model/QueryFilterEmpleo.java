@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.mides.core.enums.NivelEducativo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,8 @@ public class QueryFilterEmpleo {
     private Integer edadMinima;
     private Integer edadMaxima;
     private String experienciaMinima;
-    private String formacionAcademica;
+   // private String formacionAcademica;
+    private NivelEducativo formacionAcademica;
     private String departamento;
     private String localidades;
     private String implicaDesplazamientos;

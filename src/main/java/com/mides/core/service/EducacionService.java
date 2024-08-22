@@ -1,5 +1,6 @@
 package com.mides.core.service;
 
+import com.mides.core.enums.NivelEducativo;
 import com.mides.core.model.Candidato;
 import com.mides.core.model.Educacion;
 import com.mides.core.model.Institucion;
@@ -43,7 +44,7 @@ public class EducacionService implements IEducacionService{
 
         for (Map<String, String> row : csvData) {
             educacion.setSituacionActual(row.get("Asist_educ"));
-            educacion.setNivelEducativo(row.get("Nivel_educ"));
+            educacion.setNivelEducativo(NivelEducativo.valueOf(row.get("Nivel_educ")).toString());
             educacion.setAniosEducacion(Integer.parseInt(row.get("Anios_educ")));
             educacion.setParticipacionInstitucion(row.get("Particip_inst"));
             educacion.setInstitucionesDeseo(getInstitucionesDeseo(csvData, institucions));
@@ -54,6 +55,7 @@ public class EducacionService implements IEducacionService{
             educacion.setRazonDejaEstudios(row.get("Razon_deja_estudios"));
             educacion.setDeseaParticiparEnAlgunaInstitucion(row.get("Deseo_particip"));
         }
+        educacion.setNivelEducativoEnum(educacion.getNivelEducativo());
         this.saveEducacion(educacion);
 
     }

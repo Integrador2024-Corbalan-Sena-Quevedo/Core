@@ -2,6 +2,7 @@ package com.mides.core.service;
 
 import com.mides.core.dto.EmpleoDTO;
 import com.mides.core.dto.EmpresaDTO;
+import com.mides.core.enums.NivelEducativo;
 import com.mides.core.model.*;
 import com.mides.core.repository.ICandidatoRepositoy;
 import com.mides.core.repository.IConocimientosEspecificosEmpleoRepository;
@@ -70,7 +71,7 @@ public class EmpleoService implements IEmpleoService{
             empleo.setSubordinados(row.get("Número de subordinados:"));
             empleo.setEdadPreferente(row.get("Edad preferente:"));
             empleo.setRangoDeEdad(row.get("Rango de edad:"));
-            empleo.setFormacionAcademica(row.get("¿Qué formación académica requiere el puesto?:"));
+            empleo.setFormacionAcademica(NivelEducativo.valueOf(row.get("¿Qué formación académica requiere el puesto?:")).toString());
             empleo.setLibretaConducir(row.get("¿Necesita licencia de conducir?:"));
             empleo.setCategoriaLibretaConducir(row.get("Categoría:"));
             empleo.setExperienciaPrevia(row.get("¿Necesita contar con experiencia laboral previa?:"));
@@ -144,7 +145,9 @@ public class EmpleoService implements IEmpleoService{
         queryFilterEmpleo.setLocalidades(empleo.getLocalidades() != null ? empleo.getLocalidades() : "");
         queryFilterEmpleo.setLibretaConducir(empleo.getLibretaConducir() != null ? empleo.getLibretaConducir() : "");
         queryFilterEmpleo.setImplicaDesplazamientos(empleo.getImplicaDesplazamientos() != null ? empleo.getImplicaDesplazamientos() : "");
-        queryFilterEmpleo.setFormacionAcademica(empleo.getFormacionAcademica() != null ? empleo.getFormacionAcademica() : "");
+        queryFilterEmpleo.setFormacionAcademica(empleo.getFormacionAcademica() != null
+                                                ? NivelEducativo.valueOf(empleo.getFormacionAcademica().toUpperCase().replace(" ", "_"))
+                                                : null);
         if (empleo.getRangoDeEdad() != null && !empleo.getRangoDeEdad().equals("")) {
             int[] ageRange = extractAgeRange(empleo.getRangoDeEdad());
             queryFilterEmpleo.setEdadMinima(ageRange[0]);
