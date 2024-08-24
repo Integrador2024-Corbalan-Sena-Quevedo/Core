@@ -2,6 +2,7 @@ package com.mides.core.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mides.core.enums.NivelEducativo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Educacion {
     private Long id;
     private String situacionActual;
     private String nivelEducativo;
+    private int nivelNumerico;
     private int aniosEducacion;
     private String nombreInstitucion;
     private String participacionInstitucion;
@@ -42,4 +44,8 @@ public class Educacion {
     private String deseoDeOtrasInstituciones;
     private String deseaParticiparEnAlgunaInstitucion;
 
+    public void setNivelEducativoEnum(String nivelEducativo) {
+        this.nivelEducativo = nivelEducativo;
+        this.nivelNumerico = NivelEducativo.valueOf(nivelEducativo.toUpperCase().replace(" ", "_")).getNivel();
+    }
 }
