@@ -1,4 +1,4 @@
-package com.mides.core.model;
+package com.mides.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,12 +10,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ActualizarCampoRequest {
-    private String candidatoId;
+public class ActualizarEmpresaRequest {
+    private String empresaId;
+    private String empleoId;
+    private String userName;
     private String campo;
     private String datoAct;
     private String datoAnt;
     private String lista;
     private String subLista;
-
 }

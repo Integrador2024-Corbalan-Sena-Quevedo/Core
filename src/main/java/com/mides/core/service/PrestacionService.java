@@ -68,4 +68,14 @@ public class PrestacionService implements IPrestacionService{
     public List<Prestacion> getPrestaciones() {
         return prestacionRepository.findAll();
     }
+
+    @Override
+    public Prestacion getUnaPrestacion(String nombre) {
+        for (Prestacion prestacionAux : prestacionRepository.findAll()){
+            if (prestacionAux.getNombre().equals(nombre)){
+                return prestacionAux;
+            }
+        }
+        return null;
+    }
 }

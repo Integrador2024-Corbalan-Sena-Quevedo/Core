@@ -15,42 +15,60 @@ import java.util.List;
 public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
     @Autowired
-    IPrestacionRepository prestacionRepository;
+    ICandidatoSevice candidatoSevice;
+
     @Autowired
-    IAyudaTecnicaRepository ayudaTecnicaRepository;
+    IPrestacionService prestacionService;
+
     @Autowired
-    IAreaRepository areaRepository;
+    IUsuarioService usuarioService;
     @Autowired
-    IApoyoRepository apoyoRepository;
+    IAyudaTecnicaService ayudaTecnicaService;
+
+    @Autowired
+    IAreaService areaService;
+
+
+    @Autowired
+    IApoyoService apoyoService;
+
     @Autowired
     IEmailRepository emailRepository;
-    @Autowired
-    IGustoLaboralRepository gustoLaboralRepository;
 
     @Autowired
-    IActitudRepository actitudRepository;
+    IGustoLaboralService gustoLaboralService;
+
 
     @Autowired
-    IMotivoDesempleoRepository motivoDesempleoRepository;
+    IActitudService actitudService;
 
     @Autowired
-    ITurnoRepository iturnoRepository;
+    IMotivoDesempleoService motivoDesempleoService;
 
     @Autowired
-    IInsititucionRepository insititucionRepository;
+    ITurnoService turnoService;
+
+    @Autowired
+    IInstitucionService institucionService;
+
     @Autowired
     IActualizarCandidatoRepository actualizarCandidatoRepository;
 
     @Autowired
     IAuditoriaCandidatoService auditoriaCandidatoService;
-
-
+    @Autowired
+    TipoDiscapacidadService tipoDiscapacidadService;
+    @Autowired
+    private IdiomaService idiomaService;
+    @Autowired
+    private CandidatoIdiomaService candidatoIdiomaService;
 
 
     @Override
-    public void actualizarCampo(String candidatoId, String campo, String datoAct, String datoAnt, String lista, String subLista) throws Exception {
+    public void actualizarCampo(String candidatoId, String campo, String userName, String datoAct, String datoAnt, String lista, String subLista) throws Exception {
         long idCandidato = Long.parseLong(candidatoId);
         Candidato candidato = actualizarCandidatoRepository.findById(idCandidato).orElse(null);
+        Usuario usuario = usuarioService.getUsuario(userName);
 
 
         try {
@@ -63,241 +81,261 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
                     switch (subLista) {
                         case "candidatoIdiomas":
-                            // Actualiza el campo candidatoIdiomas
+                            boolean cambio = false;
+
+                            CandidatoIdioma candidatoIdioma= null;
+                            List<CandidatoIdioma> candidatoIdiomas = candidato.getCandidatoIdiomas();
+                            for(CandidatoIdioma unCandidatoIdioma : candidatoIdiomas){
+                                if (unCandidatoIdioma.getId().equals(Long.parseLong(campo))){
+                                    unCandidatoIdioma.setNivel(datoAct);
+                                    candidatoIdioma = unCandidatoIdioma;
+                                    cambio = true;
+                                    break;
+                                }
+                            }
+                            if (cambio){
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, "Nivel", datoAnt, datoAct, candidatoIdioma.getIdioma().getNombre(), candidatoIdioma.getId(), LocalDate.now()));
+                            }else {
+                                throw new Exception("CandidatoIdioma no encontrado");
+                            }
                             break;
                         case "tipoDiscapacidades":
-                            // edito con sublista tipoDiscapcidades
+
+
                             break;
                     }
-                }
-
-                if(!subLista.isEmpty() && lista.isEmpty()) {
-                    System.out.println("Campo: "+campo);
-                    System.out.println("Dato: "+datoAct);
-                    System.out.println("Dato: "+datoAnt);
-                    System.out.println("Lista: "+lista);
-                    System.out.println("SubLista: "+subLista);
-                    switch (subLista) {
-                        case "datosAdicionalesCandidato":
-                            DatosAdicionalesCandidato datosAdicionalesCandidato = candidato.getDatosAdicionalesCandidato();
-                            if(datosAdicionalesCandidato!= null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, datosAdicionalesCandidato.getId(), LocalDate.now()));
-                                actualizarDatosAdicionales(candidato.getDatosAdicionalesCandidato(), campo, datoAct);
-                                candidato.setDatosAdicionalesCandidato(datosAdicionalesCandidato);
-                                actualizarCandidatoRepository.save(candidato);
-
-                            }else{
-                                throw new Exception("Datos adicionales del candidato no encontrados");
-                            }
-                            break;
-                        case "apellido":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setApellido(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-                        case "direccion":
-                            Dirreccion dirreccion = candidato.getDirreccion();
-
-                            if(dirreccion != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, dirreccion.getId(), LocalDate.now()));
-                                actualizarDireccion(dirreccion, campo, datoAct);
-                                candidato.setDirreccion(dirreccion);
-                                actualizarCandidatoRepository.save(candidato);
-
-                            }else{
-                                throw new Exception("El campo no puede ser vacio");
-                            }
-
-                            break;
-                        case "disponibilidadHoraria":
-                            DisponibilidadHoraria dh = candidato.getDisponibilidadHoraria();
-                            if(dh != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, lista, dh.getId(), LocalDate.now()));
-                                actualizarDisponibilidadHoraria(dh, campo, datoAct);
-                                candidato.setDisponibilidadHoraria(dh);
-                                actualizarCandidatoRepository.save(candidato);
-                            }else {
-                                throw new Exception("El campo no puede ser vacio");
-                            }
-                            break;
-
-                        case "discapacidad":
-                            Discapacidad discapacidad = candidato.getDiscapacidad();
-                            if (discapacidad != null) {
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, discapacidad.getId(), LocalDate.now()));
-                                discapacidad.setDiagnostico(datoAct);
-                                candidato.setDiscapacidad(discapacidad);
-                                actualizarCandidatoRepository.save(candidato);
-                            }else{
-                                throw new Exception("El campo no puede ser vacio");
-                            }
-
-                            break;
-
-                        case "documento":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setDocumento(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-                        case "educacion":
-                            Educacion educacion = candidato.getEducacion();
-                            if(educacion != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, educacion.getId(), LocalDate.now()));
-                                actualizarEducacion(educacion, campo, datoAct);
-                                candidato.setEducacion(educacion);
-                                actualizarCandidatoRepository.save(candidato);
-
-                            }else{
-                                throw new Exception("El campo no puede ser vacio");
-                            }
-                            break;
-                        case "emails":
-                            List<Email> emails = candidato.getEmails();
-                            Email email = null;
-                            for (Email unEmail : emails) {
-                                if(unEmail.getId() == Long.parseLong(campo)){
-                                    email = unEmail;
-                                    unEmail.setEmail(datoAct);
-                                }
-                            }
-
-                            if(email != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, email.getId(), LocalDate.now()));
-                                candidato.setEmails(emails);
-                                actualizarCandidatoRepository.save(candidato);
-                            }else{
-                                throw new Exception("Email no encontrado");
-                            }
-
-                            break;
-                        case "encuestaCandidato":
-                            EncuestaCandidato encuestaCandidato = candidato.getEncuestaCandidato();
-                            if(encuestaCandidato != null){
-                                if(campo.equals("fechaCreacion") || campo.equals("fechaFinalizacion")){
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                                    if(campo.equals("fechaCreacion")){
-                                        String fechaHoraString = encuestaCandidato.getFechaCreacion().format(formatter);
-                                        auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, fechaHoraString, datoAct, subLista, encuestaCandidato.getId(), LocalDate.now()));
-                                        actualizarEncuesta(encuestaCandidato, campo, datoAct);
-                                        candidato.setEncuestaCandidato(encuestaCandidato);
-                                        actualizarCandidatoRepository.save(candidato);
-                                    }else{
-                                        String fechaHoraString = encuestaCandidato.getFechaFinalizacion().format(formatter);
-                                        auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, fechaHoraString, datoAct, subLista, encuestaCandidato.getId(), LocalDate.now()));
-                                        actualizarEncuesta(encuestaCandidato, campo, datoAct);
-                                        candidato.setEncuestaCandidato(encuestaCandidato);
-                                        actualizarCandidatoRepository.save(candidato);
-
-                                    }
-                                }else{
-                                    auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, encuestaCandidato.getId(), LocalDate.now()));
-                                    actualizarEncuesta(encuestaCandidato, campo, datoAct);
-                                    candidato.setEncuestaCandidato(encuestaCandidato);
-                                    actualizarCandidatoRepository.save(candidato);
-                                }
-
-                            }else{
-                                throw new Exception("Encuenta no encontrada");
-                            }
-
-
-                            break;
-                        case "estadoCivil":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setEstadoCivil(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-
-                        case "fecha_de_nacimiento":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setFecha_de_nacimiento(LocalDate.parse(datoAct));
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-                        case "habilidad":
-                            Habilidad habilidad = candidato.getHabilidad();
-                            if(habilidad != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, habilidad.getId(), LocalDate.now()));
-                                actualizarHabilidad(habilidad, campo, datoAct);
-                                candidato.setHabilidad(habilidad);
-                                actualizarCandidatoRepository.save(candidato);
-                            }else {
-                                throw new Exception("Habilidad no encontrada");
-                            }
-                            break;
-                        case "identidadGenero":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setIdentidadGenero(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-                        case "nombre":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setNombre(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-                        case "salud":
-                            Salud salud = candidato.getSalud();
-                            if(salud != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, salud.getId(), LocalDate.now()));
-                                actualizarSalud(salud, campo, datoAct);
-                                candidato.setSalud(salud);
-                                actualizarCandidatoRepository.save(candidato);
-                            }else {
-                                throw new Exception("Salud no encontrada");
-                            }
-
-                            break;
-                        case "sexo":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setSexo(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-                        case "telefonos":
-                            List<Telefono> telefonos = candidato.getTelefonos();
-                            Telefono telefono = null;
-                            for(Telefono unTelefono : telefonos){
-                                actualizarTelefono(unTelefono, campo, datoAct);
-                                telefono = unTelefono;
-                            }
-
-                            if(telefono != null){
-                                auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, telefono.getId(), LocalDate.now()));
-                                candidato.setTelefonos(telefonos);
-                                actualizarCandidatoRepository.save(candidato);
-
-                            }else {
-                                throw new Exception("Telefonos no encontrada");
-                            }
-
-
-
-                            break;
-                        case "tipoDocumento":
-                            auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                            candidato.setTipoDocumento(datoAct);
-                            actualizarCandidatoRepository.save(candidato);
-                            break;
-
-                    }
-
-
                 }else{
-                    if (subLista.isEmpty() && !lista.isEmpty()){
-                        switch (lista) {
-                            case "experienciaLaboral":
-                                ExperienciaLaboral experienciaLaboral = candidato.getExperienciaLaboral();
-                                if(experienciaLaboral != null){
-                                    auditoriaCandidatoService.guardar(crearAuditoria("Modificación",candidato, campo, datoAnt, datoAct, subLista, experienciaLaboral.getId(), LocalDate.now()));
-                                    actualizarExperienciaLaboral(experienciaLaboral, campo, datoAct);
-                                    candidato.setExperienciaLaboral(experienciaLaboral);
+                    if(!subLista.isEmpty() && lista.isEmpty()) {
+                        System.out.println("Campo: "+campo);
+                        System.out.println("Dato: "+datoAct);
+                        System.out.println("Dato: "+datoAnt);
+                        System.out.println("Lista: "+lista);
+                        System.out.println("SubLista: "+subLista);
+                        switch (subLista) {
+                            case "datosAdicionalesCandidato":
+                                DatosAdicionalesCandidato datosAdicionalesCandidato = candidato.getDatosAdicionalesCandidato();
+                                if(datosAdicionalesCandidato!= null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, datosAdicionalesCandidato.getId(), LocalDate.now()));
+                                    actualizarDatosAdicionales(candidato.getDatosAdicionalesCandidato(), campo, datoAct);
+                                    candidato.setDatosAdicionalesCandidato(datosAdicionalesCandidato);
                                     actualizarCandidatoRepository.save(candidato);
-                                } else {
-                                    throw new Exception("Experiencia Laboral no encontrada");
+
+                                }else{
+                                    throw new Exception("Datos adicionales del candidato no encontrados");
                                 }
                                 break;
+                            case "apellido":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setApellido(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+                            case "dirreccion":
+                                Dirreccion dirreccion = candidato.getDirreccion();
+
+                                if(dirreccion != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, dirreccion.getId(), LocalDate.now()));
+                                    actualizarDireccion(dirreccion, campo, datoAct);
+                                    candidato.setDirreccion(dirreccion);
+                                    actualizarCandidatoRepository.save(candidato);
+
+                                }else{
+                                    throw new Exception("El campo no puede ser vacio");
+                                }
+
+                                break;
+                            case "disponibilidadHoraria":
+                                DisponibilidadHoraria dh = candidato.getDisponibilidadHoraria();
+                                if(dh != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, lista, dh.getId(), LocalDate.now()));
+                                    actualizarDisponibilidadHoraria(dh, campo, datoAct);
+                                    candidato.setDisponibilidadHoraria(dh);
+                                    actualizarCandidatoRepository.save(candidato);
+                                }else {
+                                    throw new Exception("El campo no puede ser vacio");
+                                }
+                                break;
+
+                            case "discapacidad":
+                                Discapacidad discapacidad = candidato.getDiscapacidad();
+                                if (discapacidad != null) {
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, discapacidad.getId(), LocalDate.now()));
+                                    discapacidad.setDiagnostico(datoAct);
+                                    candidato.setDiscapacidad(discapacidad);
+                                    actualizarCandidatoRepository.save(candidato);
+                                }else{
+                                    throw new Exception("El campo no puede ser vacio");
+                                }
+
+                                break;
+
+                            case "documento":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setDocumento(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+                            case "educacion":
+                                Educacion educacion = candidato.getEducacion();
+                                if(educacion != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, educacion.getId(), LocalDate.now()));
+                                    actualizarEducacion(educacion, campo, datoAct);
+                                    candidato.setEducacion(educacion);
+                                    actualizarCandidatoRepository.save(candidato);
+
+                                }else{
+                                    throw new Exception("El campo no puede ser vacio");
+                                }
+                                break;
+                            case "emails":
+                                List<Email> emails = candidato.getEmails();
+                                Email email = null;
+                                for (Email unEmail : emails) {
+                                    if(unEmail.getId() == Long.parseLong(campo)){
+                                        email = unEmail;
+                                        unEmail.setEmail(datoAct);
+                                        break;
+                                    }
+                                }
+
+                                if(email != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, email.getId(), LocalDate.now()));
+                                    candidato.setEmails(emails);
+                                    actualizarCandidatoRepository.save(candidato);
+                                }else{
+                                    throw new Exception("Email no encontrado");
+                                }
+
+                                break;
+                            case "encuestaCandidato":
+                                EncuestaCandidato encuestaCandidato = candidato.getEncuestaCandidato();
+                                if(encuestaCandidato != null){
+                                    if(campo.equals("fechaCreacion") || campo.equals("fechaFinalizacion")){
+                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                                        if(campo.equals("fechaCreacion")){
+                                            String fechaHoraString = encuestaCandidato.getFechaCreacion().format(formatter);
+                                            auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, fechaHoraString, datoAct, subLista, encuestaCandidato.getId(), LocalDate.now()));
+                                            actualizarEncuesta(encuestaCandidato, campo, datoAct);
+                                            candidato.setEncuestaCandidato(encuestaCandidato);
+                                            actualizarCandidatoRepository.save(candidato);
+                                        }else{
+                                            String fechaHoraString = encuestaCandidato.getFechaFinalizacion().format(formatter);
+                                            auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, fechaHoraString, datoAct, subLista, encuestaCandidato.getId(), LocalDate.now()));
+                                            actualizarEncuesta(encuestaCandidato, campo, datoAct);
+                                            candidato.setEncuestaCandidato(encuestaCandidato);
+                                            actualizarCandidatoRepository.save(candidato);
+
+                                        }
+                                    }else{
+                                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, encuestaCandidato.getId(), LocalDate.now()));
+                                        actualizarEncuesta(encuestaCandidato, campo, datoAct);
+                                        candidato.setEncuestaCandidato(encuestaCandidato);
+                                        actualizarCandidatoRepository.save(candidato);
+                                    }
+
+                                }else{
+                                    throw new Exception("Encuenta no encontrada");
+                                }
+
+
+                                break;
+                            case "estadoCivil":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setEstadoCivil(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+
+                            case "fecha_de_nacimiento":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setFecha_de_nacimiento(LocalDate.parse(datoAct));
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+                            case "habilidad":
+                                Habilidad habilidad = candidato.getHabilidad();
+                                if(habilidad != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, habilidad.getId(), LocalDate.now()));
+                                    actualizarHabilidad(habilidad, campo, datoAct);
+                                    candidato.setHabilidad(habilidad);
+                                    actualizarCandidatoRepository.save(candidato);
+                                }else {
+                                    throw new Exception("Habilidad no encontrada");
+                                }
+                                break;
+                            case "identidadGenero":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setIdentidadGenero(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+                            case "nombre":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setNombre(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+                            case "salud":
+                                Salud salud = candidato.getSalud();
+                                if(salud != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, salud.getId(), LocalDate.now()));
+                                    actualizarSalud(salud, campo, datoAct);
+                                    candidato.setSalud(salud);
+                                    actualizarCandidatoRepository.save(candidato);
+                                }else {
+                                    throw new Exception("Salud no encontrada");
+                                }
+
+                                break;
+                            case "sexo":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setSexo(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+                            case "telefonos":
+                                List<Telefono> telefonos = candidato.getTelefonos();
+                                Telefono telefono = null;
+                                for(Telefono unTelefono : telefonos){
+                                    actualizarTelefono(unTelefono, campo, datoAct);
+                                    telefono = unTelefono;
+                                }
+
+                                if(telefono != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, telefono.getId(), LocalDate.now()));
+                                    candidato.setTelefonos(telefonos);
+                                    actualizarCandidatoRepository.save(candidato);
+
+                                }else {
+                                    throw new Exception("Telefonos no encontrada");
+                                }
+
+
+
+                                break;
+                            case "tipoDocumento":
+                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
+                                candidato.setTipoDocumento(datoAct);
+                                actualizarCandidatoRepository.save(candidato);
+                                break;
+
                         }
 
+
+                    }else{
+                        if (subLista.isEmpty() && !lista.isEmpty()){
+                            switch (lista) {
+                                case "experienciaLaboral":
+                                    ExperienciaLaboral experienciaLaboral = candidato.getExperienciaLaboral();
+                                    if(experienciaLaboral != null){
+                                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, experienciaLaboral.getId(), LocalDate.now()));
+                                        actualizarExperienciaLaboral(experienciaLaboral, campo, datoAct);
+                                        candidato.setExperienciaLaboral(experienciaLaboral);
+                                        actualizarCandidatoRepository.save(candidato);
+                                    } else {
+                                        throw new Exception("Experiencia Laboral no encontrada");
+                                    }
+                                    break;
+                            }
+
+                        }
                     }
                 }
+
+
             }else{
                 throw new Exception("Candidato no encontrado");
             }
@@ -309,13 +347,15 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
     }
 
     @Override
-    public void elimnarSubLista(String candidatoId, String lista, String subLista, String idAEliminar) throws Exception {
+    public void elimnarSubLista(String candidatoId, String userName, String lista, String subLista, String idAEliminar) throws Exception {
         System.out.println("Candidato: "+candidatoId);
         System.out.println("idAEliminar: "+idAEliminar);
         System.out.println("Lista: "+lista);
         System.out.println("SubLista: "+subLista);
 
         Candidato candidato = actualizarCandidatoRepository.findById(Long.parseLong(candidatoId)).orElse(null);
+        Usuario usuario = usuarioService.getUsuario(userName);
+
 
         if(candidato != null){
             Long id = Long.parseLong(idAEliminar);
@@ -334,7 +374,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         }
                     }
                     if(cambio){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion" ,candidato, "InstitucionesDeseo", ins.getTipo().name(), "", lista, ins.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion" ,candidato, "InstitucionesDeseo", ins.getTipo().name(), "", lista, ins.getId(), LocalDate.now()));
                     }else {
                         throw new Exception("Institucion no encontrada");
                     }
@@ -358,7 +398,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     if(cambio){
                         System.out.println("Cambio" + cambio);
 
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Turnos", turno.getTurno().name(), "", lista, turno.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Turnos", turno.getTurno().name(), "", lista, turno.getId(), LocalDate.now()));
                     }else {
                         System.out.println("Turno no encontrada"+ cambio);
 
@@ -366,7 +406,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                     break;
                 case "experienciaLaboral":
-                    eliminarDeExperienciaLaboral(candidato, subLista, id);
+                    eliminarDeExperienciaLaboral(candidato, usuario, subLista, id);
                     break;
 
                 case  "emails" :
@@ -382,7 +422,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         }
                     }
                     if(cambio){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Email", email.getEmail(), "", lista, email.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Email", email.getEmail(), "", lista, email.getId(), LocalDate.now()));
                     }else {
                         throw new Exception("Email no encontrado");
                     }
@@ -399,7 +439,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         }
                     }
                     if (cambio){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Apoyos", apoyo.getNombre(), "", subLista, apoyo.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Apoyos", apoyo.getNombre(), "", subLista, apoyo.getId(), LocalDate.now()));
 
                     }else {
                         throw new Exception("Apoyo no encontrado");
@@ -417,7 +457,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         }
                     }
                     if (cambio){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Areas", area.getNombre(), "", subLista, area.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Areas", area.getNombre(), "", subLista, area.getId(), LocalDate.now()));
 
                     }else {
                         throw new Exception("Area no encontrada");
@@ -436,7 +476,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         }
                     }
                     if (cambio){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Ayudas tecnicas", ayudaTecnica.getNombre(), "", subLista, ayudaTecnica.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Ayudas tecnicas", ayudaTecnica.getNombre(), "", subLista, ayudaTecnica.getId(), LocalDate.now()));
 
                     }else {
                         throw new Exception("Ayuda tecnica no encontrada");
@@ -454,10 +494,46 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         }
                     }
                     if (cambio){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Prestacion", prestacion.getNombre(), "", subLista, prestacion.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Prestacion", prestacion.getNombre(), "", subLista, prestacion.getId(), LocalDate.now()));
 
                     }else {
                         throw new Exception("Prestacion no encontrada");
+                    }
+                    break;
+                case "discapacidad":
+                    TipoDiscapacidad tipoDiscapacidad= null;
+                    List<TipoDiscapacidad> tiposDisc = candidato.getDiscapacidad().getTipoDiscapacidades();
+                    for(TipoDiscapacidad unTipoDiscapacidad : tiposDisc){
+                        if (unTipoDiscapacidad.getId().equals(id)){
+                            tiposDisc.remove(unTipoDiscapacidad);
+                            tipoDiscapacidad = unTipoDiscapacidad;
+                            cambio = true;
+                            break;
+                        }
+                    }
+                    if (cambio){
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Discapcidad", tipoDiscapacidad.getNombre(), "", subLista, tipoDiscapacidad.getId(), LocalDate.now()));
+
+                    }else {
+                        throw new Exception("Tipo de discapacidad no encontrada");
+                    }
+                    break;
+                case "candidatoIdiomas" :
+                    CandidatoIdioma candidatoIdioma= null;
+                    List<CandidatoIdioma> idiomas = candidato.getCandidatoIdiomas();
+                    for(CandidatoIdioma unCandidatoIdioma : idiomas){
+                        if (unCandidatoIdioma.getId().equals(id)){
+                            idiomas.remove(unCandidatoIdioma);
+                            candidatoIdioma = unCandidatoIdioma;
+                            cambio = true;
+                            break;
+                        }
+                    }
+                    if (cambio){
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Candidato Idioma", candidatoIdioma.getIdioma().getNombre(), "", subLista, candidatoIdioma.getId(), LocalDate.now()));
+
+                    }else {
+                        throw new Exception("CandidatoIdioma no encontrado");
                     }
                     break;
 
@@ -465,7 +541,8 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
         }
 
     }
-    private void eliminarDeExperienciaLaboral(Candidato candidato, String subLista, Long id) throws Exception {
+
+    private void eliminarDeExperienciaLaboral(Candidato candidato,Usuario usuario, String subLista, Long id) throws Exception {
         boolean cambio = false;
         switch (subLista){
 
@@ -481,7 +558,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                 }
                 if (cambio) {
-                    auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Gustos", gusto.getGusto(), "", subLista, gusto.getId(), LocalDate.now()));
+                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Gustos", gusto.getGusto(), "", subLista, gusto.getId(), LocalDate.now()));
 
                 }else {
 
@@ -503,7 +580,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                 }
 
                 if (cambio) {
-                    auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "Actitudes", actitud.getNombre(), "", subLista, actitud.getId(), LocalDate.now()));
+                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Actitudes", actitud.getNombre(), "", subLista, actitud.getId(), LocalDate.now()));
 
                 }else {
                     throw new Exception("Actitud no encontrada");
@@ -524,7 +601,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                 }
                 if (cambio) {
-                    auditoriaCandidatoService.guardar(crearAuditoria("Eliminacion",candidato, "motivosDesempleo", mds.getMotivo(), "", subLista, mds.getId(), LocalDate.now()));
+                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "motivosDesempleo", mds.getMotivo(), "", subLista, mds.getId(), LocalDate.now()));
 
                 }else {
                     throw new Exception("Motivo desempleo no encontrado");
@@ -539,16 +616,18 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
     }
 
     @Override
-    public void agregarASubLista(String candidatoId, String lista, String subLista, String id) throws Exception{
+    public void agregarASubLista(String candidatoId, String userName, String lista, String subLista, String id) throws Exception{
         Candidato candidato = actualizarCandidatoRepository.findById(Long.parseLong(candidatoId)).orElse(null);
+        Usuario usuario = usuarioService.getUsuario(userName);
+
 
         if(candidato != null){
             boolean cambio = false;
             switch (lista){
                 case "educacion":
-                    Institucion ins = insititucionRepository.findById(Long.parseLong(id)).orElse(null);
+                    Institucion ins = institucionService.getUnaInstitucion(id);
                     if(ins != null){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "InstitucionesDeseo", "", ins.getTipo().name(), lista, ins.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "InstitucionesDeseo", "", ins.getTipo().name(), lista, ins.getId(), LocalDate.now()));
                         candidato.getEducacion().getInstitucionesDeseo().add(ins);
                         actualizarCandidatoRepository.save(candidato);
                     }else{
@@ -557,9 +636,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
                     break;
                 case "disponibilidadHoraria":
-                    Turno turno = iturnoRepository.findById(Long.parseLong(id)).orElse(null);
+                    Turno turno = turnoService.getUnTurno(id);
                     if(turno != null){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "Turnos", "", turno.getTurno().name(), lista, turno.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Turnos", "", turno.getTurno().name(), lista, turno.getId(), LocalDate.now()));
                         candidato.getDisponibilidadHoraria().getTurnos().add(turno);
                         actualizarCandidatoRepository.save(candidato);
                     }else{
@@ -567,7 +646,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                     break;
                 case "experienciaLaboral":
-                    agregarAExperienciaLaboral(candidato, subLista, Long.parseLong(id));
+                    agregarAExperienciaLaboral(candidato, usuario, subLista, id);
                     break;
                 case "emails":
                     Email email = new Email(id, candidato);
@@ -575,9 +654,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     actualizarCandidatoRepository.save(candidato);
                     break;
                 case "apoyos":
-                    Apoyo apoyo = apoyoRepository.findById(Long.parseLong(id)).orElse(null);
+                    Apoyo apoyo = apoyoService.getUnApoyo(id);
                     if(apoyo != null){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "Apoyo", "", apoyo.getNombre(), lista, apoyo.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Apoyo", "", apoyo.getNombre(), lista, apoyo.getId(), LocalDate.now()));
                         candidato.getApoyos().add(apoyo);
                         actualizarCandidatoRepository.save(candidato);
                     }else {
@@ -585,9 +664,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                     break;
                 case "areas":
-                    Area area = areaRepository.findById(Long.parseLong(id)).orElse(null);
+                    Area area = areaService.getUnArea(id);
                     if(area != null){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "Area", "", area.getNombre(), lista, area.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Area", "", area.getNombre(), lista, area.getId(), LocalDate.now()));
                         candidato.getAreas().add(area);
                         actualizarCandidatoRepository.save(candidato);
                     }else {
@@ -595,9 +674,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                     break;
                 case "ayudaTecnicas":
-                    AyudaTecnica ayudaTecnica = ayudaTecnicaRepository.findById(Long.parseLong(id)).orElse(null);
+                    AyudaTecnica ayudaTecnica = ayudaTecnicaService.getUnaAyudaTecnica(id);
                     if(ayudaTecnica != null){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "ayudaTecnicas", "", ayudaTecnica.getNombre(), lista, ayudaTecnica.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "ayudaTecnicas", "", ayudaTecnica.getNombre(), lista, ayudaTecnica.getId(), LocalDate.now()));
                         candidato.getAyudaTecnicas().add(ayudaTecnica);
                         actualizarCandidatoRepository.save(candidato);
 
@@ -606,9 +685,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                     break;
                 case "prestaciones":
-                    Prestacion prestacion = prestacionRepository.findById(Long.parseLong(id)).orElse(null);
+                    Prestacion prestacion = prestacionService.getUnaPrestacion(id);
                     if(prestacion != null){
-                        auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "Prestaciones", "", prestacion.getNombre(), lista, prestacion.getId(), LocalDate.now()));
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Prestaciones", "", prestacion.getNombre(), lista, prestacion.getId(), LocalDate.now()));
                         candidato.getPrestaciones().add(prestacion);
                         actualizarCandidatoRepository.save(candidato);
                     }
@@ -616,16 +695,37 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         throw new Exception("Prestacion no encontrada");
                     }
                     break;
+                case "discapacidad":
+                    TipoDiscapacidad tipoDiscapacidad = tipoDiscapacidadService.getTipoDiscapacidadByNombre(id);
+                    if(tipoDiscapacidad != null){
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Tipo de discapacidad", "", tipoDiscapacidad.getNombre(), lista, tipoDiscapacidad.getId(), LocalDate.now()));
+                        candidato.getDiscapacidad().getTipoDiscapacidades().add(tipoDiscapacidad);
+                        actualizarCandidatoRepository.save(candidato);
+                    }
+                    break;
+                case "candidatoIdiomas":
+                    Idioma idioma = idiomaService.getIdiomaNombre(id);
+                    if(idioma != null){
+                        CandidatoIdioma candidatoIdioma = new CandidatoIdioma();
+                        candidatoIdioma.setIdioma(idioma);
+                        candidatoIdioma.setCandidato(candidato);
+                        auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Idioma", "", idioma.getNombre(), lista, idioma.getId(), LocalDate.now()));
+                        candidato.getCandidatoIdiomas().add(candidatoIdioma);
+                        actualizarCandidatoRepository.save(candidato);
+                    }
+
+
+                    break;
             }
         }
     }
 
-    private void agregarAExperienciaLaboral(Candidato candidato, String subLista, Long idAgregar) throws Exception {
+    private void agregarAExperienciaLaboral(Candidato candidato,Usuario usuario, String subLista, String nombre) throws Exception {
         switch (subLista){
             case "gustosLaborales":
-                GustoLaboral gusto = gustoLaboralRepository.findById(idAgregar).orElse(null);
+                GustoLaboral gusto = gustoLaboralService.getUnGusto(nombre);
                 if(gusto != null){
-                    auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "Gustos", "", gusto.getGusto(), subLista, gusto.getId(), LocalDate.now()));
+                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Gustos", "", gusto.getGusto(), subLista, gusto.getId(), LocalDate.now()));
                     candidato.getExperienciaLaboral().getGustosLaborales().add(gusto);
                     actualizarCandidatoRepository.save(candidato);
                 }else {
@@ -633,9 +733,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                 }
                 break;
             case "actitudes":
-                Actitud actitud = actitudRepository.findById(idAgregar).orElse(null);
+                Actitud actitud = actitudService.getUnActitud(nombre);
                 if(actitud != null){
-                    auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "Actitud", "", actitud.getNombre(), subLista, actitud.getId(), LocalDate.now()));
+                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "Actitud", "", actitud.getNombre(), subLista, actitud.getId(), LocalDate.now()));
                     candidato.getExperienciaLaboral().getActitudes().add(actitud);
                     actualizarCandidatoRepository.save(candidato);
                 }else {
@@ -643,9 +743,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                 }
                 break;
             case "motivosDesempleo":
-                MotivoDesempleo mds = motivoDesempleoRepository.findById(idAgregar).orElse(null);
+                MotivoDesempleo mds = motivoDesempleoService.getUnMotivoDesempleo(nombre);
                 if(mds != null){
-                    auditoriaCandidatoService.guardar(crearAuditoria("Agregar", candidato, "motivosDesempleo", "", mds.getMotivo(), subLista, mds.getId(), LocalDate.now()));
+                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Agregar", candidato, "motivosDesempleo", "", mds.getMotivo(), subLista, mds.getId(), LocalDate.now()));
                     candidato.getExperienciaLaboral().getMotivosDesempleo().add(mds);
                     actualizarCandidatoRepository.save(candidato);
                 }
@@ -656,11 +756,11 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
         }
     }
 
-    private AuditoriaCandidato crearAuditoria(String tipo, Candidato candidato, String campo, String datoAnt, String datoAct, String tablaAEditar, Long idTablaAEditar, LocalDate fechaCambio){
-        return new AuditoriaCandidato(tipo, candidato, campo, datoAnt, datoAct, tablaAEditar, idTablaAEditar, fechaCambio);
+    private AuditoriaCandidato crearAuditoria(Usuario usuario, String tipo, Candidato candidato, String campo, String datoAnt, String datoAct, String tablaAEditar, Long idTablaAEditar, LocalDate fechaCambio){
+        return new AuditoriaCandidato(usuario, tipo, candidato, campo, datoAnt, datoAct, tablaAEditar, idTablaAEditar, fechaCambio);
     }
-    private AuditoriaCandidato crearAuditoria(String tipo, Candidato candidato, String campo, String datoAnt, String datoAct, String tablaAEditar, LocalDate fechaCambio){
-        return new AuditoriaCandidato(tipo, candidato, campo, datoAnt, datoAct, tablaAEditar, fechaCambio);
+    private AuditoriaCandidato crearAuditoria(Usuario usuario, String tipo, Candidato candidato, String campo, String datoAnt, String datoAct, String tablaAEditar, LocalDate fechaCambio){
+        return new AuditoriaCandidato(usuario, tipo, candidato, campo, datoAnt, datoAct, tablaAEditar, fechaCambio);
     }
 
     private void actualizarTelefono(Telefono telefono, String campo, String dato) throws Exception{

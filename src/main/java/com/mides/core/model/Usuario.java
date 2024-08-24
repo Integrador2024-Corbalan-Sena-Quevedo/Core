@@ -1,10 +1,8 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.model.Rol;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +27,10 @@ public class Usuario implements UserDetails {
     private String username;
     private String password;
     private Rol rol;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AuditoriaEmpresa> auditoriaEmpresas;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

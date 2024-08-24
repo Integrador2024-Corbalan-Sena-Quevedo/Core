@@ -1,18 +1,16 @@
 package com.mides.core.model;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 
@@ -20,17 +18,16 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuditoriaCandidato {
-
+public class AuditoriaEmpresa {
     @jakarta.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "candidato_id", referencedColumnName = "id")
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     @JsonBackReference
-    private Candidato candidato;
+    private Empresa empresa;
     @ManyToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     @JsonBackReference
@@ -45,10 +42,10 @@ public class AuditoriaCandidato {
     @Temporal(TemporalType.DATE) // Especifica que la columna es de tipo DATE
     private LocalDate fechaCambio;
 
-    public AuditoriaCandidato(Usuario usuario, String tipo, Candidato candidato, String campo, String datoAnt, String datoAct, String tablaAEditar, LocalDate fechaCambio) {
+    public AuditoriaEmpresa(Empresa empresa, Usuario usuario, String tipo, String campo, String datoAnt, String datoAct, String tablaAEditar, LocalDate fechaCambio) {
+        this.empresa = empresa;
         this.usuario = usuario;
         this.tipo = tipo;
-        this.candidato = candidato;
         this.campo = campo;
         this.datoAnt = datoAnt;
         this.datoAct = datoAct;
@@ -56,10 +53,10 @@ public class AuditoriaCandidato {
         this.fechaCambio = fechaCambio;
     }
 
-    public AuditoriaCandidato(Usuario usuario, String tipo, Candidato candidato, String campo, String datoAnt, String datoAct, String tablaAEditar, Long idTablaAEditar, LocalDate fechaCambio) {
+    public AuditoriaEmpresa(Empresa empresa, Usuario usuario, String tipo, String campo, String datoAnt, String datoAct, String tablaAEditar, Long idTablaAEditar, LocalDate fechaCambio) {
+        this.empresa = empresa;
         this.usuario = usuario;
         this.tipo = tipo;
-        this.candidato = candidato;
         this.campo = campo;
         this.datoAnt = datoAnt;
         this.datoAct = datoAct;
@@ -67,6 +64,4 @@ public class AuditoriaCandidato {
         this.idTablaAEditar = idTablaAEditar;
         this.fechaCambio = fechaCambio;
     }
-
-    // Getters y Setters
 }

@@ -62,4 +62,14 @@ public class TurnoService implements ITurnoService {
     public List<Turno> getTurnos() {
        return turnoRepository.findAll();
     }
+
+    @Override
+    public Turno getUnTurno(String nombre) {
+        for (Turno turno : getTurnos()){
+            if (turno.getTurno().name().equals(nombre)){
+                return turno;
+            }
+        }
+        return null;
+    }
 }

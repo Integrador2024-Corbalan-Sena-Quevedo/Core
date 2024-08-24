@@ -13,4 +13,6 @@ public interface IIdiomaService {
     void processIdioma(List<Map<String, String>> csvData);
     void precargaIdiomas();
     List<Idioma> getIdiomas();
+
+    Idioma getIdiomaNombre(String id);
 }

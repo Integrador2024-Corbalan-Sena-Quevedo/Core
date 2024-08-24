@@ -11,4 +11,6 @@ public interface IPrestacionService {
     void processPrestacionCarga(List<Map<String,String>> csvData);
 
     List<Prestacion> getPrestaciones();
+
+    Prestacion getUnaPrestacion(String nombre);
 }

@@ -34,4 +34,27 @@ public class Empresa extends Cliente{
     private EncuestaEmpresa encuestaEmpresa;
     @OneToMany
     private List<Seguimiento> seguimientos;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AuditoriaEmpresa> auditoriaEmpresas;
+
+    public Empleo getUnEmpleo(Long id){
+        for (Empleo emp : empleo) {
+            if (emp.getId().equals(id)) {
+                return emp;
+            }
+        }
+        return null;
+    }
+
+    public void setUnEmpleo(Empleo emp) {
+        for (Empleo unEmp : empleo){
+            if (unEmp.getId().equals(emp.getId())) {
+                empleo.remove(unEmp);
+                empleo.add(emp);
+                break;
+            }
+        }
+    }
 }

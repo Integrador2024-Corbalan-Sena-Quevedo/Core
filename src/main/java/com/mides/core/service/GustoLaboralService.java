@@ -120,4 +120,14 @@ public class GustoLaboralService implements IGustoLaboralService{
     public List<GustoLaboral> getGustos() {
         return  gustoLaboralRepository.findAll();
     }
+
+    @Override
+    public GustoLaboral getUnGusto(String nombre) {
+        for (GustoLaboral unGustoLaboral : getGustos()){
+            if (unGustoLaboral.getGusto().equals(nombre)){
+                return unGustoLaboral;
+            }
+        }
+        return null;
+    }
 }

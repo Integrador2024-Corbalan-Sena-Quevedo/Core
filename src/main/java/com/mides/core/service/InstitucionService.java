@@ -45,4 +45,13 @@ public class InstitucionService implements IInstitucionService{
     public List<Institucion> getInstituciones() {
        return insititucionRepository.getInstituciones();
     }
+
+    public Institucion getUnaInstitucion(String nombre) {
+        for (Institucion unaIns : getInstituciones()) {
+            if (unaIns.getTipo().name().equals(nombre)) {
+                return unaIns;
+            }
+        }
+        return null;
+    }
 }

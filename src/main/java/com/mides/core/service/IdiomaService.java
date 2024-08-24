@@ -55,4 +55,14 @@ public class IdiomaService implements IIdiomaService{
     public List<Idioma> getIdiomas() {
         return idiomaRepository.findAll();
     }
+
+    @Override
+    public Idioma getIdiomaNombre(String id) {
+        for (Idioma idioma : idiomaRepository.findAll()) {
+            if (idioma.getNombre().equals(id)) {
+                return idioma;
+            }
+        }
+        return null;
+    }
 }

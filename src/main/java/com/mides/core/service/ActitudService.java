@@ -46,8 +46,6 @@ public class ActitudService implements IActitudService{
                 if (key.startsWith("Actitud_empleo - ")) {
                     String nombreActitud = key.substring("Actitud_empleo - ".length());
                     actitudAux = new Actitud(nombreActitud);
-                    if(row.get("Descripción actitud ante el empleo") != null && !row.get("Descripción actitud ante el empleo").isEmpty() )
-                        actitudAux.setObservacionDeActiud((row.get("Descripción actitud ante el empleo")));
                         actitudes.add(actitudAux);
                 }
             }
@@ -58,5 +56,15 @@ public class ActitudService implements IActitudService{
     @Override
     public List<Actitud> getActitudes() {
         return actitudRepository.findAll();
+    }
+
+    @Override
+    public Actitud getUnActitud(String nombre) {
+        for (Actitud actitud : getActitudes()) {
+            if (actitud.getNombre().equals(nombre)) {
+                return actitud;
+            }
+        }
+        return null;
     }
 }
