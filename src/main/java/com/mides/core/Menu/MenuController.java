@@ -106,4 +106,10 @@ public class MenuController {
         return ResponseEntity.ok(candidatosCargaHoraria);
     }
 
+    @GetMapping("estadisticas/candidatosTrabajando")
+    public ResponseEntity<Map<String, Long>> getCandidatosTrabajando() {
+        Map<String, Long> candidatosCargaHoraria= menuService.getCandidatosTrabajando();
+        return ResponseEntity.ok(candidatosCargaHoraria);
+    }
+
 }

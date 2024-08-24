@@ -1,10 +1,7 @@
 package com.mides.core.Menu;
 
 import com.mides.core.model.*;
-import com.mides.core.repository.ICandidatoRepositoy;
-import com.mides.core.repository.IEmpleoRepository;
-import com.mides.core.repository.IEncuestaRepository;
-import com.mides.core.repository.IUsuarioRepository;
+import com.mides.core.repository.*;
 import com.mides.core.service.ICandidatoSevice;
 import com.mides.core.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +31,8 @@ public class MenuService {
  private IEncuestaRepository encuestaRepository;
     @Autowired
     private ICandidatoRepositoy candidatoRepository;
+    @Autowired
+    private ISeguimientoRepository seguimientoRepository;
  private final UsuarioService usuarioService;
 
     public List<Usuario> getAllOperators() {
@@ -212,6 +211,16 @@ public class MenuService {
                 }, Collectors.counting()));
 
         return candidatosPorCargaHoraria;
+    }
+
+    public Map<String, Long> getCandidatosTrabajando() {
+        List<Seguimiento> seguimientos = seguimientoRepository.findAll();
+
+        Map<String, Long> candidatosTrabajando = seguimientos.stream()
+                .filter(seguimiento -> seguimiento.getCandidato() != null)
+                .collect(Collectors.groupingBy(seguimiento -> seguimiento.getEmpleo().getNombrePuesto(), Collectors.counting()));
+
+        return candidatosTrabajando;
     }
 }
 
