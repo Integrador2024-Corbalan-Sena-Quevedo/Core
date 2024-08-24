@@ -28,6 +28,7 @@ public interface ICandidatoRepositoy  extends JpaRepository<Candidato, Long> {
             "AND (:#{#filter.formacionAcademica} IS NULL OR e.nivel_numerico >= :#{#filter.formacionAcademica.ordinal()}) " +
             "AND (:#{#filter.ingles} = '' OR i.nombre LIKE 'Ingl%') " +
             "AND (:#{#filter.portugues} = '' OR i.nombre LIKE 'Portu%' ) " +
+            "AND (:#{#filter.conduce} = 0 OR dac.conduce = :#{#filter.conduce} ) " +
             "AND (DATE_PART('year', AGE(c.fecha_de_nacimiento )) >= :#{#filter.edadMinima}) " +
             "AND (DATE_PART('year', AGE(c.fecha_de_nacimiento )) <= :#{#filter.edadMaxima}) " +
             "AND (:#{#filter.cargaHorariaSemanal} IS NULL OR :#{#filter.cargaHorariaSemanal} = '' " +

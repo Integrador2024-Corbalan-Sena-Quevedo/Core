@@ -26,4 +26,5 @@ public class QueryFilterEmpleo {
     private String portugues;
     private String computacion;
     private String libretaConducir;
+    private int conduce;
 }

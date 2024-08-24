@@ -143,12 +143,14 @@ public class EmpleoService implements IEmpleoService{
         queryFilterEmpleo.setDepartamento(empleo.getDepartamento() != null ? empleo.getDepartamento() : "");
         queryFilterEmpleo.setExperienciaMinima(empleo.getExperienciaPrevia() != null ? empleo.getExperienciaPrevia() : "");
         queryFilterEmpleo.setLocalidades(empleo.getLocalidades() != null ? empleo.getLocalidades() : "");
+        String libretaConducir = empleo.getLibretaConducir();
+        queryFilterEmpleo.setConduce("SI".equalsIgnoreCase(libretaConducir) ? 1 : 0);
         queryFilterEmpleo.setLibretaConducir(empleo.getLibretaConducir() != null ? empleo.getLibretaConducir() : "");
         queryFilterEmpleo.setImplicaDesplazamientos(empleo.getImplicaDesplazamientos() != null ? empleo.getImplicaDesplazamientos() : "");
         queryFilterEmpleo.setFormacionAcademica(empleo.getFormacionAcademica() != null
                                                 ? NivelEducativo.valueOf(empleo.getFormacionAcademica().toUpperCase().replace(" ", "_"))
                                                 : null);
-        if (empleo.getRangoDeEdad() != null && !empleo.getRangoDeEdad().equals("")) {
+        if (empleo.getRangoDeEdad() != null && !empleo.getRangoDeEdad().isEmpty()) {
             int[] ageRange = extractAgeRange(empleo.getRangoDeEdad());
             queryFilterEmpleo.setEdadMinima(ageRange[0]);
             queryFilterEmpleo.setEdadMaxima(ageRange[1]);
