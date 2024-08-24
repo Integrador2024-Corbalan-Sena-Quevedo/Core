@@ -75,6 +75,25 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
                     case "menores a":
                         addFiltersMenores(root, "fecha_de_nacimiento", filtro.getSubFiltros(), criteriaBuilder, predicate);
                         break;
+                    case "departamento":
+                        Join<Candidato, Dirreccion> dirreccionJoin = root.join("dirreccion", JoinType.INNER );
+                        addSubFiltersDepartamento(dirreccionJoin, filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "idioma":
+                        Join<Candidato, CandidatoIdioma> candidatoCandidatoIdiomaJoin = root.join("candidatoIdiomas", JoinType.INNER );
+                        Join<CandidatoIdioma, Idioma> idiomaJoin = candidatoCandidatoIdiomaJoin.join("idioma", JoinType.INNER );
+                        addSubFiltersIdioma(idiomaJoin, filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
+                    case "libreta_Conducir":
+                        Join<Candidato, DatosAdicionalesCandidato> datosAdicionalesCandidatoJoin = root.join("datosAdicionalesCandidato", JoinType.INNER );
+                        Predicate pred = criteriaBuilder.notEqual(datosAdicionalesCandidatoJoin.get("tipoLibreta"), "");
+                        predicate.add(pred);
+                        break;
+                    case "Registro Nacional de Persona con Discapacidad":
+                        Join<Candidato, DatosAdicionalesCandidato> datosAdicionalesCandidatoJoin1 = root.join("datosAdicionalesCandidato", JoinType.INNER );
+                        Predicate predDatoAd = criteriaBuilder.equal(criteriaBuilder.upper(datosAdicionalesCandidatoJoin1.get("registoEnCNHD")),"SI");
+                        predicate.add(predDatoAd);
+                        break;
                 }
             }
         }
@@ -82,6 +101,31 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
         System.out.println("CAntidad de Predicados +++++++++++"+predicate.size());
         query.orderBy(criteriaBuilder.asc(root.get("apellido")));
         return criteriaBuilder.and(predicate.toArray(new Predicate[predicate.size()]));
+    }
+
+    private void addSubFiltersIdioma(Join<CandidatoIdioma, Idioma> idiomaJoin, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        if (subFiltros != null && !subFiltros.isEmpty()){
+            List<Predicate> subFilters = new ArrayList<>();
+            for (String subFiltro : subFiltros){
+                Predicate predicate = criteriaBuilder.equal(idiomaJoin.get("nombre"), subFiltro);
+                subFilters.add(predicate);
+            }
+
+            predicates.add(criteriaBuilder.or(subFilters.toArray(new Predicate[0])));
+        }
+    }
+
+    private void addSubFiltersDepartamento(Join<Candidato, Dirreccion> dirreccionJoin, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        if (subFiltros != null && !subFiltros.isEmpty()) {
+            List<Predicate> subFilters = new ArrayList<>();
+            for (String subFiltro : subFiltros) {
+                Predicate predicate = criteriaBuilder.equal(dirreccionJoin.get("departamento"), subFiltro);
+                subFilters.add(predicate);
+            }
+
+            predicates.add(criteriaBuilder.or(subFilters.toArray(new Predicate[0])));
+
+        }
     }
 
     private void addFiltersMayores(Path<?> path, String attributeName, List<String> subFilters, CriteriaBuilder criteriaBuilder, List<Predicate> predicates){

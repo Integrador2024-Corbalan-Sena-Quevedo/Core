@@ -134,4 +134,12 @@ public class Candidato extends Cliente{
     }
 
 
+    public CandidatoIdioma getUnCandidatoIdioma(long l) {
+        for (CandidatoIdioma candidatoIdioma : this.getCandidatoIdiomas()){
+            if (candidatoIdioma.getId().equals(l)){
+                return candidatoIdioma;
+            }
+        }
+        return null;
+    }
 }

@@ -13,4 +13,6 @@ public interface IAyudaTecnicaService {
 
     void processAyudaTecnicaCarga(List<Map <String,String>> csvData);
     List<AyudaTecnica> getAyudaTecnicas();
+
+    AyudaTecnica getUnaAyudaTecnica(String nombre);
 }

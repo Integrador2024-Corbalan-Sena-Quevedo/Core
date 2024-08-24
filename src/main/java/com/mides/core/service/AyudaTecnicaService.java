@@ -66,4 +66,14 @@ public class AyudaTecnicaService implements IAyudaTecnicaService {
        return ayudaTecnicaRepository.findAll();
     }
 
+    @Override
+    public AyudaTecnica getUnaAyudaTecnica(String nombre) {
+        for (AyudaTecnica ayudaTec : ayudaTecnicaRepository.findAll()) {
+            if (ayudaTec.getNombre().equals(nombre)) {
+                return ayudaTec;
+            }
+        }
+        return null;
+    }
+
 }

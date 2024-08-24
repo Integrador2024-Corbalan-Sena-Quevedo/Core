@@ -19,6 +19,7 @@ public class DatosAdicionalesCandidato {
     private Long id;
     private String registoEnCNHD;
     private int conduce;
+
     private String tipoLibreta;
     private String enviaCV;
     private String hijos;

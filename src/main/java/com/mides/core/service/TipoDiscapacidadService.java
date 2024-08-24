@@ -62,4 +62,20 @@ public class TipoDiscapacidadService implements  ITipoDiscapacidadService{
     public List<TipoDiscapacidad> getTipoDiscapacidades() {
         return tipoDiscapacidadRepository.findAll();
     }
+
+    @Override
+    public TipoDiscapacidad getTipoDiscapacidadById(long l) {
+        return tipoDiscapacidadRepository.findById(l).orElse(null);
+    }
+
+    @Override
+    public TipoDiscapacidad getTipoDiscapacidadByNombre(String nombre) {
+        for (TipoDiscapacidad tipo : tipoDiscapacidadRepository.findAll()) {
+            if (tipo.getNombre().equals(nombre)) {
+                return tipo;
+            }
+        }
+
+        return null;
+    }
 }

@@ -75,4 +75,14 @@ public class ApoyoService implements IApoyoService{
     public List<Apoyo> getApoyos() {
         return apoyoRepository.findAll();
     }
+
+    @Override
+    public Apoyo getUnApoyo(String nombre) {
+        for (Apoyo apoyo : apoyoRepository.findAll()){
+            if (apoyo.getNombre().equals(nombre)){
+                return apoyo;
+            }
+        }
+        return null;
+    }
 }

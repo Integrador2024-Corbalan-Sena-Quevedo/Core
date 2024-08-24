@@ -13,4 +13,6 @@ public interface ITurnoService {
 
     List<Turno> getTurnos();
 
+    Turno getUnTurno(String nombre);
+
 }

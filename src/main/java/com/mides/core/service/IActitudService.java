@@ -13,4 +13,6 @@ public interface IActitudService {
     void processActitudCarga(List<Map<String, String>> csvData);
 
     List<Actitud> getActitudes();
+
+    Actitud getUnActitud(String nombre);
 }

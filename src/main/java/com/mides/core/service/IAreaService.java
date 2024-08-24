@@ -11,4 +11,6 @@ public interface IAreaService {
     void processAreaCarga(List<Map<String,String>> csvData);
 
     List<Area> getAreas();
+
+    Area getUnArea(String nombre);
 }

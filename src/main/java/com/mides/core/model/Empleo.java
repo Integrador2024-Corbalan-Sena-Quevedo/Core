@@ -19,7 +19,7 @@ public class Empleo {
     private String plazoContrato;
     private String departamento;
     private String localidades;
-    @OneToMany(mappedBy = "empleo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "empleo", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Tarea> tareas;
     private String trabajoAlExterior;
@@ -56,4 +56,16 @@ public class Empleo {
     private int activo;
     @OneToMany
     private List<Seguimiento> seguimientos;
+
+
+    public void setUnaTarea(Tarea tarea) {
+        for (Tarea t : tareas) {
+            if (t.getId().equals(tarea.getId())) {
+
+                tareas.remove(t);
+                tareas.add(tarea);
+                break;
+            }
+        }
+    }
 }

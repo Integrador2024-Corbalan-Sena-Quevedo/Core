@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -18,11 +20,10 @@ public class Actitud {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String nombre;
-    private String observacionDeActiud;
-    @ManyToOne
-    @JoinColumn(name = "experienciaLaboral_id", referencedColumnName = "id")
+
+    @ManyToMany(mappedBy = "actitudes")
     @JsonBackReference
-    private ExperienciaLaboral experienciaLaboral;
+    private List<ExperienciaLaboral> experienciaLaboral;
 
 
     public Actitud(String nombre) {

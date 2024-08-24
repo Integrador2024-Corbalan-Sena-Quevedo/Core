@@ -13,4 +13,6 @@ public interface IMotivoDesempleoService {
     void processMotivoDesempleoCarga(List<Map<String, String>> csvData);
 
     List<MotivoDesempleo> getMotivos();
+
+    MotivoDesempleo getUnMotivoDesempleo(String nombre);
 }

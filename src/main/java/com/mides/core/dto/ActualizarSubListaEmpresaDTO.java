@@ -10,8 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ActualizarSubListaCandidatoDTO {
-    private String candidatoId;
+public class ActualizarSubListaEmpresaDTO {
+    private String empresaId;
+    private String empleoId;
     private String userName;
     private String lista;
     private String subLista;

@@ -29,6 +29,9 @@ public class Institucion {
         OTRA;
     }
 
+
+
+
     public Institucion(Instituciondeseo tipo) {
         this.tipo = tipo;
     }

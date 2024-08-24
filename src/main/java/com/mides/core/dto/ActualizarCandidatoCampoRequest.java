@@ -10,10 +10,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ActualizarSubListaCandidatoDTO {
+public class ActualizarCandidatoCampoRequest {
     private String candidatoId;
+    private String campo;
     private String userName;
+    private String datoAct;
+    private String datoAnt;
     private String lista;
     private String subLista;
-    private String id;
+
 }

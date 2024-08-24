@@ -14,4 +14,6 @@ public interface IInstitucionService {
 
     void precargarInsituciones();
     List<Institucion> getInstituciones();
+
+    Institucion getUnaInstitucion(String nombre);
 }

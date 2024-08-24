@@ -1,6 +1,5 @@
 package com.mides.core.controller;
 
-import com.mides.core.model.ActualizarCampoRequest;
 import com.mides.core.model.Candidato;
 import com.mides.core.model.Cliente;
 import com.mides.core.service.IFiltroCandidatosService;
@@ -11,11 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Console;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/filtro")

@@ -33,6 +33,7 @@ public class ExperienciaLaboral {
     private String finTrabajo;
     private String tareas;
     private String tipoDeTrabajoOtros;
+    private String observacionDeActiud;
     @OneToOne
     @JoinColumn(name = "candidato_id", referencedColumnName = "id")
     @JsonBackReference
@@ -55,7 +56,12 @@ public class ExperienciaLaboral {
     @JsonManagedReference
     private List<GustoLaboral> gustosLaborales;
 
-    @OneToMany(mappedBy = "experienciaLaboral", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "experienciaLaboral_Actitud",
+            joinColumns = @JoinColumn(name = "experienciaLaboral_id"),
+            inverseJoinColumns = @JoinColumn(name = "actitud_id")
+    )
     @JsonManagedReference
     private  List<Actitud> actitudes;
 

@@ -14,4 +14,6 @@ public interface IApoyoService {
     void processApoyoCarga(List<Map<String, String>> csvData);
 
     List<Apoyo> getApoyos();
+
+    Apoyo getUnApoyo(String nombre);
 }

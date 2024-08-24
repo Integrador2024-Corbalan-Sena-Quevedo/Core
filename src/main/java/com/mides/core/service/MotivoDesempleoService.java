@@ -94,4 +94,14 @@ public class MotivoDesempleoService implements IMotivoDesempleoService{
     public List<MotivoDesempleo> getMotivos() {
       return  motivoDesempleoRepository.findAll();
     }
+
+    @Override
+    public MotivoDesempleo getUnMotivoDesempleo(String nombre) {
+        for (MotivoDesempleo unMotivoDesempleo : getMotivos()) {
+            if (unMotivoDesempleo.getMotivo().equals(nombre)) {
+                return unMotivoDesempleo;
+            }
+        }
+        return null;
+    }
 }

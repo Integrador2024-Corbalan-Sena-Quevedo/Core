@@ -40,6 +40,9 @@ public class ExperienciaLaboralService implements  IExperienciaLaboralService{
             experienciaLaboral.setGustosLaborales(getGustos(csvData, gustoLaborales));
             experienciaLaboral.setMotivosDesempleo(getMotivos(csvData, motivoDesempleos));
             experienciaLaboral.setActitudes(getActitudes(csvData, actitudes, experienciaLaboral));
+            if(row.get("Descripción actitud ante el empleo") != null && !row.get("Descripción actitud ante el empleo").isEmpty() ){
+                experienciaLaboral.setObservacionDeActiud((row.get("Descripción actitud ante el empleo")));
+            }
         }
         this.saveExperienciaLaboral(experienciaLaboral);
     }
@@ -54,8 +57,9 @@ public class ExperienciaLaboralService implements  IExperienciaLaboralService{
                     String nombreActitud = key.substring("Actitud_empleo - ".length());
                     for (Actitud actitud : actitudes) {
                         if (actitud.getNombre().equals(nombreActitud)) {
-                            actitud.setExperienciaLaboral(experienciaLaboral);
+
                             actitudesDelCandidato.add(actitud);
+
                         }
                     }
                 }

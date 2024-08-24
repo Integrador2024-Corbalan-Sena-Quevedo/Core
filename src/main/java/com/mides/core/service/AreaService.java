@@ -60,4 +60,14 @@ public class AreaService implements IAreaService {
     public List<Area> getAreas() {
         return areaRepository.findAll();
     }
+
+    @Override
+    public Area getUnArea(String nombre) {
+        for (Area area : getAreas()) {
+            if (area.getNombre().equals(nombre)) {
+                return area;
+            }
+        }
+        return null;
+    }
 }

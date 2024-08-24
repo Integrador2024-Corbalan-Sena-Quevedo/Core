@@ -13,4 +13,8 @@ public interface ITipoDiscapacidadService {
     void processTipoDiscapacidadCarga(List<Map<String,String>> csvData);
 
     List<TipoDiscapacidad> getTipoDiscapacidades();
+
+    TipoDiscapacidad getTipoDiscapacidadById(long l);
+
+    TipoDiscapacidad getTipoDiscapacidadByNombre(String nombre);
 }
