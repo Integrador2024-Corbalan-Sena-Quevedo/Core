@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", methods = { RequestMethod.PATCH, RequestMethod.GET, RequestMethod.DELETE })
 public class CandidatoController {
 
     @Autowired

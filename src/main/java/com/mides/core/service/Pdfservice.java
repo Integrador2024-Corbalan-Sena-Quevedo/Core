@@ -53,6 +53,9 @@ public class Pdfservice  implements IPdfService {
     }
 
     public File base64AsPdfFile(String nombre, String cvBase64) {
+        if(cvBase64 == null ){
+            return null;
+        }
         try {
             byte[] pdfData = Base64.getDecoder().decode(cvBase64);
             File tempFile = File.createTempFile(nombre + "Cv", ".pdf");
