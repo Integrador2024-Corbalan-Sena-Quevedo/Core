@@ -1,7 +1,6 @@
 package com.mides.core.service;
 
 import com.mides.core.dto.EmpleoDTO;
-import com.mides.core.dto.EmpresaDTO;
 import com.mides.core.enums.NivelEducativo;
 import com.mides.core.model.*;
 import com.mides.core.repository.ICandidatoRepositoy;
@@ -9,9 +8,7 @@ import com.mides.core.repository.IConocimientosEspecificosEmpleoRepository;
 import com.mides.core.repository.IEmpleoRepository;
 import com.mides.core.request.EmpleoRequest;
 import lombok.NoArgsConstructor;
-import org.apache.el.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.mides.core.service;
+package com.mides.core.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

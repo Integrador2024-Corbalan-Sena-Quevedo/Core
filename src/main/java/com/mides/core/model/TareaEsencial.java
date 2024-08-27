@@ -1,5 +1,6 @@
-package com.mides.core.service;
+package com.mides.core.model;
 
+import com.mides.core.model.DetalleTarea;
 import com.mides.core.model.Tarea;
 import jakarta.persistence.Entity;
 import java.util.List;

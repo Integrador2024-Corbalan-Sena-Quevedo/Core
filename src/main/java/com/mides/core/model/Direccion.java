@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Dirreccion {
+public class Direccion {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
