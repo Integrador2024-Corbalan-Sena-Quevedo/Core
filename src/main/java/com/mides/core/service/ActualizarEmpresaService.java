@@ -100,7 +100,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                         empresa.setDatosAdicionalesEmpresa(dhe);
                                         actualizarEmpresaRepository.save(empresa);
                                         break;
-                                    case "dirreccion":
+                                    case "direccion":
                                         Direccion direccion = empresa.getDireccion();
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, direccion.getId(), LocalDate.now());
                                         auditoriaEmpresaRepository.save(auditoriaEmpresa);

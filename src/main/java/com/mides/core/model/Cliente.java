@@ -34,7 +34,7 @@ public abstract class Cliente {
         return "Cliente{" +
                 "id=" + id +
                 ", emails=" + emails +
-                ", dirreccion=" + direccion +
+                ", direccion=" + direccion +
                 ", telefonos=" + telefonos +
                 '}';
     }
