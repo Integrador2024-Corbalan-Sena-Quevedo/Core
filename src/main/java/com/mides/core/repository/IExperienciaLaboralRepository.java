@@ -1,6 +1,6 @@
 package com.mides.core.repository;
 
-import com.mides.core.service.ExperienciaLaboral;
+import com.mides.core.model.ExperienciaLaboral;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

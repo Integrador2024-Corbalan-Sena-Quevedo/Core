@@ -19,7 +19,7 @@ public interface ICandidatoRepositoy  extends JpaRepository<Candidato, Long> {
             "INNER JOIN cliente cli ON c.id = cli.id " +
             "INNER JOIN datos_adicionales_candidato dac ON  dac.candidato_id = c.id " +
             "INNER JOIN habilidad h ON h.candidato_id = c.id " +
-            "INNER JOIN dirreccion d ON d.cliente_id = cli.id " +
+            "INNER JOIN direccion d ON d.cliente_id = cli.id " +
             "INNER JOIN educacion e ON e.candidato_id = c.id " +
             "LEFT JOIN candidato_idioma ci ON ci.candidato_id = c.id " +
             "LEFT JOIN idioma i ON ci.idioma_id = i.id " +

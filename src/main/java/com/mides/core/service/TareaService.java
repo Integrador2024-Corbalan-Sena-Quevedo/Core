@@ -1,10 +1,8 @@
 package com.mides.core.service;
 
-import com.mides.core.model.Empleo;
-import com.mides.core.model.Tarea;
+import com.mides.core.model.*;
 import com.mides.core.repository.ITareaEsencialRepository;
 import com.mides.core.repository.ITareaNoEsencialRepository;
-import com.mides.core.repository.ITareaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
