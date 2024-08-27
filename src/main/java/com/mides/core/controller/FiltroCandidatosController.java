@@ -66,7 +66,6 @@ public class FiltroCandidatosController {
     @PostMapping("/unCandidato")
     public ResponseEntity<?> obtenerCandidato(@RequestBody Long candidatoId) {
         try {
-            System.out.println(candidatoId);
             Candidato candidato = filtroCandidatosService.obtenerElCandidato(candidatoId);
 
             if (candidato != null) {
