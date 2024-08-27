@@ -128,7 +128,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                                 candidato.setApellido(datoAct);
                                 actualizarCandidatoRepository.save(candidato);
                                 break;
-                            case "dirreccion":
+                            case "direccion":
                                 Direccion direccion = candidato.getDireccion();
 
                                 if(direccion != null){
