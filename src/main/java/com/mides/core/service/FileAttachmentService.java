@@ -27,7 +27,7 @@ public class FileAttachmentService implements IFileAttachmentService{
     @Autowired
     ICandidatoSevice candidatoSevice;
     @Autowired
-    IDirreccionService dirreccionService;
+    IDireccionService direccionService;
 
     @Autowired
     ITelefonoService  telefonoService;
@@ -137,7 +137,7 @@ public class FileAttachmentService implements IFileAttachmentService{
     @Override
     public void processCSVDataCandidate(List<Map<String, String>> csvData) throws Exception {
             Candidato candidato = candidatoSevice.processCandidato(csvData, ayudaTecnicaService.getAyudaTecnicas(), prestacionService.getPrestaciones(), areaService.getAreas(), apoyoService.getApoyos());
-            dirreccionService.processDirreccion(csvData, candidato);
+            direccionService.processDireccion(csvData, candidato);
             telefonoService.processTelefono(csvData, candidato);
             educacionService.processEducacion(csvData, candidato, institucionService.getInstituciones());
             habilidadService.processHabilidad(csvData, candidato);
@@ -157,7 +157,7 @@ public class FileAttachmentService implements IFileAttachmentService{
 
             Empresa empresa = empresaSevice.processEmpresa(csvData);
             datosAdicionalesEmpresaService.proessDatosAdicionalesEmpresa(csvData, empresa);
-            dirreccionService.processDirreccion(csvData, empresa);
+            direccionService.processDireccion(csvData, empresa);
             emailService.processEmail(csvData, empresa);
             telefonoService.processTelefono(csvData, empresa);
             Empleo empleo = empleoService.processEmpleo(csvData, empresa);

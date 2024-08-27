@@ -1,7 +1,7 @@
 package com.mides.core.specification;
 
 import com.mides.core.model.*;
-import com.mides.core.service.ExperienciaLaboral;
+import com.mides.core.model.ExperienciaLaboral;
 import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +10,9 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
 
 
-import javax.script.ScriptEngine;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -76,8 +74,8 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
                         addFiltersMenores(root, "fecha_de_nacimiento", filtro.getSubFiltros(), criteriaBuilder, predicate);
                         break;
                     case "departamento":
-                        Join<Candidato, Dirreccion> dirreccionJoin = root.join("dirreccion", JoinType.INNER );
-                        addSubFiltersDepartamento(dirreccionJoin, filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        Join<Candidato, Direccion> direccionJoin = root.join("direccion", JoinType.INNER );
+                        addSubFiltersDepartamento(direccionJoin, filtro.getSubFiltros(), criteriaBuilder, predicate);
                         break;
                     case "idioma":
                         Join<Candidato, CandidatoIdioma> candidatoCandidatoIdiomaJoin = root.join("candidatoIdiomas", JoinType.INNER );
@@ -115,11 +113,11 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
         }
     }
 
-    private void addSubFiltersDepartamento(Join<Candidato, Dirreccion> dirreccionJoin, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+    private void addSubFiltersDepartamento(Join<Candidato, Direccion> direccionJoin, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
         if (subFiltros != null && !subFiltros.isEmpty()) {
             List<Predicate> subFilters = new ArrayList<>();
             for (String subFiltro : subFiltros) {
-                Predicate predicate = criteriaBuilder.equal(dirreccionJoin.get("departamento"), subFiltro);
+                Predicate predicate = criteriaBuilder.equal(direccionJoin.get("departamento"), subFiltro);
                 subFilters.add(predicate);
             }
 

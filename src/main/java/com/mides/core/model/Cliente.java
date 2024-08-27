@@ -23,7 +23,7 @@ public abstract class Cliente {
     private List<Email> emails;
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private Dirreccion dirreccion;
+    private Direccion direccion;
     @JsonManagedReference
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Telefono> telefonos;
@@ -34,7 +34,7 @@ public abstract class Cliente {
         return "Cliente{" +
                 "id=" + id +
                 ", emails=" + emails +
-                ", dirreccion=" + dirreccion +
+                ", direccion=" + direccion +
                 ", telefonos=" + telefonos +
                 '}';
     }

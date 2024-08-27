@@ -24,10 +24,6 @@ public class EmpleoController{
     IEmpleoService empleoService;
     @Autowired
     ICandidatoSevice candidatoSevice;
-
-    @Autowired
-    ChatGPTController chatGPTController;
-
     private List<Candidato> candidatos = new ArrayList<>();
 
     @PostMapping("/preFilto")

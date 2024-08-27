@@ -4,7 +4,6 @@ import com.mides.core.model.*;
 import com.mides.core.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -129,13 +128,13 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                                 candidato.setApellido(datoAct);
                                 actualizarCandidatoRepository.save(candidato);
                                 break;
-                            case "dirreccion":
-                                Dirreccion dirreccion = candidato.getDirreccion();
+                            case "direccion":
+                                Direccion direccion = candidato.getDireccion();
 
-                                if(dirreccion != null){
-                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, dirreccion.getId(), LocalDate.now()));
-                                    actualizarDireccion(dirreccion, campo, datoAct);
-                                    candidato.setDirreccion(dirreccion);
+                                if(direccion != null){
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, direccion.getId(), LocalDate.now()));
+                                    actualizarDireccion(direccion, campo, datoAct);
+                                    candidato.setDireccion(direccion);
                                     actualizarCandidatoRepository.save(candidato);
 
                                 }else{
@@ -1066,7 +1065,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
         }
     }
 
-    private void actualizarDireccion(Dirreccion direccion, String campo, String dato) throws Exception {
+    private void actualizarDireccion(Direccion direccion, String campo, String dato) throws Exception {
         if (direccion != null) {
             System.out.println("Campo: "+campo);
             switch (campo) {

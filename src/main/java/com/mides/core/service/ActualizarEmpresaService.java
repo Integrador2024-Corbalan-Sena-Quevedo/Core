@@ -3,7 +3,6 @@ package com.mides.core.service;
 import com.mides.core.model.*;
 import com.mides.core.repository.IActualizarEmpresaRepository;
 import com.mides.core.repository.IAuditoriaEmpresaRepository;
-import com.mides.core.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,12 +100,12 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                         empresa.setDatosAdicionalesEmpresa(dhe);
                                         actualizarEmpresaRepository.save(empresa);
                                         break;
-                                    case "dirreccion":
-                                        Dirreccion direccion = empresa.getDirreccion();
+                                    case "direccion":
+                                        Direccion direccion = empresa.getDireccion();
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, direccion.getId(), LocalDate.now());
                                         auditoriaEmpresaRepository.save(auditoriaEmpresa);
                                         actualizarDireccion(direccion, campo, datoAct);
-                                        empresa.setDirreccion(direccion);
+                                        empresa.setDireccion(direccion);
                                         actualizarEmpresaRepository.save(empresa);
                                         break;
                                     case "emails":
@@ -567,7 +566,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
 
     }
 
-    private void actualizarDireccion(Dirreccion direccion, String campo, String datoAct) {
+    private void actualizarDireccion(Direccion direccion, String campo, String datoAct) {
         switch (campo){
             case "apartamento":
                 direccion.setApartamento(datoAct);

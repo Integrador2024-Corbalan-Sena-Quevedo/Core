@@ -3,9 +3,7 @@ package com.mides.core.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.mides.core.service.ExperienciaLaboral;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -115,7 +113,7 @@ public class Candidato extends Cliente{
                 ", fechaDeNacimiento=" + fecha_de_nacimiento +
                 ", estadoCivil='" + estadoCivil + '\'' +
                 ", emails=" + this.getEmails() +
-                ", dirreccion=" + this.getDirreccion() +
+                ", direccion=" + this.getDireccion() +
                 ", telefonos=" + this.getTelefonos() +
                 ", educacion=" + educacion +
                 ", habilidad=" + habilidad +
