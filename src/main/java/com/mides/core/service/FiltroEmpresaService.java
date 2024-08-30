@@ -38,4 +38,9 @@ public class FiltroEmpresaService implements IFiltroEmpresaService{
         }
         return map;
     }
+
+    @Override
+    public Empresa obtenerlaEmpresa(Long empresaId) {
+        return filtroEmpresaRepository.findById(empresaId).orElse(null);
+    }
 }
