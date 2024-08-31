@@ -1,6 +1,7 @@
 package com.mides.core.model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.mides.core.enums.NivelEducativo;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -32,6 +33,7 @@ public class Empleo {
     private String edadPreferente;
     private String rangoDeEdad;
     private String formacionAcademica;
+    private int formacionNumerico;
     private String libretaConducir;
     private String categoriaLibretaConducir;
     private String experienciaPrevia;
@@ -67,5 +69,10 @@ public class Empleo {
                 break;
             }
         }
+    }
+
+    public void setFormacionAcademicaEnum(String nivelEducativo) {
+        this.formacionAcademica = nivelEducativo;
+        this.formacionNumerico = NivelEducativo.valueOf(nivelEducativo.toUpperCase().replace(" ", "_")).getNivel();
     }
 }

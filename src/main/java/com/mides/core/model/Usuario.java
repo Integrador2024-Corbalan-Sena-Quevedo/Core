@@ -33,6 +33,10 @@ public class Usuario implements UserDetails {
     @JsonManagedReference
     private List<AuditoriaEmpresa> auditoriaEmpresas;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<AuditoriaCandidato> auditoriaCandidatoes;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority((rol.name())));

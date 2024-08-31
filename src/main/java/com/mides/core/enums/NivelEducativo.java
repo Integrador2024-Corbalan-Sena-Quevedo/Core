@@ -40,4 +40,14 @@ public enum NivelEducativo {
         }
         throw new IllegalArgumentException("Nivel educativo no válido: " + nivel);
     }
+
+    public static int getNivelEducativo(String nivel) {
+        for (NivelEducativo n : values()) {
+            if (n.name().equals(nivel)) {
+                return n.getNivel();
+            }
+        }
+        throw new IllegalArgumentException("Nivel educativo no válido: " + nivel);
+    }
+
 }

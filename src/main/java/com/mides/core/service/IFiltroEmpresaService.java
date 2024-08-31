@@ -9,4 +9,6 @@ public interface IFiltroEmpresaService {
     Map<Long, Empresa> filtrarEmresas(SearchEmpresaSpecification criteria);
 
     Map<Long, Empresa> todasLasEmpresas();
+
+    Empresa obtenerlaEmpresa(Long empresaId);
 }
