@@ -1,5 +1,6 @@
 package com.mides.core.specification;
 
+import com.mides.core.enums.NivelEducativo;
 import com.mides.core.model.*;
 import com.mides.core.model.ExperienciaLaboral;
 import jakarta.persistence.criteria.*;
@@ -92,6 +93,10 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
                         Predicate predDatoAd = criteriaBuilder.equal(criteriaBuilder.upper(datosAdicionalesCandidatoJoin1.get("registoEnCNHD")),"SI");
                         predicate.add(predDatoAd);
                         break;
+                    case "nivel_Educativo":
+                        Join<Candidato, Educacion> educacionJoin = root.join("educacion", JoinType.INNER );
+                        addSubFiltersNivelEducativo(educacionJoin, filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
                 }
             }
         }
@@ -99,6 +104,19 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
         System.out.println("CAntidad de Predicados +++++++++++"+predicate.size());
         query.orderBy(criteriaBuilder.asc(root.get("apellido")));
         return criteriaBuilder.and(predicate.toArray(new Predicate[predicate.size()]));
+    }
+
+    private void addSubFiltersNivelEducativo(Join<Candidato, Educacion> educacionJoin, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        if(subFiltros != null && !subFiltros.isEmpty()){
+            List<Predicate> subFilters = new ArrayList<>();
+            for(String subFiltro : subFiltros){
+                int nivelEdu = NivelEducativo.getNivelEducativo(subFiltro);
+                Predicate preicate= criteriaBuilder.greaterThanOrEqualTo(educacionJoin.get("nivelNumerico"), nivelEdu);
+                subFilters.add(preicate);
+            }
+
+            predicates.add(criteriaBuilder.or(subFilters.toArray(new Predicate[0])));
+        }
     }
 
     private void addSubFiltersIdioma(Join<CandidatoIdioma, Idioma> idiomaJoin, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
@@ -131,7 +149,7 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
 
             for (String subFilter : subFilters){
                 LocalDate anioNacimiento = calcularAnioNacimiento(Integer.parseInt(subFilter));
-                Predicate predicate = criteriaBuilder.lessThan(path.get(attributeName), anioNacimiento);
+                Predicate predicate = criteriaBuilder.lessThanOrEqualTo(path.get(attributeName), anioNacimiento);
                 predicates.add(predicate);
                 System.out.println(path.get(attributeName) + " " + anioNacimiento);
             }
@@ -143,7 +161,7 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
 
             for (String subFilter : subFilters){
                 LocalDate anioNacimiento = calcularAnioNacimiento(Integer.parseInt(subFilter));
-                Predicate predicate = criteriaBuilder.greaterThan(path.get(attributeName), anioNacimiento);
+                Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(path.get(attributeName), anioNacimiento);
                 predicates.add(predicate);
                 System.out.println(path.get(attributeName) + " " + anioNacimiento);
             }
