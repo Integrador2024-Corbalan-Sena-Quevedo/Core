@@ -979,6 +979,12 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     educacion.setEducacionNoFormal(dato);
                     break;
                 case "nivelEducativo":
+                    try {
+                        educacion.setNivelEducativoEnum(dato);
+                    }catch (Exception e){
+                        throw new Exception("Nivel de educativo no encontrado");
+                    }
+
                     educacion.setNivelEducativo(dato);
                     break;
                 case "nombreInstitucion":

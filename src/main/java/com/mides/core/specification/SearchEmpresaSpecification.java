@@ -1,5 +1,8 @@
 package com.mides.core.specification;
 
+import com.mides.core.enums.NivelEducativo;
+import com.mides.core.model.Candidato;
+import com.mides.core.model.Educacion;
 import com.mides.core.model.Empleo;
 import com.mides.core.model.Empresa;
 import jakarta.persistence.criteria.*;
@@ -45,6 +48,10 @@ public class SearchEmpresaSpecification implements Specification<Empresa> {
                         Join<Empresa, Empleo> joinEmpleo = root.join("empleo", JoinType.INNER);
                         addSUbFiltersDepartamento(joinEmpleo, filtro.getSubFiltros(), criteriaBuilder,predicate);
                         break;
+                    case "formacion_Academica":
+                        Join<Empresa, Empleo> joinEmpleoAc = root.join("empleo", JoinType.INNER);
+                        addSubFiltersFormacionAcademica(joinEmpleoAc, filtro.getSubFiltros(), criteriaBuilder, predicate);
+                        break;
 
                 }
 
@@ -52,6 +59,19 @@ public class SearchEmpresaSpecification implements Specification<Empresa> {
         }
 
         return criteriaBuilder.and(predicate.toArray(new Predicate[predicate.size()]));
+    }
+
+    private void addSubFiltersFormacionAcademica(Join<Empresa, Empleo> joinEmpleoAc, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        if(subFiltros != null && !subFiltros.isEmpty()){
+            List<Predicate> subFilters = new ArrayList<>();
+            for(String subFiltro : subFiltros){
+                int nivelEdu = NivelEducativo.getNivelEducativo(subFiltro);
+                Predicate preicate= criteriaBuilder.greaterThanOrEqualTo(joinEmpleoAc.get("formacionNumerico"), nivelEdu);
+                subFilters.add(preicate);
+            }
+
+            predicates.add(criteriaBuilder.or(subFilters.toArray(new Predicate[0])));
+        }
     }
 
     private void addSUbFiltersDepartamento(Join<Empresa, Empleo> joinEmpleo, ArrayList<String> subFiltros, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {

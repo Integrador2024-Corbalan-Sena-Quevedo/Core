@@ -465,7 +465,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
 
     }
 
-    private void actualizarEmpleoDatosPrincipales(Empleo empleo, String campo, String datoAct) {
+    private void actualizarEmpleoDatosPrincipales(Empleo empleo, String campo, String datoAct) throws Exception {
         switch (campo) {
             case "activo":
                 empleo.setActivo(Integer.parseInt(datoAct));
@@ -513,7 +513,12 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                 empleo.setExperienciaPrevia(datoAct);
                 break;
             case "formacionAcademica":
-                empleo.setFormacionAcademica(datoAct);
+                try {
+                    empleo.setFormacionAcademicaEnum(datoAct);
+                }catch (Exception e){
+                    throw new Exception(e.getMessage());
+                }
+
                 break;
             case "implicaDesplazamientos":
                 empleo.setImplicaDesplazamientos(datoAct);
