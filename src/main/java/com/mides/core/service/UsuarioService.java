@@ -3,6 +3,7 @@ package com.mides.core.service;
 import com.mides.core.model.Usuario;
 import com.mides.core.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +13,7 @@ public class UsuarioService implements IUsuarioService{
     IUsuarioRepository usuarioRepository;
     @Override
     public void saveUsuario(Usuario usuario) {
-        List<Usuario> lista = usuarioRepository.findAll();
-
-            if(!existeUsuario(usuario, lista)){
-                usuarioRepository.save(usuario);
-            }
-            if(lista.isEmpty()){
-                usuarioRepository.save(usuario);
-            }
-
+        usuarioRepository.save(usuario);
     }
 
     public boolean existeUsuario(Usuario usuario, List<Usuario> usuariosLista){
@@ -48,4 +41,21 @@ public class UsuarioService implements IUsuarioService{
         }
         return null;
     }
+
+    @Override
+    public void deleteById(Long id) {
+        usuarioRepository.deleteById(id);
+    }
+
+    @Override
+    public Usuario getUsuarioById(Long id) {
+       return usuarioRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+    }
+
+    @Override
+    public List<String> getEmailUsersAdmin() {
+       return usuarioRepository.getEmailsUsuariosAdmin(0);
+    }
+
+
 }

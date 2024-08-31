@@ -29,7 +29,7 @@ public class EmpleoService implements IEmpleoService{
     @Autowired
     IEmpleoRepository empleoRepository;
     @Autowired
-    ICandidatoRepositoy candidatoRepositoy;
+    ICandidatoSevice candidatoSevice;
     @Autowired
     IChatGPTService chatGPTService;
 
@@ -156,7 +156,7 @@ public class EmpleoService implements IEmpleoService{
             queryFilterEmpleo.setEdadMinima(14);
             queryFilterEmpleo.setEdadMaxima(99);
         }
-      return candidatoRepositoy.findCandidatosByFilter(queryFilterEmpleo);
+      return candidatoSevice.findCandidatosByFilter(queryFilterEmpleo);
 
     }
 
@@ -206,7 +206,7 @@ public class EmpleoService implements IEmpleoService{
     @Override
     public ResponseEntity<?> candidatosSegueridosParaEmpleo(EmpleoRequest empleoRequest) throws IOException {
         try {
-            List<Candidato> candidatos = candidatoRepositoy.findAllById(empleoRequest.getCandidatosId());
+            List<Candidato> candidatos = candidatoSevice.findAllById(empleoRequest.getCandidatosId());
 
             if (candidatos.isEmpty()){
                 return new ResponseEntity<>("No hay candidatos para sugerir", HttpStatus.OK);

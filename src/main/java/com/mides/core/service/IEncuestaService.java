@@ -14,5 +14,6 @@ public interface IEncuestaService {
     void saveEncuestaEmpresa(EncuestaEmpresa encuestaEmpresa);
     void processEncuestaCandidato(List<Map<String,String>> csvData, Candidato candidato) throws ParseException;
     void processEncuestaEmpresa(List<Map<String,String>> csvData, Empresa empresa) throws ParseException;
+    List<EncuestaCandidato> getEncuestasCandidato();
 
 }

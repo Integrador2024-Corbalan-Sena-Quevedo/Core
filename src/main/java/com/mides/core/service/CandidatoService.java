@@ -30,6 +30,11 @@ public class CandidatoService implements ICandidatoSevice{
     }
 
     @Override
+    public List<Candidato> findAllById(List<Long> ids) {
+        return candidatoRepositoy.findAllById(ids);
+    }
+
+    @Override
     public void saveCandidato(Candidato candidato) {
             candidatoRepositoy.save(candidato);
     }
@@ -89,6 +94,11 @@ public class CandidatoService implements ICandidatoSevice{
         }
         this.saveCandidato(candidato);
         return candidato;
+    }
+
+    @Override
+    public List<Candidato> findCandidatosByFilter(QueryFilterEmpleo queryFilterEmpleo) {
+        return candidatoRepositoy.findCandidatosByFilter(queryFilterEmpleo);
     }
 
     private List<Apoyo> getApoyos(List<Map<String, String>> csvData, List<Apoyo> apoyos) {

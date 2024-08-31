@@ -32,7 +32,7 @@ public class EmailSenderController {
             }
         }
         if (!candidatos.isEmpty()){
-            emailSenderService.sendEmailsToCompany(candidatos, request.getEmpresaId());
+            emailSenderService.sendEmailsToCompany(candidatos, request.getEmpresaId(), request.getEmpleoId(), request.getEmailUser());
             return new ResponseEntity<>("Se enviaron",  HttpStatus.OK);
         }else {
             return new ResponseEntity<>("No hay candidatos para el envío",  HttpStatus.BAD_REQUEST);

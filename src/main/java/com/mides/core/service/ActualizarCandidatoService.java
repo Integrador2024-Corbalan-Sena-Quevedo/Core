@@ -14,9 +14,6 @@ import java.util.List;
 public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
     @Autowired
-    ICandidatoSevice candidatoSevice;
-
-    @Autowired
     IPrestacionService prestacionService;
 
     @Autowired
@@ -27,16 +24,14 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
     @Autowired
     IAreaService areaService;
 
-
     @Autowired
     IApoyoService apoyoService;
 
     @Autowired
-    IEmailRepository emailRepository;
+    IEmailService emailService;
 
     @Autowired
     IGustoLaboralService gustoLaboralService;
-
 
     @Autowired
     IActitudService actitudService;
@@ -56,11 +51,10 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
     @Autowired
     IAuditoriaCandidatoService auditoriaCandidatoService;
     @Autowired
-    TipoDiscapacidadService tipoDiscapacidadService;
+    ITipoDiscapacidadService tipoDiscapacidadService;
     @Autowired
-    private IdiomaService idiomaService;
-    @Autowired
-    private CandidatoIdiomaService candidatoIdiomaService;
+    private IIdiomaService idiomaService;
+
 
 
     @Override
@@ -415,7 +409,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                         if (unEmail.getId().equals(id)){
                             emails.remove(unEmail);
                             email = unEmail;
-                            emailRepository.delete(unEmail);
+                            emailService.deleteById(unEmail.getId());
                             cambio = true;
                             break;
                         }

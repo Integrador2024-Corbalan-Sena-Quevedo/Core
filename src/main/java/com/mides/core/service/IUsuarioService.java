@@ -11,4 +11,7 @@ public interface IUsuarioService {
     List<Usuario> getUsuarios();
 
     Usuario getUsuario(String nombre);
+    void deleteById(Long id);
+    Usuario getUsuarioById(Long id);
+    List<String> getEmailUsersAdmin();
 }

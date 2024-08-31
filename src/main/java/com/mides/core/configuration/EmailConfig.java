@@ -1,5 +1,7 @@
 package com.mides.core.configuration;
 
+import com.mides.core.repository.IParametersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,15 +13,14 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+import static com.mides.core.constant.Constant.EMAIL_FROM;
+import static com.mides.core.constant.Constant.EMAIL_PASSWORD;
+
 @Configuration
-@PropertySource("classpath:email.properties")
 public class EmailConfig {
 
-    @Value("${email.username}")
-    private String email;
-
-    @Value("${email.password}")
-    private String password;
+    @Autowired
+    IParametersRepository parametersRepository;
 
     private Properties getMailProperties(){
         Properties properties = new Properties();
@@ -34,7 +35,9 @@ public class EmailConfig {
     public JavaMailSender javaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setJavaMailProperties(getMailProperties());
-        mailSender.setUsername(email);
+        String emailFrom = parametersRepository.getParameterById(EMAIL_FROM);
+        String password = parametersRepository.getParameterById(EMAIL_PASSWORD);
+        mailSender.setUsername(emailFrom);
         mailSender.setPassword(password);
         return  mailSender;
     }
