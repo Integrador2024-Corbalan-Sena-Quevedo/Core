@@ -123,11 +123,13 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                                     throw new Exception("Datos adicionales del candidato no encontrados");
                                 }
                                 break;
-                            case "apellido":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setApellido(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
+                            case "datosPrincipalesCandidato":
+                                    auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, candidato.getId(), LocalDate.now()));
+                                    actualizarDatosPrincipales(candidato, campo, datoAct);
+                                    actualizarCandidatoRepository.save(candidato);
                                 break;
+
+
                             case "direccion":
                                 Direccion direccion = candidato.getDireccion();
 
@@ -167,11 +169,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
                                 break;
 
-                            case "documento":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setDocumento(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
+
                             case "educacion":
                                 Educacion educacion = candidato.getEducacion();
                                 if(educacion != null){
@@ -236,17 +234,9 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
 
                                 break;
-                            case "estadoCivil":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setEstadoCivil(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
 
-                            case "fecha_de_nacimiento":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setFecha_de_nacimiento(LocalDate.parse(datoAct));
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
+
+
                             case "habilidad":
                                 Habilidad habilidad = candidato.getHabilidad();
                                 if(habilidad != null){
@@ -258,16 +248,8 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                                     throw new Exception("Habilidad no encontrada");
                                 }
                                 break;
-                            case "identidadGenero":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setIdentidadGenero(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
-                            case "nombre":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setNombre(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
+
+
                             case "salud":
                                 Salud salud = candidato.getSalud();
                                 if(salud != null){
@@ -280,11 +262,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                                 }
 
                                 break;
-                            case "sexo":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setSexo(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
+
                             case "telefonos":
                                 List<Telefono> telefonos = candidato.getTelefonos();
                                 Telefono telefono = null;
@@ -305,11 +283,7 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
 
                                 break;
-                            case "tipoDocumento":
-                                auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Modificación",candidato, campo, datoAnt, datoAct, subLista, LocalDate.now()));
-                                candidato.setTipoDocumento(datoAct);
-                                actualizarCandidatoRepository.save(candidato);
-                                break;
+
 
                         }
 
@@ -344,6 +318,8 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
         }
 
     }
+
+
 
     @Override
     public void elimnarSubLista(String candidatoId, String userName, String lista, String subLista, String idAEliminar) throws Exception {
@@ -1068,6 +1044,36 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
         } else {
             throw new Exception("Datos adicionales del candidato no encontrados");
+        }
+    }
+
+    private void actualizarDatosPrincipales(Candidato candidato, String campo, String datoAct) {
+        switch (campo){
+            case "nombre":
+                candidato.setNombre(datoAct);
+                break;
+            case "apellido":
+                candidato.setApellido(datoAct);
+                break;
+            case "documento":
+                candidato.setDocumento(datoAct);
+                break;
+            case "fecha_de_nacimiento":
+                candidato.setFecha_de_nacimiento(LocalDate.parse(datoAct));
+                break;
+            case "sexo":
+                candidato.setSexo(datoAct);
+                break;
+            case "estadoCivil":
+                candidato.setEstadoCivil(datoAct);
+                break;
+            case "tipoDocumento":
+                candidato.setTipoDocumento(datoAct);
+                break;
+            case "identidadGenero":
+                candidato.setIdentidadGenero(datoAct);
+                break;
+
         }
     }
 
