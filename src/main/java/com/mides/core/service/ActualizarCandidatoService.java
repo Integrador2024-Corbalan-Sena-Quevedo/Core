@@ -67,10 +67,6 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
         try {
             if(candidato != null){
                 if(!lista.isEmpty() && !subLista.isEmpty()){
-                    System.out.println("Campo: "+campo);
-                    System.out.println("Dato: "+datoAct);
-                    System.out.println("Lista: "+lista);
-                    System.out.println("SubLista: "+subLista);
 
                     switch (subLista) {
                         case "candidatoIdiomas":
@@ -99,11 +95,6 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                     }
                 }else{
                     if(!subLista.isEmpty() && lista.isEmpty()) {
-                        System.out.println("Campo: "+campo);
-                        System.out.println("Dato: "+datoAct);
-                        System.out.println("Dato: "+datoAnt);
-                        System.out.println("Lista: "+lista);
-                        System.out.println("SubLista: "+subLista);
                         switch (subLista) {
                             case "datosAdicionalesCandidato":
                                 DatosAdicionalesCandidato datosAdicionalesCandidato = candidato.getDatosAdicionalesCandidato();
@@ -317,10 +308,6 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
     @Override
     public void elimnarSubLista(String candidatoId, String userName, String lista, String subLista, String idAEliminar) throws Exception {
-        System.out.println("Candidato: "+candidatoId);
-        System.out.println("idAEliminar: "+idAEliminar);
-        System.out.println("Lista: "+lista);
-        System.out.println("SubLista: "+subLista);
 
         Candidato candidato = actualizarCandidatoRepository.findById(Long.parseLong(candidatoId)).orElse(null);
         Usuario usuario = usuarioService.getUsuario(userName);
@@ -358,19 +345,13 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                             turnos.remove(unTurno);
                             cambio = true;
                             turno = unTurno;
-                            System.out.println("Encontro");
                             break;
                         }
-                        System.out.println("Id del turno:" + unTurno.getId());
                     }
 
                     if(cambio){
-                        System.out.println("Cambio" + cambio);
-
                         auditoriaCandidatoService.guardar(crearAuditoria(usuario,"Eliminacion",candidato, "Turnos", turno.getTurno().name(), "", lista, turno.getId(), LocalDate.now()));
                     }else {
-                        System.out.println("Turno no encontrada"+ cambio);
-
                         throw new Exception("Turno no encontrada");
                     }
                     break;
@@ -915,7 +896,6 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
                 case "fechaFinalizacion":
                     String fechaFinal = dato+"T00:00:00";
                     encuestaCandidato.setFechaFinalizacion(LocalDateTime.parse(fechaFinal));
-                    System.out.println("Formato de fechaFinalizacion: "+dato);
                     break;
 
                 case "idFlow":
@@ -999,7 +979,6 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
     private void actualizarDatosAdicionales( DatosAdicionalesCandidato datosAdicionales, String campo, String dato) throws Exception {
         if (datosAdicionales != null) {
-            System.out.println("Campo: "+campo);
             switch (campo) {
 
                 case "autorizacionDarDatos":
@@ -1073,7 +1052,6 @@ public class ActualizarCandidatoService implements IActualizarCandidatoService{
 
     private void actualizarDireccion(Direccion direccion, String campo, String dato) throws Exception {
         if (direccion != null) {
-            System.out.println("Campo: "+campo);
             switch (campo) {
                 case "apartamento":
                     direccion.setApartamento(dato);

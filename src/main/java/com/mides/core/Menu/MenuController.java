@@ -36,7 +36,6 @@ public class MenuController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Usuario> changeRole(@PathVariable Long id, @RequestBody String nuevoRol) {
         String rol = nuevoRol.substring(3,nuevoRol.length() -3);
-        System.out.println(rol);
         Usuario user = menuService.changeRole(id, Rol.valueOf(rol));
         return ResponseEntity.ok(user);
     }
