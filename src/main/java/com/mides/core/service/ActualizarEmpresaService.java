@@ -210,7 +210,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                         Long idDetalle = Long.parseLong(idDetalleTarea);
 
                                         Tarea tarea = empleo.getTareas().get(Integer.parseInt(indexTarea));
-                                        DetalleTarea detalleTarea = tarea.getDetalleTarea().get(Integer.parseInt(indexDetalleTarea));
+                                        DetalleTarea detalleTarea = tarea.getDetalleTareaById(idDetalle);
 
                                         if(detalleTarea.getId().equals(idDetalle)){
                                             detalleTarea.setDetalle(datoAct);
@@ -264,48 +264,26 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                 }else{
                     if (!lista.isEmpty() && !subLista.isEmpty()){
                         AuditoriaEmpresa auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Agregar", "", "", "", subLista, LocalDate.now());
-
-                        switch (subLista){
-                            case "tareas-Esencial":
-                                TareaEsencial tareaEsencial = new TareaEsencial();
-                                tareaEsencial.setNombre(id);
-                                tareaEsencial.setEmpleo(empleo);
-                                empleo.getTareas().add(tareaEsencial);
-                                auditoriaEmpresa.setCampo("Nueva tarea esencial");
-                                auditoriaEmpresa.setDatoAct(id);
-                                auditoriaEmpresaRepository.save(auditoriaEmpresa);
-                            break;
-                            case "tareas-NoEsencial":
-                                TareaNoEsencial tareaNoEsencial = new TareaNoEsencial();
-                                tareaNoEsencial.setNombre(id);
-                                tareaNoEsencial.setEmpleo(empleo);
-                                empleo.getTareas().add(tareaNoEsencial);
-                                auditoriaEmpresa.setCampo("Nueva tarea No esencial");
-                                auditoriaEmpresa.setDatoAct(id);
-                                auditoriaEmpresaRepository.save(auditoriaEmpresa);
-                                break;
-                            case "detalleTarea":
-                                Tarea tarea = empleo.getTareas().get(Integer.parseInt(lista));
-                                if (tarea == null){
-                                    throw new Exception("Tarea no encontrada");
-                                }else{
-                                    DetalleTarea detalleTarea = new DetalleTarea();
-                                    detalleTarea.setTarea(tarea);
-                                    detalleTarea.setDetalle(id);
-                                    List<Tarea> tareas = empleo.getTareas();
-                                    for(Tarea untarea : tareas){
-                                        if (untarea.getId().equals(tarea.getId())){
-                                            untarea.getDetalleTarea().add(detalleTarea);
-                                            break;
-                                        }
+                        if(subLista.equals("detalleTarea")){
+                            Tarea tarea = empleo.getTareas().get(Integer.parseInt(lista));
+                            if (tarea == null){
+                                throw new Exception("Tarea no encontrada");
+                            }else{
+                                DetalleTarea detalleTarea = new DetalleTarea();
+                                detalleTarea.setTarea(tarea);
+                                detalleTarea.setDetalle(id);
+                                List<Tarea> tareas = empleo.getTareas();
+                                for(Tarea untarea : tareas){
+                                    if (untarea.getId().equals(tarea.getId())){
+                                        untarea.getDetalleTarea().add(detalleTarea);
+                                        break;
                                     }
-                                    empleo.setTareas(tareas);
-                                    auditoriaEmpresa.setCampo("Nuevo detalle tarea");
-                                    auditoriaEmpresa.setDatoAct(id);
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
                                 }
-
-                                break;
+                                empleo.setTareas(tareas);
+                                auditoriaEmpresa.setCampo("Nuevo detalle tarea");
+                                auditoriaEmpresa.setDatoAct(id);
+                                auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                            }
                         }
 
                     }

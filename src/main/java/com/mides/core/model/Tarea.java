@@ -44,4 +44,13 @@ public abstract class Tarea {
             }
         }
     }
+
+    public DetalleTarea getDetalleTareaById(Long idDetalle) {
+        for(DetalleTarea unDetalle : detalleTarea){
+            if(unDetalle.getId().equals(idDetalle)){
+                return unDetalle;
+            }
+        }
+        return null;
+    }
 }
