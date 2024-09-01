@@ -8,6 +8,8 @@ import java.util.Map;
 
 public interface IFileAttachmentService {
 
-    void processCSVData(List<Map<String, String>> csvData);
-    void forCSVData(BufferedReader bufferedReader, CSVParser csvParser);
+    void processCSVDataCandidate(List<Map<String, String>> csvData) throws Exception;
+
+    void processCSVDataCompany(List<Map<String, String>> csvData) throws Exception;
+    List<Integer> forCSVData(BufferedReader bufferedReader, CSVParser csvParser, String type) throws Exception;
 }
