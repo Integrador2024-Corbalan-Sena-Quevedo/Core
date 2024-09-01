@@ -1,64 +1,55 @@
 package com.mides.core.Menu;
 
 import com.mides.core.model.*;
-import com.mides.core.repository.*;
-import com.mides.core.service.ICandidatoSevice;
-import com.mides.core.service.UsuarioService;
+import com.mides.core.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
 
 @Service
 @RequiredArgsConstructor
 public class MenuService {
 
     @Autowired
-    private IEmpleoRepository empleoRepository;
- private final IUsuarioRepository usuarioRepository;
+    private IEmpleoService empleoService;
     @Autowired
- private IEncuestaRepository encuestaRepository;
+    private IEncuestaService encuestaService;
     @Autowired
-    private ICandidatoRepositoy candidatoRepository;
+    private ICandidatoSevice candidatoSevice;
     @Autowired
-    private ISeguimientoRepository seguimientoRepository;
- private final UsuarioService usuarioService;
+    private ISeguimientoService seguimientoService;
+    @Autowired
+    private IUsuarioService usuarioService;
 
     public List<Usuario> getAllOperators() {
-        return usuarioRepository.findAll().stream()
-
-                .collect(Collectors.toList());
+        return usuarioService.getUsuarios();
     }
 
     public void deleteOperator(Long id) {
-        usuarioRepository.deleteById(id);
+        usuarioService.deleteById(id);
     }
 
 
     public Usuario changeRole(Long id, Rol nuevoRol) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        Usuario usuario = usuarioService.getUsuarioById(id);
         usuario.setRol(nuevoRol);
-        return usuarioRepository.save(usuario);
+        usuarioService.saveUsuario(usuario);
+        return usuario;
     }
 
     public List<Usuario> ListaOperadores (){
-        return usuarioRepository.findAll();
+        return usuarioService.getUsuarios();
     }
 
     public Map<String, Long> getEmpleosPorDepartamento() {
-        List<Empleo> empleos = empleoRepository.findAll();
+        List<Empleo> empleos = empleoService.getEmpleos();
 
         Map<String, Long> empleosPorDepartamento = empleos.stream()
                 .collect(Collectors.groupingBy(Empleo::getDepartamento, Collectors.counting()));
@@ -67,7 +58,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getEmpleosPorFormacionAcademica() {
-        List<Empleo> empleos = empleoRepository.findAll();
+        List<Empleo> empleos = empleoService.getEmpleos();
 
         Map<String, Long> empleosPorFormacionAcademica= empleos.stream()
                 .collect(Collectors.groupingBy(Empleo::getFormacionAcademica, Collectors.counting()));
@@ -76,7 +67,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getEmpleosPorCargaHoraria() {
-        List<Empleo> empleos = empleoRepository.findAll();
+        List<Empleo> empleos = empleoService.getEmpleos();
 
         Map<String, Long> empleosPorCargaHoraria= empleos.stream()
                 .collect(Collectors.groupingBy(empleo -> {
@@ -102,7 +93,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getEntrevistasPorAnio() {
-        List<EncuestaCandidato> entrevistas = encuestaRepository.findAll();
+        List<EncuestaCandidato> entrevistas = encuestaService.getEncuestasCandidato();
 
         Map<String, Long> entrevistasPorAnio = entrevistas.stream()
                 .filter(entrevista -> entrevista.getFechaCreacion().getYear() >= 2013)
@@ -115,7 +106,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getEntrevistasPorGenero() {
-        List<Candidato> entrevistas = candidatoRepository.findAll();
+        List<Candidato> entrevistas = candidatoSevice.getCandidatos();
 
         Map<String, Long> entrevistasPorGenero= entrevistas.stream()
                 .collect(Collectors.groupingBy(Candidato::getIdentidadGenero, Collectors.counting()));
@@ -125,7 +116,7 @@ public class MenuService {
 
 
     public Map<String, Long> getCandidatosPorEdad() {
-        List<Candidato> candidatos = candidatoRepository.findAll();
+        List<Candidato> candidatos = candidatoSevice.getCandidatos();
 
         Map<String, Long> candidatosPorEdad= candidatos.stream()
                 .collect(Collectors.groupingBy(candidato -> {
@@ -156,7 +147,7 @@ public class MenuService {
 
 
     public Map<String, Long> getCandidatosPorDiscapacidad() {
-        List<Candidato> candidatos = candidatoRepository.findAll();
+        List<Candidato> candidatos = candidatoSevice.getCandidatos();
 
         Map<String, Long> candidatosPorDiscapacidad = candidatos.stream()
                 .flatMap(candidato -> {
@@ -179,7 +170,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getCandidatosPorFormacionAcademica() {
-        List<Candidato> candidatos = candidatoRepository.findAll();
+        List<Candidato> candidatos = candidatoSevice.getCandidatos();
 
         Map<String, Long> candidatosPorFormacionAcademica= candidatos.stream()
                 .collect(Collectors.groupingBy(candidato -> candidato.getEducacion().getNivelEducativo(), Collectors.counting()));
@@ -188,7 +179,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getCandidatosPorCargaHoraria() {
-        List<Candidato> candidatos = candidatoRepository.findAll();
+        List<Candidato> candidatos = candidatoSevice.getCandidatos();
 
         Map<String, Long> candidatosPorCargaHoraria= candidatos.stream()
                 .collect(Collectors.groupingBy(candidato -> {
@@ -214,7 +205,7 @@ public class MenuService {
     }
 
     public Map<String, Long> getCandidatosTrabajando() {
-        List<Seguimiento> seguimientos = seguimientoRepository.findAll();
+        List<Seguimiento> seguimientos = seguimientoService.getSeguimientos();
 
         Map<String, Long> candidatosTrabajando = seguimientos.stream()
                 .filter(seguimiento -> seguimiento.getCandidato() != null)

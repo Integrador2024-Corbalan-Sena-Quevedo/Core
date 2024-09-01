@@ -11,4 +11,6 @@ public class EmailDTO {
     private String subject;
     public String body;
     private String toEmail;
+    private String toEmailCc;
+    private String toEmailCo;
 }

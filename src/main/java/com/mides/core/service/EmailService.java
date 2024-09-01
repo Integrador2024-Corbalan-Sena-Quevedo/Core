@@ -39,4 +39,9 @@ public class EmailService implements IEmailService {
 
         this.saveEmail(email);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        emailRepository.deleteById(id);
+    }
 }

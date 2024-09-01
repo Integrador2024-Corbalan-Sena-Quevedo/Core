@@ -25,5 +25,6 @@ public class EmpleoDTO {
     private String correoEmpresa;
     private Long idEncuesta;
     private String localidad;
+    private String nivelEducativo;
     private int activo;
 }

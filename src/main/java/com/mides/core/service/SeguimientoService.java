@@ -164,6 +164,11 @@ public class SeguimientoService implements ISeguimientoService {
 
     }
 
+    @Override
+    public List<Seguimiento> getSeguimientos() {
+       return seguimientoRepository.findAll();
+    }
+
 
     @Transactional
     private List<DetalleSeguimiento> processDetalleSeguimiento(SeguimientoDTO seguimientoDTO, List<DetalleSeguimiento> detalleSeguimientosAux) {

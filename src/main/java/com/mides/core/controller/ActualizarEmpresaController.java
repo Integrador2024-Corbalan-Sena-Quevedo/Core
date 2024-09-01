@@ -17,7 +17,6 @@ public class ActualizarEmpresaController {
 
     @PutMapping("/empresa")
     public ResponseEntity<?> actualizarCampo(@RequestBody ActualizarEmpresaRequest request) {
-        System.out.println("LLEGUA A LA PARTE DE ACTUALIZAR Empresa");
         try {
             actualizarEmpresaService.actualizarCampo(request.getEmpresaId(), request.getEmpleoId(),request.getUserName(), request.getCampo(), request.getDatoAct(), request.getDatoAnt(),request.getLista(), request.getSubLista());
             return new ResponseEntity<>("Actualización exitosa", HttpStatus.OK);
@@ -39,7 +38,7 @@ public class ActualizarEmpresaController {
 
     @DeleteMapping("/eliminarSubListaEmpresa")
     public ResponseEntity<?> actualizarSubLista(@RequestBody EliminarSubListaEmpresaDTO request) {
-        System.out.println("LLEGUA A LA PARTE DE ELIMINAR SUBLISTA");
+
         try {
             actualizarEmpresaService.elimnarSubLista(request.getEmpresaId(), request.getEmpleoId(), request.getUserName(), request.getLista(), request.getSubLista(), request.getId(), request.getNombreAEliminar(), request.getPosAElim());
             return new ResponseEntity<>("Actualización exitosa", HttpStatus.OK);

@@ -9,6 +9,7 @@ import java.util.Map;
 public interface ICandidatoSevice {
 
     List<Candidato> getCandidatos();
+    List<Candidato> findAllById(List<Long> ids);
     void saveCandidato(Candidato candidato);
     void deleteCandidato(Long id);
     Candidato findCandidato(String documento);
@@ -16,4 +17,5 @@ public interface ICandidatoSevice {
     void editCandidato(Candidato candidato);
     void deleteCv(Long id);
     Candidato processCandidato(List<Map<String, String>>  csvData, List<AyudaTecnica> ayudaTecnicas, List<Prestacion> prestaciones, List<Area> areas, List<Apoyo> apoyos) throws ParseException;
+    List<Candidato>findCandidatosByFilter(QueryFilterEmpleo queryFilterEmpleo);
 }

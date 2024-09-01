@@ -81,4 +81,9 @@ public class EncuestaService implements  IEncuestaService{
         encuestaEmpresa.setEmpresa(empresa);
         this.saveEncuestaEmpresa(encuestaEmpresa);
     }
+
+    @Override
+    public List<EncuestaCandidato> getEncuestasCandidato() {
+        return encuestaRepository.findAll();
+    }
 }

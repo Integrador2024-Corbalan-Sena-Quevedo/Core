@@ -27,6 +27,7 @@ public class Usuario implements UserDetails {
     private String username;
     private String password;
     private Rol rol;
+    private String email;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

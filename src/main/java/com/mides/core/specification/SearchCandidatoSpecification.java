@@ -101,7 +101,6 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
             }
         }
 
-        System.out.println("CAntidad de Predicados +++++++++++"+predicate.size());
         query.orderBy(criteriaBuilder.asc(root.get("apellido")));
         return criteriaBuilder.and(predicate.toArray(new Predicate[predicate.size()]));
     }
@@ -151,7 +150,6 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
                 LocalDate anioNacimiento = calcularAnioNacimiento(Integer.parseInt(subFilter));
                 Predicate predicate = criteriaBuilder.lessThanOrEqualTo(path.get(attributeName), anioNacimiento);
                 predicates.add(predicate);
-                System.out.println(path.get(attributeName) + " " + anioNacimiento);
             }
         }
     }
@@ -163,7 +161,6 @@ public class SearchCandidatoSpecification implements Specification<Candidato> {
                 LocalDate anioNacimiento = calcularAnioNacimiento(Integer.parseInt(subFilter));
                 Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(path.get(attributeName), anioNacimiento);
                 predicates.add(predicate);
-                System.out.println(path.get(attributeName) + " " + anioNacimiento);
             }
         }
     }

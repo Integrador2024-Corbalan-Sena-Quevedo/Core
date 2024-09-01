@@ -9,4 +9,6 @@ public class EmailRequest {
     private List<Long> candidatosId;
     private Long empresaId;
     private String empresaMail;
+    private Long empleoId;
+    private String emailUser;
 }

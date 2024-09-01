@@ -26,7 +26,6 @@ public class ActualizarCandidatoController {
 
     @PutMapping("/candidato")
     public ResponseEntity<?> actualizarCampo(@RequestBody ActualizarCandidatoCampoRequest request) {
-        System.out.println("LLEGUA A LA PARTE DE ACTUALIZAR");
         try {
             actualizarCandidatoService.actualizarCampo(request.getCandidatoId(), request.getCampo(), request.getUserName(), request.getDatoAct(), request.getDatoAnt(),request.getLista(), request.getSubLista());
             return new ResponseEntity<>("Actualización exitosa", HttpStatus.OK);
@@ -37,7 +36,7 @@ public class ActualizarCandidatoController {
 
     @DeleteMapping("/eliminarSubLista")
     public ResponseEntity<?> actualizarSubLista(@RequestBody ActualizarSubListaCandidatoDTO request) {
-        System.out.println("LLEGUA A LA PARTE DE ELIMINAR SUBLISTA");
+
         try {
             actualizarCandidatoService.elimnarSubLista(request.getCandidatoId(), request.getUserName(), request.getLista(), request.getSubLista(), request.getId());
             return new ResponseEntity<>("Actualización exitosa", HttpStatus.OK);
@@ -48,7 +47,6 @@ public class ActualizarCandidatoController {
 
     @PostMapping("/agregarSubLista")
     public ResponseEntity<?> agrearASubLista(@RequestBody ActualizarSubListaCandidatoDTO request) {
-        System.out.println("LLEGUA A LA PARTE DE AGREGAAR SUBLISTA");
         try {
             actualizarCandidatoService.agregarASubLista(request.getCandidatoId(), request.getUserName(), request.getLista(), request.getSubLista(), request.getId());
             return new ResponseEntity<>("Actualización exitosa", HttpStatus.OK);

@@ -3,6 +3,7 @@ package com.mides.core.Auth;
 import com.mides.core.model.Rol;
 import com.mides.core.model.Usuario;
 import com.mides.core.repository.IUsuarioRepository;
+import com.mides.core.service.IUsuarioService;
 import com.mides.core.service.JwtService;
 import com.mides.core.service.UsuarioService;
 import jakarta.security.auth.message.AuthException;
@@ -25,35 +26,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthService {
 
- private final   IUsuarioRepository usuarioRepository;
-private final JwtService jwtService;
-private final UsuarioService usuarioService;
-private final AuthenticationManager authenticationManager;
-private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    @Autowired
+    private final IUsuarioService usuarioService;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     public AuthResponse login(LoginRequest request){
-authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-UserDetails user = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
-Usuario us = usuarioService.getUsuario(user.getUsername());
-String token = jwtService.getToken(user);
-return AuthResponse.builder().token(token).username(user.getUsername()).rol(us.getRol()).build();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        UserDetails user = usuarioService.getUsuario(request.getUsername());
+        Usuario us = usuarioService.getUsuario(user.getUsername());
+        String token = jwtService.getToken(user);
+        return AuthResponse.builder().token(token).username(user.getUsername()).rol(us.getRol()).build();
 
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if(usuarioRepository.findByUsername(request.getUsername()).isPresent()){
+        if(usuarioService.getUsuario(request.getUsername()) != null){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Ese nombre de usuario ya se encuentra en el sistema");
-        }
-        Usuario usuario = new Usuario();
-        usuario.setName(request.getName());
-        usuario.setUsername(request.getUsername());
-        usuario.setPassword(passwordEncoder.encode(request.getPassword()));
-        usuario.setRol(Rol.OPERADOR_LABORAL_NOVATO);
-        if(usuarioService.getUsuario(request.getUsername()) == null) {
-            usuarioRepository.save(usuario);
+        }else {
+            Usuario usuario = new Usuario();
+            usuario.setName(request.getName());
+            usuario.setUsername(request.getUsername());
+            usuario.setPassword(passwordEncoder.encode(request.getPassword()));
+            usuario.setRol(Rol.OPERADOR_LABORAL_NOVATO);
+            usuario.setEmail(request.getEmail());
+            usuarioService.saveUsuario(usuario);
+            return AuthResponse.builder().token(jwtService.getToken(usuario)).build();
         }
 
-
-        return AuthResponse.builder().token(jwtService.getToken(usuario)).build();
     }
 
     public void addTestUser(){
@@ -62,7 +62,7 @@ return AuthResponse.builder().token(token).username(user.getUsername()).rol(us.g
         usuario.setUsername("pedrito");
         usuario.setPassword(passwordEncoder.encode("12345"));
         usuario.setRol(Rol.ADMIN);
-        usuarioRepository.save(usuario);
+        usuarioService.saveUsuario(usuario);
     }
 
 
