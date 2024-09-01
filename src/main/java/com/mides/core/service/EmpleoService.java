@@ -194,6 +194,7 @@ public class EmpleoService implements IEmpleoService{
             empleoDTO.setTareas(empleo.getTareas());
             empleoDTO.setEmpresaId(empleo.getEmpresa().getId());
             empleoDTO.setEmpresaNombre(empleo.getEmpresa().getNombre());
+            empleoDTO.setNivelEducativo(empleo.getFormacionAcademica());
             empleoDTO.setCorreoEmpresa(empleo.getEmpresa().getEmails().get(0).getEmail());
             empleoDTO.setLocalidad(empleo.getLocalidades());
             empleoDTO.setIdEncuesta(empleo.getEmpresa().getEncuestaEmpresa().getIdEncuesta());

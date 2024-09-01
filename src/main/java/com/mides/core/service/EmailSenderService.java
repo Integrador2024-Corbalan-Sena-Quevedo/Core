@@ -88,7 +88,9 @@ public class EmailSenderService {
             helper.setTo(emailDTO.getToEmail());
             helper.setSubject(emailDTO.getSubject());
             helper.setText(emailDTO.getBody());
-            helper.addCc(emailDTO.getToEmailCc());
+            if(emailDTO.getToEmailCc() != null){
+                helper.addCc(emailDTO.getToEmailCc());
+            }
             for (Resource resource : resources) {
                 ByteArrayDataSource dataSource = new ByteArrayDataSource(resource.getInputStream(), "application/pdf");
                 helper.addAttachment(resource.getFilename(), dataSource);
