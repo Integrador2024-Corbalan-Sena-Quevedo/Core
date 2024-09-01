@@ -36,7 +36,7 @@ public class AuthService {
         UserDetails user = usuarioService.getUsuario(request.getUsername());
         Usuario us = usuarioService.getUsuario(user.getUsername());
         String token = jwtService.getToken(user);
-        return AuthResponse.builder().token(token).username(user.getUsername()).rol(us.getRol()).build();
+        return AuthResponse.builder().token(token).username(user.getUsername()).rol(us.getRol()).email(us.getEmail()).build();
 
     }
 
@@ -48,7 +48,7 @@ public class AuthService {
             usuario.setName(request.getName());
             usuario.setUsername(request.getUsername());
             usuario.setPassword(passwordEncoder.encode(request.getPassword()));
-            usuario.setRol(Rol.OPERADOR_LABORAL_NOVATO);
+            usuario.setRol(Rol.OPERADOR_LABORAL_BASICO);
             usuario.setEmail(request.getEmail());
             usuarioService.saveUsuario(usuario);
             return AuthResponse.builder().token(jwtService.getToken(usuario)).build();

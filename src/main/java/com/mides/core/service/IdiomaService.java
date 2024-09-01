@@ -16,19 +16,18 @@ public class IdiomaService implements IIdiomaService{
     @Autowired
     IIdiomaRepository idiomaRepository;
     @Override
-    public void saveIdioma(Idioma idioma) {
-        List<Idioma> idiomas = idiomaRepository.findAll();
-        if(!idiomas.isEmpty())
-        {
-            for(Idioma idi : idiomas){
-                if (!idi.getNombre().equals(idioma.getNombre())){
-                    idiomaRepository.save(idioma);
-                }
-            }
-        }else {
-            idiomaRepository.save(idioma);
-        }
+    public void saveIdioma(Idioma idiomaParam) {
 
+        List<Idioma> idiomas = idiomaRepository.findAll();
+        Idioma idiomaAux = null;
+        for (Idioma idioma : idiomas){
+            if (idioma.getNombre().equals(idiomaParam.getNombre())){
+                idiomaAux = idioma;
+            }
+        }
+        if (idiomaAux == null){
+            idiomaRepository.save(idiomaParam);
+        }
     }
 
     @Override
@@ -38,9 +37,11 @@ public class IdiomaService implements IIdiomaService{
         for (Map<String, String> row : csvData){
             if(row.get("Otro_idioma").equals("1")){
                 idiomaOtro.setNombre(row.get("Cual_otro"));
+                this.saveIdioma(idiomaOtro);
             }
         }
-        this.saveIdioma(idiomaOtro);
+
+
     }
 
     @Override

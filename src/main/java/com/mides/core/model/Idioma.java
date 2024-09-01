@@ -18,6 +18,7 @@ public class Idioma {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Column(unique = true)
     private String nombre;
 
     @OneToMany(mappedBy = "idioma", cascade = CascadeType.ALL, orphanRemoval = true)
