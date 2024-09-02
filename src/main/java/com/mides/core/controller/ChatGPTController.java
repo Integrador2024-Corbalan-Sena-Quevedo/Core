@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.POST)
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com", methods = RequestMethod.POST)
 public class ChatGPTController {
     @Autowired
     IEmpleoService empleoService;
