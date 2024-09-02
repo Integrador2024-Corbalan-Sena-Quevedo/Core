@@ -15,8 +15,6 @@ import java.util.Base64;
 
 @Service
 public class Pdfservice  implements IPdfService {
-
-    @Value("${file.upload-dir}")
     private String pathDir;
 
 
