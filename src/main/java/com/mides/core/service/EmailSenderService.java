@@ -65,9 +65,11 @@ public class EmailSenderService {
         try {
             for (Candidato candidato : candidatos) {
                 Candidato candidatoBase = candidatoSevice.findCandidato(candidato.getDocumento());
-                Resource resource = pdfService.base64AsPdf(candidatoBase.getNombre(),candidatoBase.getCsvBase64());
-                if (resource != null) {
-                    resources.add(resource);
+                if(candidatoBase.getCsvBase64() != null){
+                    Resource resource = pdfService.base64AsPdf(candidatoBase.getNombre(),candidatoBase.getCsvBase64());
+                    if (resource != null) {
+                        resources.add(resource);
+                    }
                 }
             }
             if(!resources.isEmpty()){
