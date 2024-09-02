@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.POST)
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com", methods = RequestMethod.POST)
 public class AuthController {
 
     private final AuthService authService;

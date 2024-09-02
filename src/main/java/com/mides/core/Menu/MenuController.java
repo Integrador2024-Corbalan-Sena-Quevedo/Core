@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com")
 public class MenuController {
     @Autowired
     private final MenuService menuService;

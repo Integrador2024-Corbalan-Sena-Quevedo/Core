@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", methods = RequestMethod.POST)
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com", methods = RequestMethod.POST)
 public class EmailSenderController {
     @Autowired
     private EmailSenderService emailSenderService;

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/filtro")
-@CrossOrigin(origins = "http://localhost:3000", methods = { RequestMethod.POST, RequestMethod.PUT })
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com", methods = { RequestMethod.POST, RequestMethod.PUT })
 
 public class FiltroEmpleosController {
 

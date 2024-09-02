@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/actualizar")
-@CrossOrigin(origins = "http://localhost:3000", methods = { RequestMethod.PUT, RequestMethod.DELETE })
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com", methods = { RequestMethod.PUT, RequestMethod.DELETE })
 public class ActualizarCandidatoController {
 
     @Autowired
