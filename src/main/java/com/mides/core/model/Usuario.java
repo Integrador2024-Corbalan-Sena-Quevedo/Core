@@ -1,5 +1,6 @@
 package com.mides.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mides.core.model.Rol;
 import jakarta.persistence.*;
@@ -34,7 +35,7 @@ public class Usuario implements UserDetails {
     private List<AuditoriaEmpresa> auditoriaEmpresas;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<AuditoriaCandidato> auditoriaCandidatoes;
 
     @Override
