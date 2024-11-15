@@ -13,13 +13,13 @@ import java.util.List;
 public class ActualizarEmpresaService implements IActualizarEmpresaService{
 
     @Autowired
-    IActualizarEmpresaRepository actualizarEmpresaRepository;
+    IAuditoriaEmpresaService auditoriaEmpresaService;
+
+    @Autowired
+    IEmpresaSevice empresaSevice;
 
     @Autowired
     IUsuarioService usuarioService;
-
-    @Autowired
-    IAuditoriaEmpresaRepository auditoriaEmpresaRepository;
 
     @Override
     public void actualizarCampo(String empresaId, String empleoId, String userName, String campo, String datoAct, String datoAnt, String lista, String subLista) throws Exception {
@@ -28,7 +28,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
         }else{
             Long idEmpresa = Long.parseLong(empresaId);
             Long idEmpleo = Long.parseLong(empleoId);
-            Empresa empresa = actualizarEmpresaRepository.findById(idEmpresa).orElse(null);
+            Empresa empresa = empresaSevice.findEmpresaById(idEmpresa);
             Usuario usuario = usuarioService.getUsuario(userName);
 
             if (empresa == null || usuario == null ){
@@ -47,35 +47,35 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
 
                             switch (campo){
                                 case "nombre":
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                    auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                     empresa.setNombre(datoAct);
-                                    actualizarEmpresaRepository.save(empresa);
+                                    empresaSevice.saveEmpresa(empresa);
                                     break;
                                 case "ramaEconomica":
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                    auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                     empresa.setRamaEconomica(datoAct);
-                                    actualizarEmpresaRepository.save(empresa);
+                                    empresaSevice.saveEmpresa(empresa);
                                     break;
                                 case "rut":
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                    auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                     empresa.setRamaEconomica(datoAct);
-                                    actualizarEmpresaRepository.save(empresa);
+                                    empresaSevice.saveEmpresa(empresa);
                                     break;
                                 case "personaReferencia":
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                    auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                     empresa.setPersonaReferencia(datoAct);
-                                    actualizarEmpresaRepository.save(empresa);
+                                    empresaSevice.saveEmpresa(empresa);
                                     break;
                                 case "cvsEnviados":
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                    auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                     empresa.setCvsEnviados(datoAct);
-                                    actualizarEmpresaRepository.save(empresa);
+                                    empresaSevice.saveEmpresa(empresa);
 
                                     break;
                                 case "actividadEconomica":
-                                    auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                    auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                     empresa.setActividadEconomica(datoAct);
-                                    actualizarEmpresaRepository.save(empresa);
+                                    empresaSevice.saveEmpresa(empresa);
                                     break;
                                 default:
                                     break;
@@ -95,18 +95,18 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                     case "datosAdicionalesEmpresa":
                                         DatosAdicionalesEmpresa dhe = empresa.getDatosAdicionalesEmpresa();
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, dhe.getId(), LocalDate.now());
-                                        auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                        auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                         actualizarDatosAdicionalesEmpresa(dhe, campo, datoAct);
                                         empresa.setDatosAdicionalesEmpresa(dhe);
-                                        actualizarEmpresaRepository.save(empresa);
+                                        empresaSevice.saveEmpresa(empresa);
                                         break;
                                     case "direccion":
                                         Direccion direccion = empresa.getDireccion();
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, direccion.getId(), LocalDate.now());
-                                        auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                        auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                         actualizarDireccion(direccion, campo, datoAct);
                                         empresa.setDireccion(direccion);
-                                        actualizarEmpresaRepository.save(empresa);
+                                        empresaSevice.saveEmpresa(empresa);
                                         break;
                                     case "emails":
                                         List<Email> emails = empresa.getEmails();
@@ -121,29 +121,27 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
 
                                         if(email != null){
                                             auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", "Emails", datoAnt, datoAct, lista, email.getId(), LocalDate.now());
-                                            auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                            auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                             empresa.setEmails(emails);
-                                            actualizarEmpresaRepository.save(empresa);
+                                            empresaSevice.saveEmpresa(empresa);
                                         }else{
                                             throw new Exception("Email no encontrado");
                                         }
                                         break;
                                     case "empleo":
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, empleo.getId(), LocalDate.now());
-                                        auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                        auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                         actualizarEmpleoDatosPrincipales(empleo, campo, datoAct);
                                         empresa.setUnEmpleo(empleo);
-                                        actualizarEmpresaRepository.save(empresa);
-
-
+                                        empresaSevice.saveEmpresa(empresa);
                                         break;
                                     case "encuestaEmpresa":
                                         EncuestaEmpresa encuestaEmpresa = empresa.getEncuestaEmpresa();
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, encuestaEmpresa.getId(), LocalDate.now());
-                                        auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                        auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                         actualizarEncuestaEmpresa(encuestaEmpresa, campo, datoAct);
                                         empresa.setEncuestaEmpresa(encuestaEmpresa);
-                                        actualizarEmpresaRepository.save(empresa);
+                                        empresaSevice.saveEmpresa(empresa);
                                         break;
                                     case "telefonos":
                                         List<Telefono> telefonos = empresa.getTelefonos();
@@ -155,9 +153,9 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
 
                                         if(telefono != null){
                                             auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, telefono.getId(), LocalDate.now());
-                                            auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                            auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                             empresa.setTelefonos(telefonos);
-                                            actualizarEmpresaRepository.save(empresa);
+                                            empresaSevice.saveEmpresa(empresa);
 
                                         }else {
                                             throw new Exception("Telefono no encontrad");
@@ -173,11 +171,11 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                     case "conocimientosEspecificosEmpleo":
                                         ConocimientosEspecificosEmpleo cee = empleo.getConocimientosEspecificosEmpleo();
                                         auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", campo, datoAnt, datoAct, lista, cee.getId(), LocalDate.now());
-                                        auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                        auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                         actualizarConocimientosEspecificosEmpleo(cee, campo, datoAct);
                                         empleo.setConocimientosEspecificosEmpleo(cee);
                                         empresa.setUnEmpleo(empleo);
-                                        actualizarEmpresaRepository.save(empresa);
+                                        empresaSevice.saveEmpresa(empresa);
                                         break;
                                     case "tareas":
                                         String[] partes = campo.split("-");
@@ -193,11 +191,10 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                             tarea.setOtras(datoAct);
                                             auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", "Otras", datoAnt, datoAct, subLista, tarea.getId(), LocalDate.now());
                                         }
-
-                                        auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                        auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                         empleo.setUnaTarea(tarea);
                                         empresa.setUnEmpleo(empleo);
-                                        actualizarEmpresaRepository.save(empresa);
+                                        empresaSevice.saveEmpresa(empresa);
                                         break;
                                 }
                             }else{
@@ -215,34 +212,22 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                         if(detalleTarea.getId().equals(idDetalle)){
                                             detalleTarea.setDetalle(datoAct);
                                             auditoriaEmpresa = crearAuditoriaEmpresa(empresa, usuario, "Modificacion", "Detalle Tarea", datoAnt, datoAct, subLista, detalleTarea.getId(), LocalDate.now());
-                                            auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                            auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                             tarea.setUnDetalleTarea(detalleTarea);
                                             empleo.setUnaTarea(tarea);
                                             empresa.setUnEmpleo(empleo);
-                                            actualizarEmpresaRepository.save(empresa);
-
+                                            empresaSevice.saveEmpresa(empresa);
                                         }else{
                                             throw new Exception("Detalle de tarea no encontrada");
                                         }
-
-
-
-
-
                                     }
-
                                 }
                             }
-
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
 
     @Override
@@ -252,7 +237,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
         }else{
             Long idEmpresa = Long.parseLong(empresaId);
             Long idEmpleo = Long.parseLong(empleoId);
-            Empresa empresa = actualizarEmpresaRepository.findById(idEmpresa).orElse(null);
+            Empresa empresa = empresaSevice.findEmpresaById(idEmpresa);
             Usuario usuario = usuarioService.getUsuario(userName);
 
             if (empresa == null || usuario == null ){
@@ -282,17 +267,13 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                 empleo.setTareas(tareas);
                                 auditoriaEmpresa.setCampo("Nuevo detalle tarea");
                                 auditoriaEmpresa.setDatoAct(id);
-                                auditoriaEmpresaRepository.save(auditoriaEmpresa);
+                                auditoriaEmpresaService.guardar(auditoriaEmpresa);
                             }
                         }
-
                     }
                 }
-
-
             }
         }
-
     }
 
     @Override
@@ -302,7 +283,7 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
         }else {
             Long idEmpresa = Long.parseLong(empresaId);
             Long idEmpleo = Long.parseLong(empleoId);
-            Empresa empresa = actualizarEmpresaRepository.findById(idEmpresa).orElse(null);
+            Empresa empresa = empresaSevice.findEmpresaById(idEmpresa);
             Usuario usuario = usuarioService.getUsuario(userName);
 
             if (empresa == null || usuario == null) {
@@ -338,19 +319,13 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                                 empleo.setTareas(tareas);
                                 auditoriaEmpresa.setCampo("Eliminar detalle tarea");
                                 auditoriaEmpresa.setDatoAnt(nombreAEliminar);
-                                auditoriaEmpresaRepository.save(auditoriaEmpresa);
-
-
+                                auditoriaEmpresaService.guardar(auditoriaEmpresa);
                                 break;
                         }
-
                     }
                 }
             }
         }
-
-
-
     }
 
     private void actualizarConocimientosEspecificosEmpleo(ConocimientosEspecificosEmpleo cee, String campo, String datoAct) {
@@ -496,7 +471,6 @@ public class ActualizarEmpresaService implements IActualizarEmpresaService{
                 }catch (Exception e){
                     throw new Exception(e.getMessage());
                 }
-
                 break;
             case "implicaDesplazamientos":
                 empleo.setImplicaDesplazamientos(datoAct);

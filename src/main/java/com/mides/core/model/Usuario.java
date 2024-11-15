@@ -31,7 +31,7 @@ public class Usuario implements UserDetails {
     private String email;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<AuditoriaEmpresa> auditoriaEmpresas;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
