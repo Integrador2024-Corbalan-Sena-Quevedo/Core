@@ -36,7 +36,7 @@ public class Empresa extends Cliente{
     private List<Seguimiento> seguimientos;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonIgnore
     private List<AuditoriaEmpresa> auditoriaEmpresas;
 
     public Empleo getUnEmpleo(Long id){
