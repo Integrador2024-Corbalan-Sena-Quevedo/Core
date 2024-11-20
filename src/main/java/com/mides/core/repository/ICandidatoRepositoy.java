@@ -24,6 +24,7 @@ public interface ICandidatoRepositoy  extends JpaRepository<Candidato, Long> {
             "LEFT JOIN candidato_idioma ci ON ci.candidato_id = c.id " +
             "LEFT JOIN idioma i ON ci.idioma_id = i.id " +
             "INNER JOIN disponibilidad_horaria dh ON dh.candidato_id = c.id " +
+            "LEFT JOIN seguimiento s ON s.candidato_id = c.id " +
             "WHERE (d.departamento LIKE CONCAT('%', :#{#filter.departamento}, '%') OR :#{#filter.departamento} = '') " +
             "AND (:#{#filter.formacionAcademica} IS NULL OR e.nivel_numerico >= :#{#filter.formacionAcademica.ordinal()}) " +
             "AND (:#{#filter.ingles} = '' OR i.nombre LIKE 'Ingl%') " +

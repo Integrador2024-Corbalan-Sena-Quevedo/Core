@@ -57,6 +57,7 @@ public class Empleo {
     private Empresa empresa;
     private int activo;
     @OneToMany
+    @JsonManagedReference
     private List<Seguimiento> seguimientos;
 
 
