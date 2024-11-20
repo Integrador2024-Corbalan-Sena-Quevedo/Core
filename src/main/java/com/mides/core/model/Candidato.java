@@ -97,7 +97,8 @@ public class Candidato extends Cliente{
     private EncuestaCandidato encuestaCandidato;
     @Column(columnDefinition = "TEXT")
     private String csvBase64;
-    @OneToMany
+    @JsonManagedReference
+    @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seguimiento> seguimientos;
 
     @Override
