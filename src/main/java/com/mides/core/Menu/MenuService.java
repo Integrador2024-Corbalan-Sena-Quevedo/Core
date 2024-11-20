@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,46 +52,67 @@ public class MenuService {
 
     public Map<String, Long> getEmpleosPorDepartamento() {
         List<Empleo> empleos = empleoService.getEmpleos();
-
+        int totalEmpleos = empleos.size();
         Map<String, Long> empleosPorDepartamento = empleos.stream()
                 .collect(Collectors.groupingBy(Empleo::getDepartamento, Collectors.counting()));
 
-        return empleosPorDepartamento;
-    }
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        empleosPorDepartamento.forEach((descripcion, count) ->{
+        double porcentaje = (count * 100.0)/totalEmpleos;
+        String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+        retorno.put(descripcionConPorcentaje, count);
+    });
+        return retorno;
+}
 
     public Map<String, Long> getEmpleosPorFormacionAcademica() {
         List<Empleo> empleos = empleoService.getEmpleos();
-
+        int totalEmpleos = empleos.size();
         Map<String, Long> empleosPorFormacionAcademica= empleos.stream()
                 .collect(Collectors.groupingBy(Empleo::getFormacionAcademica, Collectors.counting()));
 
-        return empleosPorFormacionAcademica;
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        empleosPorFormacionAcademica.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalEmpleos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
     }
 
     public Map<String, Long> getEmpleosPorCargaHoraria() {
         List<Empleo> empleos = empleoService.getEmpleos();
+        int totalEmpleos = empleos.size();
 
         Map<String, Long> empleosPorCargaHoraria= empleos.stream()
                 .collect(Collectors.groupingBy(empleo -> {
                     int cargaHoraria = Integer.parseInt(empleo.getCargaHorariaSemanal().substring(0,2));
 
                     if (cargaHoraria < 15) {
-                        return "No trabaja";
+                        return  "No trabaja:";
                     }
                     if (cargaHoraria <= 25 && cargaHoraria >= 15) {
-                        return "20 horas";
+                        return "20 horas:";
                     } else if (cargaHoraria <= 35 && cargaHoraria >= 26) {
-                        return "30 horas";
-                    } else if (cargaHoraria >= 36 && cargaHoraria >= 45) {
-                        return "40 horas";
+                        return "30 horas:";
+                    } else if (cargaHoraria >= 36 && cargaHoraria <= 45) {
+                        return "40 horas:";
                     } else {
-                        return "Más de 40 horas";
+                        return "Más de 40 horas:";
                     }
 
 
                     }, Collectors.counting()));
 
-        return empleosPorCargaHoraria;
+
+
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        empleosPorCargaHoraria.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalEmpleos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
     }
 
     public Map<String, Long> getEntrevistasPorAnio() {
@@ -102,22 +125,28 @@ public class MenuService {
                      String.valueOf(entrevista.getFechaCreacion().getYear()),
                  Collectors.counting()));
 
-        return entrevistasPorAnio;
+       return entrevistasPorAnio;
     }
 
     public Map<String, Long> getEntrevistasPorGenero() {
         List<Candidato> entrevistas = candidatoSevice.getCandidatos();
-
+        int totalEntrevistas = entrevistas.size();;
         Map<String, Long> entrevistasPorGenero= entrevistas.stream()
                 .collect(Collectors.groupingBy(Candidato::getIdentidadGenero, Collectors.counting()));
 
-        return entrevistasPorGenero;
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        entrevistasPorGenero.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalEntrevistas;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
     }
 
 
     public Map<String, Long> getCandidatosPorEdad() {
         List<Candidato> candidatos = candidatoSevice.getCandidatos();
-
+        int totalCandidatos = candidatos.size();
         Map<String, Long> candidatosPorEdad= candidatos.stream()
                 .collect(Collectors.groupingBy(candidato -> {
                     int edad = Period.between(candidato.getFecha_de_nacimiento(), LocalDate.now()).getYears();
@@ -141,13 +170,20 @@ public class MenuService {
 
                 }, Collectors.counting()));
 
-        return candidatosPorEdad;
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        candidatosPorEdad.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalCandidatos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
     }
 
 
 
     public Map<String, Long> getCandidatosPorDiscapacidad() {
         List<Candidato> candidatos = candidatoSevice.getCandidatos();
+        int totalCandidatos = candidatos.size();
 
         Map<String, Long> candidatosPorDiscapacidad = candidatos.stream()
                 .flatMap(candidato -> {
@@ -166,52 +202,82 @@ public class MenuService {
                 })
                 .collect(Collectors.groupingBy(tipo -> tipo, Collectors.counting()));
 
-        return candidatosPorDiscapacidad;
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        candidatosPorDiscapacidad.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalCandidatos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
+
     }
 
     public Map<String, Long> getCandidatosPorFormacionAcademica() {
         List<Candidato> candidatos = candidatoSevice.getCandidatos();
+        long totalCandidatos = candidatos.size();
 
-        Map<String, Long> candidatosPorFormacionAcademica= candidatos.stream()
+        Map<String, Long> candidatosPorFormacionAcademica = candidatos.stream()
                 .collect(Collectors.groupingBy(candidato -> candidato.getEducacion().getNivelEducativo(), Collectors.counting()));
 
-        return candidatosPorFormacionAcademica;
+
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        candidatosPorFormacionAcademica.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalCandidatos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
     }
 
     public Map<String, Long> getCandidatosPorCargaHoraria() {
         List<Candidato> candidatos = candidatoSevice.getCandidatos();
 
-        Map<String, Long> candidatosPorCargaHoraria= candidatos.stream()
+
+        long totalCandidatos = candidatos.size();
+
+        Map<String, Long> candidatosPorCargaHoraria = candidatos.stream()
                 .collect(Collectors.groupingBy(candidato -> {
                     int cargaHoraria = Integer.parseInt(candidato.getDisponibilidadHoraria().getHorasSemanales().substring(0, 2));
 
                     if (cargaHoraria <= 20) {
                         return "Hasta 20 horas";
-                    }
-                    if (cargaHoraria <= 30 && cargaHoraria >= 21) {
+                    } else if (cargaHoraria <= 30) {
                         return "Hasta 30 horas";
-                    } else if (cargaHoraria <= 40 && cargaHoraria >= 31) {
+                    } else if (cargaHoraria <= 40) {
                         return "Hasta 40 horas";
                     } else if (cargaHoraria > 40) {
                         return "Más de 40 horas";
                     } else {
                         return "Sin restricción";
                     }
-
-
                 }, Collectors.counting()));
 
-        return candidatosPorCargaHoraria;
+
+        Map<String, Long> retorno = new LinkedHashMap<>();
+
+        candidatosPorCargaHoraria.forEach((descripcion, count) -> {
+            double porcentaje = (count * 100.0) / totalCandidatos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion, porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+
+        return retorno;
     }
 
     public Map<String, Long> getCandidatosTrabajando() {
         List<Seguimiento> seguimientos = seguimientoService.getSeguimientos();
-
+        int totalSeguimientos = seguimientos.size();
         Map<String, Long> candidatosTrabajando = seguimientos.stream()
                 .filter(seguimiento -> seguimiento.getCandidato() != null)
                 .collect(Collectors.groupingBy(seguimiento -> seguimiento.getEmpleo().getNombrePuesto(), Collectors.counting()));
 
-        return candidatosTrabajando;
+        Map<String,Long> retorno = new LinkedHashMap<>();
+        candidatosTrabajando.forEach((descripcion, count) ->{
+            double porcentaje = (count * 100.0)/totalSeguimientos;
+            String descripcionConPorcentaje = String.format("%s - %.2f%%", descripcion,porcentaje);
+            retorno.put(descripcionConPorcentaje, count);
+        });
+        return retorno;
     }
 }
 
