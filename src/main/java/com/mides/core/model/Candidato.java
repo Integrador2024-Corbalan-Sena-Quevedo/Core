@@ -2,6 +2,7 @@ package com.mides.core.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -46,7 +47,7 @@ public class Candidato extends Cliente{
     @JsonManagedReference
     private List<CandidatoIdioma> candidatoIdiomas ;
     @OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<AuditoriaCandidato> auditoriaCandidatos; ;
     @OneToOne(mappedBy = "candidato", cascade = CascadeType.ALL)
     @JsonManagedReference
