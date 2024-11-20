@@ -3,6 +3,8 @@ package com.mides.core.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,11 +28,10 @@ public class AuditoriaEmpresa {
 
     @ManyToOne
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
-    @JsonBackReference
     private Empresa empresa;
     @ManyToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonManagedReference
     private Usuario usuario;
     private String tipo;
     private String campo;
