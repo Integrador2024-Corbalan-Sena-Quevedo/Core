@@ -32,7 +32,8 @@ public class Empresa extends Cliente{
     @OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL)
     @JsonManagedReference
     private EncuestaEmpresa encuestaEmpresa;
-    @OneToMany
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Seguimiento> seguimientos;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
