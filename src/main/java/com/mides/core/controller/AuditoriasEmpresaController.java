@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/auditoriasEmpresas")
-@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST, RequestMethod.GET})
+@CrossOrigin(origins = "http://mides-web.s3-website-us-east-1.amazonaws.com", methods = {RequestMethod.POST, RequestMethod.GET})
 public class AuditoriasEmpresaController {
     @Autowired
     IAuditoriaEmpresaService auditoriaEmpresaService;
